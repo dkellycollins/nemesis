@@ -1,6 +1,0 @@
-[submodule "lib/lodash"]
-	path = lib/lodash
-	url = https://github.com/lodash/lodash
-[submodule "lib/jquery"]
-	path = lib/jquery
-	url = https://github.com/jquery/jquery
