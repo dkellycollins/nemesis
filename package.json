@@ -1,0 +1,34 @@
+{
+  "name": "nemesis",
+  "version": "0.0.0",
+  "description": "An open sourced javascrpt game engine.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dkellycollins/nemesis"
+  },
+  "author": {
+    "name": "Devin Kelly-Collins",
+    "email": "dkellycollins@gmail.com",
+    "url": "dkellycollins.github.io"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dkellycollins/nemesis/issues"
+  },
+  "homepage": "https://github.com/dkellycollins/nemesis",
+  "devDependencies": {
+    "mocha": "^1.21.4"
+  },
+  "dependencies": {
+    "jquery": "^2.1.1",
+    "lodash": "^2.4.1"
+  }
+}
