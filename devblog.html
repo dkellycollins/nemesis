@@ -1,15 +1,30 @@
 <html>
     <head>
-        <title></title>
+        <title>Nemesis - Development Blog</title>
 
-        <style href="stylesheets/bootstrap/css/bootstrap.min.css"></style>
-        <script src="stylesheets/js/bootstrap.min.js"></script>
-        <script data-main="scripts/devblog/devblog" src="scripts/lib/requirejs.js"></script>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+        <link rel="stylesheet" href="stylesheets/bootstrap/css/bootstrap.min.css">
+        <link href='http://fonts.googleapis.com/css?family=Special+Elite' rel='stylesheet' type='text/css'>
+        <style>
+            body {
+                font-family: 'Special Elite', cursive;
+            }
+        </style>
+
+        <script src="scripts/lib/jquery.js"></script>
+        <script src="scripts/lib/markdown.js"></script>
+        <script src="stylesheets/bootstrap/js/bootstrap.min.js"></script>
+        <script data-main="scripts/devblog/devblog" src="scripts/lib/require.js"></script>
     </head>
     <body>
-        <div class="panel panel-default">
-            <div id="title" class="panel-heading"></div>
-            <div id="post" class="panel-body"></div>
+        <div class="container">
+            <div class="panel panel-default">
+                <div id="title" class="panel-heading"></div>
+                <div id="post" class="panel-body"></div>
+            </div>
         </div>
     </body>
 </html>

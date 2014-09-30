@@ -1,4 +1,6 @@
-var blogPost = window.location.hash;
+///<reference path="../lib/jquery.d.ts" />
+///<reference path="../lib/require.d.ts" />
+///<reference path="../lib/markdown.d.ts" />
 
 interface BlogPost {
     Title: string;
@@ -6,10 +8,19 @@ interface BlogPost {
     Content: string;
 }
 
-define((require) => {
-    var $: jquery = require("jquery");
-    var post: BlogPost = require(blogPost);
+require.config({
+    baseUrl: 'scripts/lib',
+    paths: {
+        blog: "../devblog",
+        latest_blog: "../devblog/01.json"
+    }
+});
 
-    $('title').Text(post.Title);
-    $('post').Text(post.Content);
+define((require) => {
+    var $: JQueryStatic = require("jquery");
+    //var markdown: markdown = require("markdown");
+    var post: BlogPost = require("json!latest_blog");
+
+    $('#title').text(post.Title);
+    $('#post').html(markdown.toHTML(post.Content));
 });
