@@ -11,16 +11,25 @@ require.config({
     }
 });
 
-define(function (require) {
-    var $ = require("jquery");
+var loadPost = function () {
+    var postName = window.location.hash;
+    if (!!postName) {
+        postName = postName.replace('#', ''); //Remove hash from the name.
+        postName = 'blog/' + postName + '.json'; //Add blog path to the name.
+    } else {
+        postName = 'latest_blog';
+    }
 
-    //var markdown: markdown = require("markdown");
-    var postName = 'json!' + (window.location.hash || 'latest_blog');
-    require([postName], function (post) {
-        $('#title').text(post.Title);
-        $('#author').text(post.Author);
-        $('#date').text(post.DatePosted);
-        $('#post').html(markdown.toHTML(post.Content));
+    require(['jquery', 'json!' + postName], function ($, post) {
+        $('#title').text(post.Title || '');
+        $('#author').text(post.Author || '');
+        $('#date').text(post.DatePosted || '');
+        $('#post').html(markdown.toHTML(post.Content) || '');
     });
-});
+};
+
+window.onhashchange = function () {
+    loadPost();
+};
+loadPost();
 //# sourceMappingURL=devblog.js.map

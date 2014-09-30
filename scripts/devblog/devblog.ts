@@ -18,14 +18,24 @@ require.config({
     }
 });
 
-define((require) => {
-    var $: JQueryStatic = require("jquery");
-    //var markdown: markdown = require("markdown");
-    var postName = 'json!' + (window.location.hash || 'latest_blog');
-    require([postName], (post: BlogPost) => {
-        $('#title').text(post.Title);
-        $('#author').text(post.Author);
-        $('#date').text(post.DatePosted);
-        $('#post').html(markdown.toHTML(post.Content));
+var loadPost = () => {
+    var postName = window.location.hash;
+    if(!!postName) { //postname was provided.
+        postName = postName.replace('#', ''); //Remove hash from the name.
+        postName = 'blog/' + postName + '.json'; //Add blog path to the name.
+    } else { //post name was not provided. use the default.
+        postName = 'latest_blog';
+    }
+
+    require(['jquery', 'json!' + postName], ($: JQueryStatic, post: BlogPost) => {
+        $('#title').text(post.Title || '');
+        $('#author').text(post.Author || '');
+        $('#date').text(post.DatePosted || '');
+        $('#post').html(markdown.toHTML(post.Content) || '');
     });
-});
+};
+
+window.onhashchange = () => {
+    loadPost();
+};
+loadPost();
