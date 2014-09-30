@@ -1,0 +1,99 @@
+<html>
+    <head>
+        <title>Nemesis - Development Blog</title>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+        <link rel="stylesheet" href="stylesheets/bootstrap/css/bootstrap.min.css">
+        <link href='http://fonts.googleapis.com/css?family=Special+Elite' rel='stylesheet' type='text/css'>
+        <style>
+            body {
+                font-family: 'Special Elite', cursive;
+            }
+            textarea {
+                width: 100%;
+                height: 300px;
+            }
+        </style>
+
+        <script src="scripts/lib/jquery.js"></script>
+        <script src="scripts/lib/markdown.js"></script>
+        <script src="scripts/lib/knockout-3.2.0.js"></script>
+        <script src="stylesheets/bootstrap/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="text-center">
+                <h1>Nemesis Development Blog</h1>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="panel panel-default" data-bind="with: postModel">
+                        <div class="panel-heading clearfix">
+                            <div class="input-group">
+                                <label>Title: </label>
+                                <input type="text" data-bind="value: Title"/>
+                            </div>
+                            <div class="input-group">
+                                <label>Author: </label>
+                                <input type="text" data-bind="value: Author"/>
+                            </div>
+                            <div class="input-group">
+                                <label>Publish Date: </label>
+                                <input type="text" data-bind="value: DatePosted"/>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <textarea data-bind="value: ContentRaw, valueUpdate: 'input'"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="panel panel-default"
+                         data-bind="with: postModel">
+                        <div class="panel-heading clearfix">
+                            <div class="pull-left">
+                                <h4>(Preview) <span data-bind="text: Title"></span></h4>
+                            </div>
+                            <div class="pull-right">
+                                <div>
+                                    By: <span data-bind="text: Author"></span>
+                                </div>
+                                <div>
+                                    On: <span data-bind="text: DatePosted"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body" data-bind="html: ContentHtml"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            function PostViewModel() {
+                var postModel = {
+                    Title: ko.observable(),
+                    Author: ko.observable(),
+                    DatePosted: ko.observable(),
+                    ContentRaw: ko.observable(),
+                    ContentHtml: ko.observable()
+                };
+
+                //Update preview when content raw changes.
+                postModel.ContentRaw.subscribe(function(newContent) {
+                    postModel.ContentHtml(markdown.toHTML(newContent));
+                });
+
+                //Default data.
+                postModel.Title("Title");
+                postModel.Author("Devin Kelly-Collins");
+                postModel.DatePosted("Today");
+
+                this.postModel = postModel;
+            }
+            ko.applyBindings(new PostViewModel());
+        </script>
+    </body>
+</html>
