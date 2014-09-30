@@ -5,10 +5,12 @@
 interface BlogPost {
     Title: string;
     DatePosted: string;
+    Author: string;
     Content: string;
 }
 
 require.config({
+    waitSeconds: 2,
     baseUrl: 'scripts/lib',
     paths: {
         blog: "../devblog",
@@ -19,8 +21,11 @@ require.config({
 define((require) => {
     var $: JQueryStatic = require("jquery");
     //var markdown: markdown = require("markdown");
-    var post: BlogPost = require("json!latest_blog");
-
-    $('#title').text(post.Title);
-    $('#post').html(markdown.toHTML(post.Content));
+    var postName = 'json!' + (window.location.hash || 'latest_blog');
+    require([postName], (post: BlogPost) => {
+        $('#title').text(post.Title);
+        $('#author').text(post.Author);
+        $('#date').text(post.DatePosted);
+        $('#post').html(markdown.toHTML(post.Content));
+    });
 });

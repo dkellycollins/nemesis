@@ -3,6 +3,7 @@
 ///<reference path="../lib/markdown.d.ts" />
 
 require.config({
+    waitSeconds: 2,
     baseUrl: 'scripts/lib',
     paths: {
         blog: "../devblog",
@@ -14,9 +15,12 @@ define(function (require) {
     var $ = require("jquery");
 
     //var markdown: markdown = require("markdown");
-    var post = require("json!latest_blog");
-
-    $('#title').text(post.Title);
-    $('#post').html(markdown.toHTML(post.Content));
+    var postName = 'json!' + (window.location.hash || 'latest_blog');
+    require([postName], function (post) {
+        $('#title').text(post.Title);
+        $('#author').text(post.Author);
+        $('#date').text(post.DatePosted);
+        $('#post').html(markdown.toHTML(post.Content));
+    });
 });
 //# sourceMappingURL=devblog.js.map
