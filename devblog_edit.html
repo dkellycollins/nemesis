@@ -9,9 +9,6 @@
         <link rel="stylesheet" href="stylesheets/bootstrap/css/bootstrap.min.css">
         <link href='http://fonts.googleapis.com/css?family=Special+Elite' rel='stylesheet' type='text/css'>
         <style>
-            body {
-                font-family: 'Special Elite', cursive;
-            }
             textarea {
                 width: 100%;
                 height: 300px;
@@ -24,25 +21,25 @@
         <script src="stylesheets/bootstrap/js/bootstrap.min.js"></script>
     </head>
     <body>
-        <div class="container">
-            <div class="text-center">
-                <h1>Nemesis Development Blog</h1>
-            </div>
+        <div class="container" style="margin-top: 10px;">
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="panel panel-default" data-bind="with: postModel">
                         <div class="panel-heading clearfix">
-                            <div class="input-group">
-                                <label>Title: </label>
-                                <input type="text" data-bind="value: Title"/>
+                            <div class="pull-left">
+                                <div class="input-group">
+                                    <input type="text" data-bind="value: Title"/>
+                                </div>
                             </div>
-                            <div class="input-group">
-                                <label>Author: </label>
-                                <input type="text" data-bind="value: Author"/>
-                            </div>
-                            <div class="input-group">
-                                <label>Publish Date: </label>
-                                <input type="text" data-bind="value: DatePosted"/>
+                            <div class="pull-right">
+                                <div class="input-group">
+                                    <label>By: </label>
+                                    <input type="text" data-bind="value: Author"/>
+                                </div>
+                                <div class="input-group">
+                                    <label>On: </label>
+                                    <input type="text" data-bind="value: DatePosted"/>
+                                </div>
                             </div>
                         </div>
                         <div class="panel-body">
@@ -52,7 +49,8 @@
                 </div>
                 <div class="col-xs-12 col-md-6">
                     <div class="panel panel-default"
-                         data-bind="with: postModel">
+                         data-bind="with: postModel"
+                         style="font-family: 'Special Elite', cursive;">
                         <div class="panel-heading clearfix">
                             <div class="pull-left">
                                 <h4>(Preview) <span data-bind="text: Title"></span></h4>
@@ -70,6 +68,11 @@
                     </div>
                 </div>
             </div>
+            <div class="row" data-bind="with: postModel">
+                <div class="col-xs-12">
+                    <div class="well" data-bind="text: JsonStr"></div>
+                </div>
+            </div>
         </div>
         <script>
             function PostViewModel() {
@@ -78,13 +81,28 @@
                     Author: ko.observable(),
                     DatePosted: ko.observable(),
                     ContentRaw: ko.observable(),
-                    ContentHtml: ko.observable()
+                    ContentHtml: ko.observable(),
+                    JsonStr: ko.observable()
                 };
 
                 //Update preview when content raw changes.
                 postModel.ContentRaw.subscribe(function(newContent) {
                     postModel.ContentHtml(markdown.toHTML(newContent));
                 });
+                //Update download link when certain fields change.
+                var updateDownload = function() {
+                    var downloadModel = {
+                        Title: postModel.Title(),
+                        Author: postModel.Author(),
+                        DatePosted: postModel.DatePosted(),
+                        Content: postModel.ContentHtml()
+                    };
+                    postModel.JsonStr(JSON.stringify(downloadModel));
+                };
+                postModel.Title.subscribe(updateDownload);
+                postModel.Author.subscribe(updateDownload);
+                postModel.DatePosted.subscribe(updateDownload);
+                postModel.ContentHtml.subscribe(updateDownload);
 
                 //Default data.
                 postModel.Title("Title");
