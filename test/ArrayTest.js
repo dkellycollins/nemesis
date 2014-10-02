@@ -1,5 +1,5 @@
 ///<reference path="../lib/mocha/mocha.d.ts" />
-///<reference path="../lib/requirejs/require.d.ts" />
+///<reference path="../util/requirejs/require.d.ts" />
 var assert = require("assert");
 
 describe('Array', function () {
