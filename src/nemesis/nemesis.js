@@ -1,22 +1,40 @@
-define(["require", "exports"], function(require, exports) {
-    var _config;
-    function config(c) {
-        if (!c) {
-            _config = c;
+///<amd-dependency path="json!config.json" />
+define(["require", "exports", "json!config.json"], function(require, exports) {
+    
+    var config = require('json!config.json');
+
+    var nemesis = (function () {
+        function nemesis() {
         }
-        return _config || {};
-    }
-    exports.config = config;
+        nemesis.config = function (c) {
+            if (!!c) {
+                this._config = c;
+            }
+            return this._config || {};
+        };
+        return nemesis;
+    })();
 
-    exports.GL;
-    exports.CANVAS;
+    var nemesis;
+    (function (nemesis) {
+        debugger;
+        nemesis.config(config);
 
-    if (!!exports.config().canvasId) {
-        exports.CANVAS = document.getElementById(exports.config().canvasId);
-    } else {
-        exports.CANVAS = document.getElementsByTagName('canvas')[0];
-    }
+        if (!!nemesis.config().canvasId) {
+            nemesis.CANVAS = document.getElementById(nemesis.config().canvasId);
+        } else {
+            nemesis.CANVAS = document.getElementsByTagName('canvas')[0];
+        }
 
-    exports.GL = exports.CANVAS.getContext("experimental-webgl", { antialias: true });
+        nemesis.GL = nemesis.CANVAS.getContext("experimental-webgl", { antialias: true });
+
+        if (nemesis.config().fullscreeen) {
+            nemesis.CANVAS.width = window.innerWidth;
+            nemesis.CANVAS.height = window.innerHeight;
+        }
+    })(nemesis || (nemesis = {}));
+
+    
+    return nemesis;
 });
 //# sourceMappingURL=nemesis.js.map

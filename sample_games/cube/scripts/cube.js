@@ -5,9 +5,5 @@ require.config({
 });
 
 require(['nemesis'], function (nemesis) {
-    if(!!nemesis.CANVAS && !!nemesis.GL) {
-        alert("Worked");
-    } else {
-        alert("Failed");
-    }
+    alert(nemesis.TEST);
 });

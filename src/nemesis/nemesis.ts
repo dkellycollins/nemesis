@@ -1,24 +1,42 @@
+///<amd-dependency path="json!config.json" />
 
-export interface NemesisConfig {
-    canvasId: string;
-    fullScreen: boolean;
-}
+declare var require:(moduleId:string) => any;
+var config: nemesis.Config = require('json!config.json');
 
-var _config: NemesisConfig;
-export function config(c?: NemesisConfig): NemesisConfig {
-    if(!c) {
-        _config = c;
+class nemesis {
+    private static _config: nemesis.Config;
+    public static config(c?: nemesis.Config): nemesis.Config {
+        if (!!c) {
+            this._config = c;
+        }
+        return this._config || <nemesis.Config>{};
     }
-    return _config || <NemesisConfig>{};
+
+    public static GL;
+    public static CANVAS;
 }
 
-export var GL;
-export var CANVAS;
+module nemesis {
+    export interface Config {
+        canvasId: string;
+        fullscreeen: boolean;
+    }
 
-if(!!config().canvasId) {
-    CANVAS = document.getElementById(config().canvasId);
-} else {
-    CANVAS = document.getElementsByTagName('canvas')[0];
+    debugger;
+    nemesis.config(config);
+
+    if(!!nemesis.config().canvasId) {
+        nemesis.CANVAS = document.getElementById(nemesis.config().canvasId);
+    } else {
+        nemesis.CANVAS = document.getElementsByTagName('canvas')[0];
+    }
+
+    nemesis.GL = nemesis.CANVAS.getContext("experimental-webgl", {antialias: true});
+
+    if(nemesis.config().fullscreeen) {
+        nemesis.CANVAS.width = window.innerWidth;
+        nemesis.CANVAS.height = window.innerHeight;
+    }
 }
 
-GL = CANVAS.getContext("experimental-webgl", {antialias: true});
+export = nemesis;
