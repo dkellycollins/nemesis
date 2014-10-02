@@ -38,7 +38,7 @@
                                 </div>
                                 <div class="input-group">
                                     <label>On: </label>
-                                    <input type="text" data-bind="value: DatePosted"/>
+                                    <input type="date" data-bind="value: DatePosted"/>
                                 </div>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                                     By: <span data-bind="text: Author"></span>
                                 </div>
                                 <div>
-                                    On: <span data-bind="text: DatePosted"></span>
+                                    <On></On>: <span data-bind="text: DatePosted"></span>
                                 </div>
                             </div>
                         </div>
@@ -107,7 +107,7 @@
                 //Default data.
                 postModel.Title("Title");
                 postModel.Author("Devin Kelly-Collins");
-                postModel.DatePosted("Today");
+                postModel.DatePosted(new Date());
 
                 this.postModel = postModel;
             }
