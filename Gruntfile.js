@@ -16,8 +16,8 @@ module.exports = function(grunt) {
             compile: {
                 options: {
                     baseUrl: "src/",
-                    mainConfigFile: "src/build_config.js",
-                    name: "<%= pkg.name %>.js",
+                    mainConfigFile: "build_config.js",
+                    name: "<%= pkg.name %>",
                     out: 'build/<%= pkg.name %>.js'
                 }
             }
