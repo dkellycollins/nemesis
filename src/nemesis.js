@@ -1,6 +1,4 @@
-///<amd-dependency path="json!config.json" />
-define(["require", "exports", "json!config.json"], function(require, exports) {
-    
+define(["require", "exports", 'util/logger'], function(require, exports, Logger) {
     var config = require('json!config.json');
 
     var nemesis = (function () {
@@ -17,8 +15,11 @@ define(["require", "exports", "json!config.json"], function(require, exports) {
 
     var nemesis;
     (function (nemesis) {
-        debugger;
+        //Set config.
         nemesis.config(config);
+
+        //Setup logger.
+        nemesis.LOGGER = new Logger();
 
         if (!!nemesis.config().canvasId) {
             nemesis.CANVAS = document.getElementById(nemesis.config().canvasId);
@@ -32,6 +33,8 @@ define(["require", "exports", "json!config.json"], function(require, exports) {
             nemesis.CANVAS.width = window.innerWidth;
             nemesis.CANVAS.height = window.innerHeight;
         }
+
+        nemesis.LOGGER.log('nemesis started.');
     })(nemesis || (nemesis = {}));
 
     

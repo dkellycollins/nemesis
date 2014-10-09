@@ -1,7 +1,7 @@
-///<amd-dependency path="json!config.json" />
-
 declare var require:(moduleId:string) => any;
 var config: nemesis.Config = require('json!config.json');
+
+import Logger = require('util/logger');
 
 class nemesis {
     private static _config: nemesis.Config;
@@ -14,6 +14,7 @@ class nemesis {
 
     public static GL;
     public static CANVAS;
+    public static LOGGER: ILogger;
 }
 
 module nemesis {
@@ -22,8 +23,11 @@ module nemesis {
         fullscreeen: boolean;
     }
 
-    debugger;
+    //Set config.
     nemesis.config(config);
+
+    //Setup logger.
+    nemesis.LOGGER = new Logger();
 
     if(!!nemesis.config().canvasId) {
         nemesis.CANVAS = document.getElementById(nemesis.config().canvasId);
@@ -37,6 +41,8 @@ module nemesis {
         nemesis.CANVAS.width = window.innerWidth;
         nemesis.CANVAS.height = window.innerHeight;
     }
+
+    nemesis.LOGGER.log('nemesis started.');
 }
 
 export = nemesis;
