@@ -1,42 +1,18 @@
-define(["require", "exports", 'util/logger'], function(require, exports, Logger) {
-    var config = require('json!config.json');
-
-    var nemesis = (function () {
-        function nemesis() {
-        }
-        nemesis.config = function (c) {
-            if (!!c) {
-                this._config = c;
-            }
-            return this._config || {};
-        };
-        return nemesis;
-    })();
-
+define(["require", "exports", "_nemesis", 'rendering/rendering'], function(require, exports, _nemesis, Rendering) {
+    /* The nemesis module is for static varibles and static initialization. */
     var nemesis;
     (function (nemesis) {
-        //Set config.
-        nemesis.config(config);
+        nemesis.animate;
+        nemesis.rendering;
 
-        //Setup logger.
-        nemesis.LOGGER = new Logger();
-
-        if (!!nemesis.config().canvasId) {
-            nemesis.CANVAS = document.getElementById(nemesis.config().canvasId);
-        } else {
-            nemesis.CANVAS = document.getElementsByTagName('canvas')[0];
+        if (_nemesis.config().fullscreeen) {
+            _nemesis.canvas().width = window.innerWidth;
+            _nemesis.canvas().height = window.innerHeight;
         }
 
-        nemesis.GL = nemesis.CANVAS.getContext("experimental-webgl", { antialias: true });
-
-        if (nemesis.config().fullscreeen) {
-            nemesis.CANVAS.width = window.innerWidth;
-            nemesis.CANVAS.height = window.innerHeight;
-        }
-
-        nemesis.LOGGER.log('nemesis started.');
+        nemesis.animate = _nemesis.animate;
+        nemesis.rendering = Rendering;
     })(nemesis || (nemesis = {}));
-
     
     return nemesis;
 });

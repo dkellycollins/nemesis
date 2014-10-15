@@ -1,48 +1,18 @@
-declare var require:(moduleId:string) => any;
-var config: nemesis.Config = require('json!config.json');
+import _nemesis = require("_nemesis");
+import Logger = require('util/logging/consoleLogger');
+import Rendering = require('rendering/rendering');
 
-import Logger = require('util/logger');
-
-class nemesis {
-    private static _config: nemesis.Config;
-    public static config(c?: nemesis.Config): nemesis.Config {
-        if (!!c) {
-            this._config = c;
-        }
-        return this._config || <nemesis.Config>{};
-    }
-
-    public static GL;
-    public static CANVAS;
-    public static LOGGER: ILogger;
-}
-
+/* The nemesis module is for static varibles and static initialization. */
 module nemesis {
-    export interface Config {
-        canvasId: string;
-        fullscreeen: boolean;
+    export var animate;
+    export var rendering;
+
+    if(_nemesis.config().fullscreeen) {
+        _nemesis.canvas().width = window.innerWidth;
+        _nemesis.canvas().height = window.innerHeight;
     }
 
-    //Set config.
-    nemesis.config(config);
-
-    //Setup logger.
-    nemesis.LOGGER = new Logger();
-
-    if(!!nemesis.config().canvasId) {
-        nemesis.CANVAS = document.getElementById(nemesis.config().canvasId);
-    } else {
-        nemesis.CANVAS = document.getElementsByTagName('canvas')[0];
-    }
-
-    nemesis.GL = nemesis.CANVAS.getContext("experimental-webgl", {antialias: true});
-
-    if(nemesis.config().fullscreeen) {
-        nemesis.CANVAS.width = window.innerWidth;
-        nemesis.CANVAS.height = window.innerHeight;
-    }
-
-    nemesis.LOGGER.log('nemesis started.');
+    nemesis.animate = _nemesis.animate;
+    nemesis.rendering = Rendering;
 }
-
 export = nemesis;

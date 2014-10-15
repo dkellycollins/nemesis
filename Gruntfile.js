@@ -16,9 +16,14 @@ module.exports = function(grunt) {
             compile: {
                 options: {
                     baseUrl: "src/",
-                    mainConfigFile: "build_config.js",
                     name: "<%= pkg.name %>",
-                    out: 'build/<%= pkg.name %>.js'
+                    paths: {
+                        text: "../node_modules/text/text",
+                        json: "../lib/requirejs-plugins/json",
+                        "config.json": 'empty'
+                    },
+                    out: 'build/<%= pkg.name %>.js',
+                    optimize: 'none'
                 }
             }
         }
@@ -29,6 +34,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
 
     // Default task(s).
-    grunt.registerTask('default', ['requirejs', 'uglify']);
-
+    grunt.registerTask('default', ['requirejs']);
+    grunt.registerTask('production' ['requirejs', 'uglify']);
 };
