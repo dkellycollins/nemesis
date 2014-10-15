@@ -4,8 +4,6 @@ import Render = require("./primitive");
 import Logger = require("util/logging/consoleLogger");
 
 module rendering {
-    debugger;
-
     try {
         rendering.GL = nemesis.canvas().getContext('experimental-webgl', {antialias:true});
     } catch(e) {

@@ -20,9 +20,10 @@ require(['nemesis',
 
         //Setup shader program
         var shaderProgram = nemesis.rendering.shaders.createProgram();
-        nemesis.rendering.shaders.complieFragmentShader(fragmentShaderSource, shaderProgram);
+        nemesis.rendering.shaders.compileFragementShader(fragmentShaderSource, shaderProgram);
         nemesis.rendering.shaders.compileVertexShader(vertexShaderSource, shaderProgram);
         nemesis.rendering.shaders.linkProgram(shaderProgram);
+        nemesis.rendering.shaders.setActiveProgram(shaderProgram);
 
         //Setup buffers
         nemesis.rendering.render.createArrayBuffer(vertexes);

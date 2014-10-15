@@ -1,8 +1,6 @@
 define(["require", "exports", "_nemesis", "./shaders", "./primitive", "util/logging/consoleLogger"], function(require, exports, nemesis, Shaders, Render, Logger) {
     var rendering;
     (function (rendering) {
-        debugger;
-
         try  {
             rendering.GL = nemesis.canvas().getContext('experimental-webgl', { antialias: true });
         } catch (e) {

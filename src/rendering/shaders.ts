@@ -8,6 +8,14 @@ class shaders {
         return this._gl.createProgram();
     }
 
+    public compileFragementShader(source: string, program?: number): number {
+        return this.compile(source, this._gl.FRAGMENT_SHADER, program);
+    }
+
+    public compileVertexShader(source: string, program?: number): number {
+        return this.compile(source, this._gl.VERTEX_SHADER, program);
+    }
+
     public compile(source: string, type: string, program?:number):number {
         var shader = this._gl.createShader(type);
         this._gl.shaderSource(shader, source);
@@ -27,8 +35,12 @@ class shaders {
         this._gl.linkProgram(program);
     }
 
+    public setActiveProgram(program: number): void {
+        this._gl.useProgram(program);
+    }
+
     public setFloat(program: number, attribName:string, index: number, stride:number, pointer:number) {
-        var attrib = this._gl.getAttributeLocation(program, attribName);
+        var attrib = this._gl.getAttribLocation(program, attribName);
         this._gl.vertexAttribPointer(attrib, index, this._gl.FLOAT, false, stride, pointer);
     }
 }

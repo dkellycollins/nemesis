@@ -7,6 +7,14 @@ define(["require", "exports", "../util/logging/consoleLogger"], function(require
             return this._gl.createProgram();
         };
 
+        shaders.prototype.compileFragementShader = function (source, program) {
+            return this.compile(source, this._gl.FRAGMENT_SHADER, program);
+        };
+
+        shaders.prototype.compileVertexShader = function (source, program) {
+            return this.compile(source, this._gl.VERTEX_SHADER, program);
+        };
+
         shaders.prototype.compile = function (source, type, program) {
             var shader = this._gl.createShader(type);
             this._gl.shaderSource(shader, source);
@@ -26,8 +34,12 @@ define(["require", "exports", "../util/logging/consoleLogger"], function(require
             this._gl.linkProgram(program);
         };
 
+        shaders.prototype.setActiveProgram = function (program) {
+            this._gl.useProgram(program);
+        };
+
         shaders.prototype.setFloat = function (program, attribName, index, stride, pointer) {
-            var attrib = this._gl.getAttributeLocation(program, attribName);
+            var attrib = this._gl.getAttribLocation(program, attribName);
             this._gl.vertexAttribPointer(attrib, index, this._gl.FLOAT, false, stride, pointer);
         };
         return shaders;

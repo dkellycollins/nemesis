@@ -20,7 +20,7 @@ module.exports = function(grunt) {
                     paths: {
                         text: "../node_modules/text/text",
                         json: "../lib/requirejs-plugins/json",
-                        "config.json": 'empty'
+                        config: 'empty:'
                     },
                     out: 'build/<%= pkg.name %>.js',
                     optimize: 'none'
