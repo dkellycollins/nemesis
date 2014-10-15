@@ -7,7 +7,7 @@ module nemesis {
     export var animate;
     export var rendering;
 
-    if(_nemesis.config().fullscreeen) {
+    if(_nemesis.config().fullscreen) {
         _nemesis.canvas().width = window.innerWidth;
         _nemesis.canvas().height = window.innerHeight;
     }

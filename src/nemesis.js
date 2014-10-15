@@ -5,7 +5,7 @@ define(["require", "exports", "_nemesis", 'rendering/rendering'], function(requi
         nemesis.animate;
         nemesis.rendering;
 
-        if (_nemesis.config().fullscreeen) {
+        if (_nemesis.config().fullscreen) {
             _nemesis.canvas().width = window.innerWidth;
             _nemesis.canvas().height = window.innerHeight;
         }

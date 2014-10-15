@@ -560,6 +560,11 @@ define('rendering/shaders',["require", "exports", "../util/logging/consoleLogger
             this._gl.useProgram(program);
         };
 
+        shaders.prototype.enableAttrib = function (program, attribName) {
+            var attrib = this._gl.getAttribLocation(program, attribName);
+            this._gl.enableVertexAttribArray(attrib);
+        };
+
         shaders.prototype.setFloat = function (program, attribName, index, stride, pointer) {
             var attrib = this._gl.getAttribLocation(program, attribName);
             this._gl.vertexAttribPointer(attrib, index, this._gl.FLOAT, false, stride, pointer);
@@ -613,8 +618,6 @@ define('rendering/primitive',["require", "exports"], function(require, exports) 
 define('rendering/rendering',["require", "exports", "_nemesis", "./shaders", "./primitive", "util/logging/consoleLogger"], function(require, exports, nemesis, Shaders, Render, Logger) {
     var rendering;
     (function (rendering) {
-        debugger;
-
         try  {
             rendering.GL = nemesis.canvas().getContext('experimental-webgl', { antialias: true });
         } catch (e) {
@@ -635,12 +638,10 @@ define('nemesis',["require", "exports", "_nemesis", 'rendering/rendering'], func
     /* The nemesis module is for static varibles and static initialization. */
     var nemesis;
     (function (nemesis) {
-        debugger;
-
         nemesis.animate;
         nemesis.rendering;
 
-        if (_nemesis.config().fullscreeen) {
+        if (_nemesis.config().fullscreen) {
             _nemesis.canvas().width = window.innerWidth;
             _nemesis.canvas().height = window.innerHeight;
         }

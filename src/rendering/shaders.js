@@ -38,6 +38,11 @@ define(["require", "exports", "../util/logging/consoleLogger"], function(require
             this._gl.useProgram(program);
         };
 
+        shaders.prototype.enableAttrib = function (program, attribName) {
+            var attrib = this._gl.getAttribLocation(program, attribName);
+            this._gl.enableVertexAttribArray(attrib);
+        };
+
         shaders.prototype.setFloat = function (program, attribName, index, stride, pointer) {
             var attrib = this._gl.getAttribLocation(program, attribName);
             this._gl.vertexAttribPointer(attrib, index, this._gl.FLOAT, false, stride, pointer);

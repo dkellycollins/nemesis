@@ -39,6 +39,11 @@ class shaders {
         this._gl.useProgram(program);
     }
 
+    public enableAttrib(program:number, attribName:string): void {
+        var attrib = this._gl.getAttribLocation(program, attribName);
+        this._gl.enableVertexAttribArray(attrib);
+    }
+
     public setFloat(program: number, attribName:string, index: number, stride:number, pointer:number) {
         var attrib = this._gl.getAttribLocation(program, attribName);
         this._gl.vertexAttribPointer(attrib, index, this._gl.FLOAT, false, stride, pointer);

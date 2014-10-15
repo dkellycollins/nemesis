@@ -23,6 +23,8 @@ require(['nemesis',
         nemesis.rendering.shaders.compileFragementShader(fragmentShaderSource, shaderProgram);
         nemesis.rendering.shaders.compileVertexShader(vertexShaderSource, shaderProgram);
         nemesis.rendering.shaders.linkProgram(shaderProgram);
+        nemesis.rendering.shaders.enableAttrib(shaderProgram, "color");
+        nemesis.rendering.shaders.enableAttrib(shaderProgram, "position");
         nemesis.rendering.shaders.setActiveProgram(shaderProgram);
 
         //Setup buffers
@@ -31,8 +33,8 @@ require(['nemesis',
 
         //Draw!
         nemesis.animate(function() {
-            nemesis.rendering.shaders.setFloat(shaderProgram, "color", 4*(2+3),0);
-            nemesis.rendering.shaders.setFloat(shaderProgram, "position", 4*(2+3),2*4)
+            nemesis.rendering.shaders.setFloat(shaderProgram, "color", 2, 4*(2+3),0);
+            nemesis.rendering.shaders.setFloat(shaderProgram, "position", 3, 4*(2+3),2*4)
             nemesis.rendering.render.drawTriangles(3);
         });
 });
