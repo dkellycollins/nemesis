@@ -29,7 +29,7 @@ define(function (require) {
             $('#title').text(post.Title || '');
             $('#author').text(post.Author || '');
             $('#date').text(post.DatePosted || '');
-            $('#post').html(markdown.toHTML(post.Content) || '');
+            $('#post').html(post.Content || '');
         });
     };
 
