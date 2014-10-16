@@ -1,5 +1,7 @@
 {
+    "latestPost": "#02",
     "posts": [
-        { "id": "#01", "title": "Getting Started" }
+        { "id": "#01", "title": "Getting Started" },
+        { "id": "#02", "title": "Houston, we have a triangle"}
     ]
 }

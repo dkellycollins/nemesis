@@ -6,8 +6,7 @@ require.config({
     waitSeconds: 2,
     baseUrl: 'scripts/lib',
     paths: {
-        blog: "../devblog",
-        latest_blog: "../devblog/01.json"
+        blog: "../devblog"
     }
 });
 
@@ -22,13 +21,9 @@ define(function (require) {
     });
 
     var loadPost = function () {
-        var postName = window.location.hash;
-        if (!!postName) {
-            postName = postName.replace('#', ''); //Remove hash from the name.
-            postName = 'blog/' + postName + '.json'; //Add blog path to the name.
-        } else {
-            postName = 'latest_blog';
-        }
+        var postName = window.location.hash || index.latestPost;
+        postName = postName.replace('#', ''); //Remove hash from the name.
+        postName = 'blog/' + postName + '.json'; //Add blog path to the name.
 
         require(['json!' + postName], function (post) {
             $('#title').text(post.Title || '');
@@ -43,4 +38,3 @@ define(function (require) {
     };
     loadPost();
 });
-//# sourceMappingURL=main.js.map

@@ -13,8 +13,7 @@ require.config({
     waitSeconds: 2,
     baseUrl: 'scripts/lib',
     paths: {
-        blog: "../devblog",
-        latest_blog: "../devblog/01.json"
+        blog: "../devblog"
     }
 });
 
@@ -32,13 +31,9 @@ define((require) => {
     });
 
     var loadPost = () => {
-        var postName = window.location.hash;
-        if(!!postName) { //postname was provided.
-            postName = postName.replace('#', ''); //Remove hash from the name.
-            postName = 'blog/' + postName + '.json'; //Add blog path to the name.
-        } else { //post name was not provided. use the default.
-            postName = 'latest_blog';
-        }
+        var postName = window.location.hash || index.latestPost;
+        postName = postName.replace('#', ''); //Remove hash from the name.
+        postName = 'blog/' + postName + '.json'; //Add blog path to the name.
 
         require(['json!' + postName], (post: BlogPost) => {
             $('#title').text(post.Title || '');
