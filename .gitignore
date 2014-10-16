@@ -1,7 +1,13 @@
 .idea
-
+node_modules
+build
+*.js.map
+<<<<<<< .mine
 node_modules
 
 build
+=======
 
-*.js.map
+
+
+>>>>>>> .theirs

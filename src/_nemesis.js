@@ -37,4 +37,3 @@ define(["require", "exports", "json!config.json"], function(require, exports, co
     
     return _nemesis;
 });
-//# sourceMappingURL=_nemesis.js.map

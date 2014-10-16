@@ -35,4 +35,3 @@ define(["require", "exports"], function(require, exports) {
     
     return primitive;
 });
-//# sourceMappingURL=primitive.js.map

@@ -16,4 +16,3 @@ define(["require", "exports", "_nemesis", 'rendering/rendering'], function(requi
     
     return nemesis;
 });
-//# sourceMappingURL=nemesis.js.map

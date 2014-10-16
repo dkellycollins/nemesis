@@ -18,4 +18,3 @@ define(["require", "exports", "_nemesis", "./shaders", "./shaderProgram", "./pri
     
     return rendering;
 });
-//# sourceMappingURL=rendering.js.map
