@@ -4,9 +4,7 @@ require.config({
    }
 });
 
-require(['nemesis',
-    'text!shaders/triangle_fragment_shader.fs',
-    'text!shaders/triangle_vertex_shader.vs'],
+require(['nemesis'],
     function (nemesis, fragmentShaderSource, vertexShaderSource) {
         var vertexes = [
             -1,-1, //first summit -> bottom left of the viewport
@@ -19,13 +17,13 @@ require(['nemesis',
         var faces = [0,1,2];
 
         //Setup shader program
-        var shaderProgram = nemesis.rendering.shaders.createProgram();
-        nemesis.rendering.shaders.compileFragementShader(fragmentShaderSource, shaderProgram);
-        nemesis.rendering.shaders.compileVertexShader(vertexShaderSource, shaderProgram);
-        nemesis.rendering.shaders.linkProgram(shaderProgram);
-        nemesis.rendering.shaders.enableAttrib(shaderProgram, "color");
-        nemesis.rendering.shaders.enableAttrib(shaderProgram, "position");
-        nemesis.rendering.shaders.setActiveProgram(shaderProgram);
+        var shaderProgram = new nemesis.rendering.shaderProgram();
+        shaderProgram.addShader(nemesis.rendering.shaders.colorVertexShader);
+        shaderProgram.addShader(nemesis.rendering.shaders.colorFragmentShader);
+        shaderProgram.init();
+        shaderProgram.enableAttrib("color");
+        shaderProgram.enableAttrib("position");
+        shaderProgram.setActive();
 
         //Setup buffers
         nemesis.rendering.render.createArrayBuffer(vertexes);
@@ -33,8 +31,8 @@ require(['nemesis',
 
         //Draw!
         nemesis.animate(function() {
-            nemesis.rendering.shaders.setFloat(shaderProgram, "color", 2, 4*(2+3),0);
-            nemesis.rendering.shaders.setFloat(shaderProgram, "position", 3, 4*(2+3),2*4)
+            shaderProgram.setFloat("position", 2, 4*(2+3),0);
+            shaderProgram.setFloat("color", 3, 4*(2+3),2*4);
             nemesis.rendering.render.drawTriangles(3);
         });
 });

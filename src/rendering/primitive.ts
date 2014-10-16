@@ -1,8 +1,11 @@
 import Logger = require("../util/logging/consoleLogger");
 
 class primitive {
-    constructor(
-        private _gl) {}
+    constructor(gl) {
+        this._gl = gl;
+    }
+
+    private _gl: WebGLRenderingContext;
 
     public drawTriangles(numOfPoints: number):void {
         this._gl.viewport(0.0, 0.0, this._gl.canvas.width, this._gl.canvas.height);
@@ -11,16 +14,16 @@ class primitive {
         this._gl.flush();
     }
 
-    public createArrayBuffer(bufferData: number[]): number {
+    public createArrayBuffer(bufferData: number[]): WebGLBuffer {
         return this.createBuffer(new Float32Array(bufferData), this._gl.ARRAY_BUFFER);
     }
 
-    public createElementArrayBuffer(bufferData: number[]): number {
+    public createElementArrayBuffer(bufferData: number[]): WebGLBuffer {
         return this.createBuffer(new Uint16Array(bufferData), this._gl.ELEMENT_ARRAY_BUFFER);
     }
 
-    private createBuffer(bufferData, bufferType): number {
-        var buffer:number = this._gl.createBuffer();
+    private createBuffer(bufferData, bufferType): WebGLBuffer {
+        var buffer = this._gl.createBuffer();
         this._gl.bindBuffer(bufferType, buffer);
         this._gl.bufferData(bufferType,
             bufferData,

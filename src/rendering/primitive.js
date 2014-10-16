@@ -1,7 +1,7 @@
 define(["require", "exports"], function(require, exports) {
     var primitive = (function () {
-        function primitive(_gl) {
-            this._gl = _gl;
+        function primitive(gl) {
+            this._gl = gl;
         }
         primitive.prototype.drawTriangles = function (numOfPoints) {
             this._gl.viewport(0.0, 0.0, this._gl.canvas.width, this._gl.canvas.height);

@@ -1,0 +1,35 @@
+/* References */
+
+/* Imports */
+
+/* Globals*/
+
+/* Class */
+class Example {
+    /* Static */
+        /* Public vars */
+        /* Private var */
+        /* Public functions */
+        /* Private functions */
+
+    /* Instance */
+    constructor() {}
+
+    /* Public vars */
+    /* Private var */
+    /* Public functions */
+    /* Private functions */
+}
+
+/* Module */
+module Example {
+    /* Public vars */
+    /* Private var */
+    /* Public functions */
+    /* Private functions */
+
+    /* Staic code */
+}
+
+/* Exports */
+export = Example;

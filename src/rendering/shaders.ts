@@ -1,22 +1,22 @@
+///<reference path="./shaders.d.ts" />
+
 import logger = require("../util/logging/consoleLogger");
+import colorVertexShader_source = require("text!./shader_source/color.vertex");
+import colorFragmentShader_source = require("text!./shader_source/color.fragment");
 
 class shaders {
-    constructor(
-        private _gl) {}
-
-    public createProgram():number {
-        return this._gl.createProgram();
+    constructor(gl: WebGLRenderingContext) {
+        this._gl = gl;
+        this.colorVertexShader = this.compile(<string>colorVertexShader_source, this._gl.VERTEX_SHADER);
+        this.colorFragmentShader = this.compile(<string>colorFragmentShader_source, this._gl.FRAGMENT_SHADER);
     }
 
-    public compileFragementShader(source: string, program?: number): number {
-        return this.compile(source, this._gl.FRAGMENT_SHADER, program);
-    }
+    public colorVertexShader: WebGLShader;
+    public colorFragmentShader: WebGLShader;
 
-    public compileVertexShader(source: string, program?: number): number {
-        return this.compile(source, this._gl.VERTEX_SHADER, program);
-    }
+    private _gl: WebGLRenderingContext;
 
-    public compile(source: string, type: string, program?:number):number {
+    public compile(source: string, type: number): WebGLShader {
         var shader = this._gl.createShader(type);
         this._gl.shaderSource(shader, source);
         this._gl.compileShader(shader);
@@ -24,29 +24,7 @@ class shaders {
             logger.logError("Error compiling shader:"  + this._gl.getShaderInfoLog(shader));
             return null;
         }
-
-        if(!!program) {
-            this._gl.attachShader(program, shader);
-        }
         return shader;
-    }
-
-    public linkProgram(program:number): void {
-        this._gl.linkProgram(program);
-    }
-
-    public setActiveProgram(program: number): void {
-        this._gl.useProgram(program);
-    }
-
-    public enableAttrib(program:number, attribName:string): void {
-        var attrib = this._gl.getAttribLocation(program, attribName);
-        this._gl.enableVertexAttribArray(attrib);
-    }
-
-    public setFloat(program: number, attribName:string, index: number, stride:number, pointer:number) {
-        var attrib = this._gl.getAttribLocation(program, attribName);
-        this._gl.vertexAttribPointer(attrib, index, this._gl.FLOAT, false, stride, pointer);
     }
 }
 export = shaders;

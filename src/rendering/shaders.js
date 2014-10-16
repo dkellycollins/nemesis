@@ -1,21 +1,12 @@
-define(["require", "exports", "../util/logging/consoleLogger"], function(require, exports, logger) {
+///<reference path="./shaders.d.ts" />
+define(["require", "exports", "../util/logging/consoleLogger", "text!./shader_source/color.vertex", "text!./shader_source/color.fragment"], function(require, exports, logger, colorVertexShader_source, colorFragmentShader_source) {
     var shaders = (function () {
-        function shaders(_gl) {
-            this._gl = _gl;
+        function shaders(gl) {
+            this._gl = gl;
+            this.colorVertexShader = this.compile(colorVertexShader_source, this._gl.VERTEX_SHADER);
+            this.colorFragmentShader = this.compile(colorFragmentShader_source, this._gl.FRAGMENT_SHADER);
         }
-        shaders.prototype.createProgram = function () {
-            return this._gl.createProgram();
-        };
-
-        shaders.prototype.compileFragementShader = function (source, program) {
-            return this.compile(source, this._gl.FRAGMENT_SHADER, program);
-        };
-
-        shaders.prototype.compileVertexShader = function (source, program) {
-            return this.compile(source, this._gl.VERTEX_SHADER, program);
-        };
-
-        shaders.prototype.compile = function (source, type, program) {
+        shaders.prototype.compile = function (source, type) {
             var shader = this._gl.createShader(type);
             this._gl.shaderSource(shader, source);
             this._gl.compileShader(shader);
@@ -23,29 +14,7 @@ define(["require", "exports", "../util/logging/consoleLogger"], function(require
                 logger.logError("Error compiling shader:" + this._gl.getShaderInfoLog(shader));
                 return null;
             }
-
-            if (!!program) {
-                this._gl.attachShader(program, shader);
-            }
             return shader;
-        };
-
-        shaders.prototype.linkProgram = function (program) {
-            this._gl.linkProgram(program);
-        };
-
-        shaders.prototype.setActiveProgram = function (program) {
-            this._gl.useProgram(program);
-        };
-
-        shaders.prototype.enableAttrib = function (program, attribName) {
-            var attrib = this._gl.getAttribLocation(program, attribName);
-            this._gl.enableVertexAttribArray(attrib);
-        };
-
-        shaders.prototype.setFloat = function (program, attribName, index, stride, pointer) {
-            var attrib = this._gl.getAttribLocation(program, attribName);
-            this._gl.vertexAttribPointer(attrib, index, this._gl.FLOAT, false, stride, pointer);
         };
         return shaders;
     })();

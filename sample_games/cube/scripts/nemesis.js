@@ -520,24 +520,21 @@ define('util/logging/consoleLogger',["require", "exports"], function(require, ex
 });
 //# sourceMappingURL=consoleLogger.js.map
 ;
-define('rendering/shaders',["require", "exports", "../util/logging/consoleLogger"], function(require, exports, logger) {
+
+define('text!rendering/shader_source/color.vertex',[],function () { return 'attribute vec2 position; //the position of the point\r\nattribute vec3 color; //the color of the point\r\nvarying vec3 vColor;\r\nvoid main(void) { //pre-built function\r\n    gl_Position = vec4(position, 0., 1.); //0. is the z, and 1 is w\r\n    vColor=color;\r\n}';});
+
+
+define('text!rendering/shader_source/color.fragment',[],function () { return 'precision mediump float;\r\nvarying vec3 vColor;\r\nvoid main(void) {\r\n    gl_FragColor = vec4(vColor, 1.);\r\n}';});
+
+///<reference path="./shaders.d.ts" />
+define('rendering/shaders',["require", "exports", "../util/logging/consoleLogger", "text!./shader_source/color.vertex", "text!./shader_source/color.fragment"], function(require, exports, logger, colorVertexShader_source, colorFragmentShader_source) {
     var shaders = (function () {
-        function shaders(_gl) {
-            this._gl = _gl;
+        function shaders(gl) {
+            this._gl = gl;
+            this.colorVertexShader = this.compile(colorVertexShader_source, this._gl.VERTEX_SHADER);
+            this.colorFragmentShader = this.compile(colorFragmentShader_source, this._gl.FRAGMENT_SHADER);
         }
-        shaders.prototype.createProgram = function () {
-            return this._gl.createProgram();
-        };
-
-        shaders.prototype.compileFragementShader = function (source, program) {
-            return this.compile(source, this._gl.FRAGMENT_SHADER, program);
-        };
-
-        shaders.prototype.compileVertexShader = function (source, program) {
-            return this.compile(source, this._gl.VERTEX_SHADER, program);
-        };
-
-        shaders.prototype.compile = function (source, type, program) {
+        shaders.prototype.compile = function (source, type) {
             var shader = this._gl.createShader(type);
             this._gl.shaderSource(shader, source);
             this._gl.compileShader(shader);
@@ -545,29 +542,7 @@ define('rendering/shaders',["require", "exports", "../util/logging/consoleLogger
                 logger.logError("Error compiling shader:" + this._gl.getShaderInfoLog(shader));
                 return null;
             }
-
-            if (!!program) {
-                this._gl.attachShader(program, shader);
-            }
             return shader;
-        };
-
-        shaders.prototype.linkProgram = function (program) {
-            this._gl.linkProgram(program);
-        };
-
-        shaders.prototype.setActiveProgram = function (program) {
-            this._gl.useProgram(program);
-        };
-
-        shaders.prototype.enableAttrib = function (program, attribName) {
-            var attrib = this._gl.getAttribLocation(program, attribName);
-            this._gl.enableVertexAttribArray(attrib);
-        };
-
-        shaders.prototype.setFloat = function (program, attribName, index, stride, pointer) {
-            var attrib = this._gl.getAttribLocation(program, attribName);
-            this._gl.vertexAttribPointer(attrib, index, this._gl.FLOAT, false, stride, pointer);
         };
         return shaders;
     })();
@@ -576,10 +551,51 @@ define('rendering/shaders',["require", "exports", "../util/logging/consoleLogger
 });
 //# sourceMappingURL=shaders.js.map
 ;
+define('rendering/shaderProgram',["require", "exports"], function(require, exports) {
+    var shaderProgram = (function () {
+        function shaderProgram(gl) {
+            this._gl = gl;
+            this.Id = this._gl.createProgram();
+            this._attributes = {};
+        }
+        shaderProgram.prototype.addShader = function (shader) {
+            var _this = this;
+            if (shader instanceof Array) {
+                shader.forEach(function (s) {
+                    _this._gl.attachShader(_this.Id, s);
+                });
+            } else {
+                this._gl.attachShader(this.Id, shader);
+            }
+        };
+
+        shaderProgram.prototype.init = function () {
+            this._gl.linkProgram(this.Id);
+        };
+
+        shaderProgram.prototype.setActive = function () {
+            this._gl.useProgram(this.Id);
+        };
+
+        shaderProgram.prototype.enableAttrib = function (attribName) {
+            var attrib = this._gl.getAttribLocation(this.Id, attribName);
+            this._gl.enableVertexAttribArray(attrib);
+            this._attributes[attribName] = attrib;
+        };
+
+        shaderProgram.prototype.setFloat = function (attribName, index, stride, value) {
+            this._gl.vertexAttribPointer(this._attributes[attribName], index, this._gl.FLOAT, false, stride, value);
+        };
+        return shaderProgram;
+    })();
+    
+    return shaderProgram;
+});
+
 define('rendering/primitive',["require", "exports"], function(require, exports) {
     var primitive = (function () {
-        function primitive(_gl) {
-            this._gl = _gl;
+        function primitive(gl) {
+            this._gl = gl;
         }
         primitive.prototype.drawTriangles = function (numOfPoints) {
             this._gl.viewport(0.0, 0.0, this._gl.canvas.width, this._gl.canvas.height);
@@ -615,17 +631,20 @@ define('rendering/primitive',["require", "exports"], function(require, exports) 
 });
 //# sourceMappingURL=primitive.js.map
 ;
-define('rendering/rendering',["require", "exports", "_nemesis", "./shaders", "./primitive", "util/logging/consoleLogger"], function(require, exports, nemesis, Shaders, Render, Logger) {
+define('rendering/rendering',["require", "exports", "_nemesis", "./shaders", "./shaderProgram", "./primitive", "util/logging/consoleLogger"], function(require, exports, nemesis, Shaders, ShaderProgram, Render, Logger) {
     var rendering;
     (function (rendering) {
+        rendering.GL;
         try  {
             rendering.GL = nemesis.canvas().getContext('experimental-webgl', { antialias: true });
         } catch (e) {
             Logger.logError('Error getting webgl context.', e);
         }
 
-        rendering.GL;
         rendering.shaders = new Shaders(rendering.GL);
+        rendering.shaderProgram = function () {
+            return new ShaderProgram(rendering.GL);
+        };
         rendering.render = new Render(rendering.GL);
     })(rendering || (rendering = {}));
 
