@@ -396,7 +396,7 @@ define('text',['module'], function (module) {
  * Version: 0.4.0 (2014/04/10)
  * Released under the MIT license
  */
-define('json',['text'], function(text){
+define('json',['../../../../gh-pages/scripts/lib/text'], function(text){
 
     var CACHE_BUST_QUERY_PARAM = 'bust',
         CACHE_BUST_FLAG = '!bust',
@@ -496,8 +496,7 @@ define('_nemesis',["require", "exports", "json!config.json"], function(require, 
     
     return _nemesis;
 });
-//# sourceMappingURL=_nemesis.js.map
-;
+
 define('util/logging/consoleLogger',["require", "exports"], function(require, exports) {
     var consoleLogger = (function () {
         function consoleLogger() {
@@ -518,10 +517,9 @@ define('util/logging/consoleLogger',["require", "exports"], function(require, ex
     
     return consoleLogger;
 });
-//# sourceMappingURL=consoleLogger.js.map
-;
 
-define('text!rendering/shader_source/color.vertex',[],function () { return 'attribute vec2 position; //the position of the point\r\nattribute vec3 color; //the color of the point\r\nvarying vec3 vColor;\r\nvoid main(void) { //pre-built function\r\n    gl_Position = vec4(position, 0., 1.); //0. is the z, and 1 is w\r\n    vColor=color;\r\n}';});
+
+define('text!rendering/shader_source/color.vertex',[],function () { return 'uniform mat4 PMatrix;\r\nattribute vec3 position; //the position of the point\r\nattribute vec3 color; //the color of the point\r\nvarying vec3 vColor;\r\nvoid main(void) { //pre-built function\r\n    gl_Position = Pmatrix*vec4(position, 1.); //0. is the z, and 1 is w\r\n    vColor=color;\r\n}';});
 
 
 define('text!rendering/shader_source/color.fragment',[],function () { return 'precision mediump float;\r\nvarying vec3 vColor;\r\nvoid main(void) {\r\n    gl_FragColor = vec4(vColor, 1.);\r\n}';});
@@ -549,14 +547,12 @@ define('rendering/shaders',["require", "exports", "../util/logging/consoleLogger
     
     return shaders;
 });
-//# sourceMappingURL=shaders.js.map
-;
+
 define('rendering/shaderProgram',["require", "exports"], function(require, exports) {
     var shaderProgram = (function () {
         function shaderProgram(gl) {
             this._gl = gl;
             this.Id = this._gl.createProgram();
-            this._attributes = {};
         }
         shaderProgram.prototype.addShader = function (shader) {
             var _this = this;
@@ -580,11 +576,16 @@ define('rendering/shaderProgram',["require", "exports"], function(require, expor
         shaderProgram.prototype.enableAttrib = function (attribName) {
             var attrib = this._gl.getAttribLocation(this.Id, attribName);
             this._gl.enableVertexAttribArray(attrib);
-            this._attributes[attribName] = attrib;
         };
 
-        shaderProgram.prototype.setFloat = function (attribName, index, stride, value) {
-            this._gl.vertexAttribPointer(this._attributes[attribName], index, this._gl.FLOAT, false, stride, value);
+        shaderProgram.prototype.setFloatAttrib = function (attribName, index, stride, value) {
+            var attrib = this._gl.getAttribLocation(this.Id, attribName);
+            this._gl.vertexAttribPointer(attrib, index, this._gl.FLOAT, false, stride, value);
+        };
+
+        shaderProgram.prototype.setMatrix = function (uniName, value) {
+            var uniform = this._gl.getUniformLocation(this.Id, uniName);
+            this._gl.uniformMatrix4fv(uniform, false, value);
         };
         return shaderProgram;
     })();
@@ -596,10 +597,15 @@ define('rendering/primitive',["require", "exports"], function(require, exports) 
     var primitive = (function () {
         function primitive(gl) {
             this._gl = gl;
+
+            this._gl.clearColor(0.0, 0.0, 0.0, 0.0);
+            this._gl.enable(this._gl.DEPTH_TEST);
+            this._gl.depthFunc(this._gl.LEQUAL);
+            this._gl.clearDepth(1.0);
         }
         primitive.prototype.drawTriangles = function (numOfPoints) {
             this._gl.viewport(0.0, 0.0, this._gl.canvas.width, this._gl.canvas.height);
-            this._gl.clear(this._gl.COLOR_BUFFER_BIT);
+            this._gl.clear(this._gl.COLOR_BUFFER_BIT | this._gl.DEPTH_BUFFER_BIT);
             this._gl.drawElements(this._gl.TRIANGLES, numOfPoints, this._gl.UNSIGNED_SHORT, 0);
             this._gl.flush();
         };
@@ -629,8 +635,7 @@ define('rendering/primitive',["require", "exports"], function(require, exports) 
     
     return primitive;
 });
-//# sourceMappingURL=primitive.js.map
-;
+
 define('rendering/rendering',["require", "exports", "_nemesis", "./shaders", "./shaderProgram", "./primitive", "util/logging/consoleLogger"], function(require, exports, nemesis, Shaders, ShaderProgram, Render, Logger) {
     var rendering;
     (function (rendering) {
@@ -651,25 +656,56 @@ define('rendering/rendering',["require", "exports", "_nemesis", "./shaders", "./
     
     return rendering;
 });
-//# sourceMappingURL=rendering.js.map
-;
-define('nemesis',["require", "exports", "_nemesis", 'rendering/rendering'], function(require, exports, _nemesis, Rendering) {
+
+define('util/math/common',["require", "exports"], function(require, exports) {
+    var common = (function () {
+        function common() {
+        }
+        common.degToRad = function (angle) {
+            return (angle * Math.PI / 180);
+        };
+        return common;
+    })();
+    
+    return common;
+});
+
+define('util/math/matrix',["require", "exports", "./common"], function(require, exports, MathCommon) {
+    var matrix = (function () {
+        function matrix() {
+        }
+        matrix.getProjection = function (angle, ratio, zMin, zMax) {
+            var tan = Math.tan(MathCommon.degToRad(0.5 * angle));
+            var A = (zMax + zMin) / (zMax + zMin);
+            var B = (-2 * zMax * zMin) / zMax - zMin;
+
+            return [
+                (0.5 / tan), 0, 0, 0,
+                0, (0.5 * ratio / tan), 0, 0,
+                0, 0, A, -1,
+                0, 0, B, 0
+            ];
+        };
+        return matrix;
+    })();
+    
+    return matrix;
+});
+
+define('nemesis',["require", "exports", "_nemesis", "rendering/rendering", "util/math/matrix"], function(require, exports, _nemesis, Rendering, Matrix) {
     /* The nemesis module is for static varibles and static initialization. */
     var nemesis;
     (function (nemesis) {
-        nemesis.animate;
-        nemesis.rendering;
-
-        if (_nemesis.config().fullscreen) {
-            _nemesis.canvas().width = window.innerWidth;
-            _nemesis.canvas().height = window.innerHeight;
-        }
-
         nemesis.animate = _nemesis.animate;
         nemesis.rendering = Rendering;
+        nemesis.matrix = Matrix;
+
+        if (_nemesis.config().fullscreen) {
+            _nemesis.canvas().width = nemesis.rendering.GL.drawingBufferWidth;
+            _nemesis.canvas().height = nemesis.rendering.GL.drawingBufferHeight;
+        }
     })(nemesis || (nemesis = {}));
     
     return nemesis;
 });
-//# sourceMappingURL=nemesis.js.map
-;
+

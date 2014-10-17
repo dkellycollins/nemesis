@@ -3,13 +3,18 @@ import Logger = require("../util/logging/consoleLogger");
 class primitive {
     constructor(gl) {
         this._gl = gl;
+
+        this._gl.clearColor(0.0, 0.0, 0.0, 0.0);
+        this._gl.enable(this._gl.DEPTH_TEST);
+        this._gl.depthFunc(this._gl.LEQUAL);
+        this._gl.clearDepth(1.0);
     }
 
     private _gl: WebGLRenderingContext;
 
     public drawTriangles(numOfPoints: number):void {
         this._gl.viewport(0.0, 0.0, this._gl.canvas.width, this._gl.canvas.height);
-        this._gl.clear(this._gl.COLOR_BUFFER_BIT);
+        this._gl.clear(this._gl.COLOR_BUFFER_BIT | this._gl.DEPTH_BUFFER_BIT);
         this._gl.drawElements(this._gl.TRIANGLES, numOfPoints, this._gl.UNSIGNED_SHORT, 0);
         this._gl.flush();
     }

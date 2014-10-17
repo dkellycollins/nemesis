@@ -21,4 +21,3 @@ define(["require", "exports", "../util/logging/consoleLogger", "text!./shader_so
     
     return shaders;
 });
-//# sourceMappingURL=shaders.js.map

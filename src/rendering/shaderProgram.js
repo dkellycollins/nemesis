@@ -3,7 +3,6 @@ define(["require", "exports"], function(require, exports) {
         function shaderProgram(gl) {
             this._gl = gl;
             this.Id = this._gl.createProgram();
-            this._attributes = {};
         }
         shaderProgram.prototype.addShader = function (shader) {
             var _this = this;
@@ -27,11 +26,16 @@ define(["require", "exports"], function(require, exports) {
         shaderProgram.prototype.enableAttrib = function (attribName) {
             var attrib = this._gl.getAttribLocation(this.Id, attribName);
             this._gl.enableVertexAttribArray(attrib);
-            this._attributes[attribName] = attrib;
         };
 
-        shaderProgram.prototype.setFloat = function (attribName, index, stride, value) {
-            this._gl.vertexAttribPointer(this._attributes[attribName], index, this._gl.FLOAT, false, stride, value);
+        shaderProgram.prototype.setFloatAttrib = function (attribName, index, stride, value) {
+            var attrib = this._gl.getAttribLocation(this.Id, attribName);
+            this._gl.vertexAttribPointer(attrib, index, this._gl.FLOAT, false, stride, value);
+        };
+
+        shaderProgram.prototype.setMatrix = function (uniName, value) {
+            var uniform = this._gl.getUniformLocation(this.Id, uniName);
+            this._gl.uniformMatrix4fv(uniform, false, value);
         };
         return shaderProgram;
     })();

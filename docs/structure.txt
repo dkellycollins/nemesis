@@ -1,18 +1,20 @@
-/* References */
+/* References - generally only .d.ts should be referenced. */
+///<reference path="../path/to/reference.d.ts" />
 
-/* Imports */
+/* Imports - modules should share the name they were imported from. If needed _ can be used for namespacing.*/
+import libName = require("libName");
+import other_libName = require("/other/libName");
 
-/* Globals*/
+/* Globals - generally should only be constant values. */
+var CONST_VALUE:number = 0;
 
 /* Class */
 class Example {
-    /* Static */
-        /* Public vars */
-        /* Private var */
-        /* Public functions */
-        /* Private functions */
+    /* Static public vars */
+    /* Static private var */
+    /* Static public functions */
+    /* Static private functions */
 
-    /* Instance */
     constructor() {}
 
     /* Public vars */
