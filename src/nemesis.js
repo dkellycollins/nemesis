@@ -7,8 +7,8 @@ define(["require", "exports", "_nemesis", "rendering/rendering", "util/math/matr
         nemesis.matrix = Matrix;
 
         if (_nemesis.config().fullscreen) {
-            _nemesis.canvas().width = nemesis.rendering.GL.drawingBufferWidth;
-            _nemesis.canvas().height = nemesis.rendering.GL.drawingBufferHeight;
+            _nemesis.canvas().width = window.innerWidth;
+            _nemesis.canvas().height = window.innerHeight;
         }
     })(nemesis || (nemesis = {}));
     

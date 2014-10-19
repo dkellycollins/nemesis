@@ -10,8 +10,8 @@ module nemesis {
     export var matrix = Matrix;
 
     if(_nemesis.config().fullscreen) {
-        _nemesis.canvas().width = rendering.GL.drawingBufferWidth;
-        _nemesis.canvas().height = rendering.GL.drawingBufferHeight;
+        _nemesis.canvas().width = window.innerWidth;
+        _nemesis.canvas().height = window.innerHeight;
     }
 }
 export = nemesis;

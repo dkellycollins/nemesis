@@ -396,7 +396,7 @@ define('text',['module'], function (module) {
  * Version: 0.4.0 (2014/04/10)
  * Released under the MIT license
  */
-define('json',['../../../../gh-pages/scripts/lib/text'], function(text){
+define('json',['text'], function(text){
 
     var CACHE_BUST_QUERY_PARAM = 'bust',
         CACHE_BUST_FLAG = '!bust',
@@ -519,7 +519,7 @@ define('util/logging/consoleLogger',["require", "exports"], function(require, ex
 });
 
 
-define('text!rendering/shader_source/color.vertex',[],function () { return 'uniform mat4 PMatrix;\r\nattribute vec3 position; //the position of the point\r\nattribute vec3 color; //the color of the point\r\nvarying vec3 vColor;\r\nvoid main(void) { //pre-built function\r\n    gl_Position = Pmatrix*vec4(position, 1.); //0. is the z, and 1 is w\r\n    vColor=color;\r\n}';});
+define('text!rendering/shader_source/color.vertex',[],function () { return 'attribute vec2 position; //the position of the point\r\nattribute vec3 color; //the color of the point\r\nvarying vec3 vColor;\r\nvoid main(void) { //pre-built function\r\n    gl_Position = vec4(position, 0.,1.); //0. is the z, and 1 is w\r\n    vColor=color;\r\n}';});
 
 
 define('text!rendering/shader_source/color.fragment',[],function () { return 'precision mediump float;\r\nvarying vec3 vColor;\r\nvoid main(void) {\r\n    gl_FragColor = vec4(vColor, 1.);\r\n}';});
@@ -603,31 +603,13 @@ define('rendering/primitive',["require", "exports"], function(require, exports) 
             this._gl.depthFunc(this._gl.LEQUAL);
             this._gl.clearDepth(1.0);
         }
-        primitive.prototype.drawTriangles = function (numOfPoints) {
+        primitive.prototype.begin = function () {
             this._gl.viewport(0.0, 0.0, this._gl.canvas.width, this._gl.canvas.height);
             this._gl.clear(this._gl.COLOR_BUFFER_BIT | this._gl.DEPTH_BUFFER_BIT);
-            this._gl.drawElements(this._gl.TRIANGLES, numOfPoints, this._gl.UNSIGNED_SHORT, 0);
+        };
+
+        primitive.prototype.end = function () {
             this._gl.flush();
-        };
-
-        primitive.prototype.createArrayBuffer = function (bufferData) {
-            return this.createBuffer(new Float32Array(bufferData), this._gl.ARRAY_BUFFER);
-        };
-
-        primitive.prototype.createElementArrayBuffer = function (bufferData) {
-            return this.createBuffer(new Uint16Array(bufferData), this._gl.ELEMENT_ARRAY_BUFFER);
-        };
-
-        primitive.prototype.createBuffer = function (bufferData, bufferType) {
-            var buffer = this._gl.createBuffer();
-            this._gl.bindBuffer(bufferType, buffer);
-            this._gl.bufferData(bufferType, bufferData, this._gl.STATIC_DRAW);
-
-            return buffer;
-        };
-
-        primitive.prototype.deleteBuffer = function (buffer) {
-            this._gl.deleteBuffer(buffer);
         };
         return primitive;
     })();
@@ -636,7 +618,59 @@ define('rendering/primitive',["require", "exports"], function(require, exports) 
     return primitive;
 });
 
-define('rendering/rendering',["require", "exports", "_nemesis", "./shaders", "./shaderProgram", "./primitive", "util/logging/consoleLogger"], function(require, exports, nemesis, Shaders, ShaderProgram, Render, Logger) {
+define('rendering/renderObject',["require", "exports"], function(require, exports) {
+    var renderObject = (function () {
+        function renderObject(gl, vertexes, faces, triangles) {
+            this._gl = gl;
+            this._triangles = triangles;
+
+            this._vertexBuffer = this._createArrayBuffer(vertexes);
+            this._faceBuffer = this._createElementArrayBuffer(faces);
+        }
+        renderObject.prototype.setShader = function (shader) {
+            this._shaderProgram = shader;
+        };
+
+        renderObject.prototype.getShader = function () {
+            return this._shaderProgram;
+        };
+
+        renderObject.prototype.render = function () {
+            this._gl.useProgram(this._shaderProgram.Id);
+            this._gl.drawElements(this._gl.TRIANGLES, this._triangles, this._gl.UNSIGNED_SHORT, 0);
+        };
+
+        renderObject.prototype.clone = function () {
+            return null;
+        };
+
+        renderObject.prototype.dispose = function () {
+            this._gl.deleteBuffer(this._vertexBuffer);
+            this._gl.deleteBuffer(this._faceBuffer);
+        };
+
+        renderObject.prototype._createArrayBuffer = function (bufferData) {
+            return this._createBuffer(new Float32Array(bufferData), this._gl.ARRAY_BUFFER);
+        };
+
+        renderObject.prototype._createElementArrayBuffer = function (bufferData) {
+            return this._createBuffer(new Uint16Array(bufferData), this._gl.ELEMENT_ARRAY_BUFFER);
+        };
+
+        renderObject.prototype._createBuffer = function (bufferData, bufferType) {
+            var buffer = this._gl.createBuffer();
+            this._gl.bindBuffer(bufferType, buffer);
+            this._gl.bufferData(bufferType, bufferData, this._gl.STATIC_DRAW);
+
+            return buffer;
+        };
+        return renderObject;
+    })();
+    
+    return renderObject;
+});
+
+define('rendering/rendering',["require", "exports", "_nemesis", "./shaders", "./shaderProgram", "./primitive", "util/logging/consoleLogger", "./renderObject"], function(require, exports, nemesis, Shaders, ShaderProgram, Render, Logger, RenderObject) {
     var rendering;
     (function (rendering) {
         rendering.GL;
@@ -651,8 +685,10 @@ define('rendering/rendering',["require", "exports", "_nemesis", "./shaders", "./
             return new ShaderProgram(rendering.GL);
         };
         rendering.render = new Render(rendering.GL);
+        rendering.renderObject = function (vertexes, faces, triangles) {
+            return new RenderObject(rendering.GL, vertexes, faces, triangles);
+        };
     })(rendering || (rendering = {}));
-
     
     return rendering;
 });
@@ -701,8 +737,8 @@ define('nemesis',["require", "exports", "_nemesis", "rendering/rendering", "util
         nemesis.matrix = Matrix;
 
         if (_nemesis.config().fullscreen) {
-            _nemesis.canvas().width = nemesis.rendering.GL.drawingBufferWidth;
-            _nemesis.canvas().height = nemesis.rendering.GL.drawingBufferHeight;
+            _nemesis.canvas().width = window.innerWidth;
+            _nemesis.canvas().height = window.innerHeight;
         }
     })(nemesis || (nemesis = {}));
     

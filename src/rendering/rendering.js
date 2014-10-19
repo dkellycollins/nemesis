@@ -1,4 +1,4 @@
-define(["require", "exports", "_nemesis", "./shaders", "./shaderProgram", "./primitive", "util/logging/consoleLogger"], function(require, exports, nemesis, Shaders, ShaderProgram, Render, Logger) {
+define(["require", "exports", "_nemesis", "./shaders", "./shaderProgram", "./primitive", "util/logging/consoleLogger", "./renderObject"], function(require, exports, nemesis, Shaders, ShaderProgram, Render, Logger, RenderObject) {
     var rendering;
     (function (rendering) {
         rendering.GL;
@@ -13,8 +13,10 @@ define(["require", "exports", "_nemesis", "./shaders", "./shaderProgram", "./pri
             return new ShaderProgram(rendering.GL);
         };
         rendering.render = new Render(rendering.GL);
+        rendering.renderObject = function (vertexes, faces, triangles) {
+            return new RenderObject(rendering.GL, vertexes, faces, triangles);
+        };
     })(rendering || (rendering = {}));
-
     
     return rendering;
 });

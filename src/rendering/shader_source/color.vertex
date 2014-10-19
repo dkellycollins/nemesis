@@ -1,8 +1,7 @@
-uniform mat4 PMatrix;
-attribute vec3 position; //the position of the point
+attribute vec2 position; //the position of the point
 attribute vec3 color; //the color of the point
 varying vec3 vColor;
 void main(void) { //pre-built function
-    gl_Position = Pmatrix*vec4(position, 1.); //0. is the z, and 1 is w
+    gl_Position = vec4(position, 1.); //0. is the z, and 1 is w
     vColor=color;
 }

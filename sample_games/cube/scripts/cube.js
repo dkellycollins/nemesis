@@ -15,6 +15,7 @@ require(['nemesis'],
             1,0,0
         ];
         var faces = [0,1,2];
+        var triangle = new nemesis.rendering.renderObject(vertexes, faces, 3);
 
         //Setup shader program
         var shaderProgram = new nemesis.rendering.shaderProgram();
@@ -23,19 +24,14 @@ require(['nemesis'],
         shaderProgram.init();
         shaderProgram.enableAttrib("color");
         shaderProgram.enableAttrib("position");
-        shaderProgram.setActive();
-
-        //Setup buffers
-        nemesis.rendering.render.createArrayBuffer(vertexes);
-        nemesis.rendering.render.createElementArrayBuffer(faces);
-
-        var PROJMATRIX= nemesis.matrix.getProjection(40, CANVAS.width/CANVAS.height, 1, 100);
+        triangle.setShader(shaderProgram);
 
         //Draw!
         nemesis.animate(function() {
-            shaderProgram.
-            shaderProgram.setFloat("position", 3, 4*(3+3),0);
-            shaderProgram.setFloat("color", 3, 4*(3+3),3*4);
-            nemesis.rendering.render.drawTriangles(3);
+            nemesis.rendering.render.begin();
+            shaderProgram.setFloatAttrib("position", 3, 4*(3+3),0);
+            shaderProgram.setFloatAttrib("color", 3, 4*(3+3),3*4);
+            triangle.render();
+            nemesis.rendering.render.end();
         });
 });
