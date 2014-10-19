@@ -1,8 +1,10 @@
-import vector3 = require("util/math/vector3");
+///<reference path="../util/gl-matrix.d.ts" />
+
+import vec3 = require("gl_matrix/vec3");
 
 class camera {
-    public orientation: vector3 = new vector3(Math.PI, 0, 0);
-    public position:vector3 = vector3.zero();
+    public orientation: vec3 = vec3.fromValues(Math.PI, 0, 0);
+    public position:vec3 = vec3.create();
 
     public
 }
