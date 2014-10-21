@@ -1,12 +1,11 @@
 ///<reference path="../../lib/requirejs/require.d.ts" />
-require.config({
-    paths: {
-        nemesis: "../../src",
-        text: "../../node_modules/text/text",
-        json: "../../lib/requirejs-plugins/json"
-    }
-});
-
+/*require.config({
+paths: {
+nemesis: "../../src",
+text: "../../node_modules/text/text",
+json: "../../lib/requirejs-plugins/json"
+}
+});*/
 require([
     'nemesis/_nemesis',
     'nemesis/rendering/camera',

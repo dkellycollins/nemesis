@@ -1,6 +1,8 @@
-define(["require", "exports", "../_nemesis", "../util/logging/consoleLogger", "../util/debug/webgl"], function(require, exports, nemesis, logger, debug) {
+define(["require", "exports", "../nemesisCanvas", "../nemesisConfig", "../util/logging/consoleLogger", "../util/debug/webgl"], function(require, exports, canvas, config, logger, debug) {
     function throwOnGLError(err, funcName, args) {
-        throw debug.glEnumToString(err) + " was caused by call to: " + funcName;
+        if (config.throwOnGLError) {
+            throw debug.glEnumToString(err) + " was caused by call to: " + funcName;
+        }
     }
 
     function logGLCall(functionName, args) {
@@ -16,13 +18,17 @@ define(["require", "exports", "../_nemesis", "../util/logging/consoleLogger", ".
     }
 
     function logAndValidate(functionName, args) {
-        //logGLCall(functionName, args);
-        validateNoneOfTheArgsAreUndefined(functionName, args);
+        if (config.logGLCalls) {
+            logGLCall(functionName, args);
+        }
+        if (config.validateGLArgs) {
+            validateNoneOfTheArgsAreUndefined(functionName, args);
+        }
     }
 
     var GL;
     try  {
-        GL = nemesis.canvas().getContext('experimental-webgl', { antialias: true });
+        GL = canvas.getContext('experimental-webgl', { antialias: true });
         GL = debug.makeDebugContext(GL, throwOnGLError, logAndValidate);
     } catch (e) {
         logger.logError('Error getting webgl context.', e);

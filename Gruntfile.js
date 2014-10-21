@@ -21,7 +21,7 @@ module.exports = function(grunt) {
                         text: "../node_modules/text/text",
                         json: "../lib/requirejs-plugins/json",
                         config: 'empty:',
-                        gl_matrix: "../node_modules/gl-matrix/src/gl-matrix"
+                        lodash: "../node_modules/lodash"
                     },
                     out: 'build/<%= pkg.name %>.js',
                     optimize: 'none'

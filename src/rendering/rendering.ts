@@ -1,4 +1,3 @@
-import nemesis = require("../_nemesis");
 import gl = require("./glContext");
 import Shaders = require("./shaders");
 import ShaderProgram = require("./shaderProgram");

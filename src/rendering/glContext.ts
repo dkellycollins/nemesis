@@ -1,9 +1,12 @@
-import nemesis = require("../_nemesis");
+import canvas = require("../nemesisCanvas");
+import config = require("../nemesisConfig");
 import logger = require("../util/logging/consoleLogger");
 import debug = require("../util/debug/webgl");
 
 function throwOnGLError(err, funcName, args) {
-    throw debug.glEnumToString(err) + " was caused by call to: " + funcName;
+    if(config.throwOnGLError) {
+        throw debug.glEnumToString(err) + " was caused by call to: " + funcName;
+    }
 }
 
 function logGLCall(functionName, args) {
@@ -21,13 +24,17 @@ function validateNoneOfTheArgsAreUndefined(functionName, args) {
 }
 
 function logAndValidate(functionName, args) {
-    //logGLCall(functionName, args);
-    validateNoneOfTheArgsAreUndefined(functionName, args);
+    if(config.logGLCalls) {
+        logGLCall(functionName, args);
+    }
+    if(config.validateGLArgs) {
+        validateNoneOfTheArgsAreUndefined(functionName, args);
+    }
 }
 
 var GL: WebGLRenderingContext;
 try {
-    GL = nemesis.canvas().getContext('experimental-webgl', {antialias:true});
+    GL = canvas.getContext('experimental-webgl', {antialias:true});
     GL = debug.makeDebugContext(GL, throwOnGLError, logAndValidate);
 } catch(e) {
     logger.logError('Error getting webgl context.', e);

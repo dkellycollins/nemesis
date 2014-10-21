@@ -1,15 +1,24 @@
-define(["require", "exports", "./_nemesis", "./rendering/rendering", "./util/util"], function(require, exports, _nemesis, Rendering, Util) {
+define(["require", "exports", "./rendering/rendering", "./util/util"], function(require, exports, Rendering, Util) {
     /* The nemesis module is for static varibles and static initialization. */
     var nemesis;
     (function (nemesis) {
-        nemesis.animate = _nemesis.animate;
         nemesis.rendering = Rendering;
         nemesis.util = Util;
 
-        if (_nemesis.config().fullscreen) {
-            _nemesis.canvas().width = window.innerWidth;
-            _nemesis.canvas().height = window.innerHeight;
+        var _animate;
+        ;
+        function animate(animateFunc, args) {
+            _animate = function (time, args) {
+                animateFunc(time, args);
+                window.requestAnimationFrame(function (t) {
+                    _animate(t, args);
+                });
+            };
+            window.requestAnimationFrame(function (t) {
+                _animate(t, args);
+            });
         }
+        nemesis.animate = animate;
     })(nemesis || (nemesis = {}));
     
     return nemesis;
