@@ -23,6 +23,10 @@ define(["require", "exports", "./glMatrix"], function(require, exports, glMatrix
     */
     var vec3;
     (function (vec3) {
+        vec3.UNIT_X = vec3.fromValues(1, 0, 0);
+        vec3.UNIT_Y = vec3.fromValues(0, 1, 0);
+        vec3.UNIT_Z = vec3.fromValues(0, 0, 1);
+
         /**
         * Creates a new, empty vec3
         *

@@ -4,6 +4,7 @@ import ShaderProgram = require("./shaderProgram");
 import Render = require("./primitive");
 import Logger = require("util/logging/consoleLogger");
 import RenderObject = require("./renderObject");
+import Camera = require("./camera");
 
 module rendering {
     export var GL: WebGLRenderingContext;
@@ -17,5 +18,6 @@ module rendering {
     export var shaderProgram = () => new ShaderProgram(rendering.GL);
     export var render = new Render(rendering.GL);
     export var renderObject = (vertexes:number[], faces:number[], triangles:number) => new RenderObject(rendering.GL, vertexes, faces, triangles);
+    export var camera = Camera;
 }
 export = rendering;

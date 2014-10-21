@@ -27,6 +27,10 @@ import glMatrix = require("./glMatrix")
  * @name vec3
  */
 module vec3 {
+    export var UNIT_X = vec3.fromValues(1, 0, 0);
+    export var UNIT_Y = vec3.fromValues(0, 1, 0);
+    export var UNIT_Z = vec3.fromValues(0, 0, 1);
+
 
     /**
      * Creates a new, empty vec3

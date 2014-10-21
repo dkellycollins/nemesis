@@ -11,11 +11,23 @@ var CONST_VALUE:number = 0;
 /* Class */
 class Example {
     /* Static public vars */
-    /* Static private var */
-    /* Static public functions */
-    /* Static private functions */
+    public static staticVar: number;
 
-    constructor() {}
+    /* Static private var */
+    public static _privateStaticVar;
+
+    /* Static public functions */
+    public static staticFunc():void {
+
+    }
+
+    /* Static private functions */
+    private static _privateStaticFunc(a:number, s:string):number {
+
+    }
+
+    constructor() {
+    }
 
     /* Public vars */
     /* Private var */
@@ -23,12 +35,10 @@ class Example {
     /* Private functions */
 }
 
-/* Module */
+/* Module - all static code.*/
 module Example {
     /* Public vars */
-    /* Private var */
     /* Public functions */
-    /* Private functions */
 
     /* Staic code */
 }
