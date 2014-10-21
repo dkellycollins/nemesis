@@ -1,15 +1,17 @@
 ///<reference path="../../lib/requirejs/require.d.ts" />
 
-/*require.config({
+require.config({
     paths: {
         nemesis: "../../src",
         text: "../../node_modules/text/text",
-        json: "../../lib/requirejs-plugins/json"
+        json: "../../bower_components/requirejs-plugins/json",
+        image: "../../bower_components/requirejs-plugins/image"
     }
-});*/
+});
 
 require([
-        'nemesis/_nemesis',
+        'nemesis/nemesis',
+        'nemesis/nemesisCanvas',
         'nemesis/rendering/camera',
         'nemesis/rendering/primitive',
         'nemesis/rendering/renderObject',
@@ -18,9 +20,9 @@ require([
         'nemesis/util/logging/consoleLogger',
         'nemesis/util/math/mat4',
         'nemesis/util/math/vec3'],
-    (nemesis, camera, render, renderObject, shaders, shaderProgram, logger, mat4, vec3) => {
-        nemesis.canvas().height = window.innerHeight;
-        nemesis.canvas().width = window.innerWidth;
+    (canvas, camera, render, renderObject, shaders, shaderProgram, logger, mat4, vec3) => {
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
 
         /*========================= SHADERS ========================= */
         var cubeShader = new shaderProgram();
@@ -89,7 +91,7 @@ require([
         /*========================= MATRIX ========================= */
         var args = {
             old_time: 0,
-            projMatrix: mat4.perspective(mat4.create(), 40, nemesis.canvas().width / nemesis.canvas().height, 1, 100),
+            projMatrix: mat4.perspective(mat4.create(), 40, canvas.width / canvas.height, 1, 100),
             moveMatrix: mat4.create(),
             viewMatrix: mat4.create()
         };

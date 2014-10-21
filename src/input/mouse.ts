@@ -1,4 +1,4 @@
-import canvas = require("../nemesisCanvas");
+import canvas = require("../canvas");
 
 class mouse {
     constructor() {

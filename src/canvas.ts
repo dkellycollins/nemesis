@@ -1,5 +1,5 @@
 import logger = require("./util/logging/consoleLogger");
-import config = require("./nemesisConfig");
+import config = require("./config");
 
 var canvas;
 if(config.canvasId) {

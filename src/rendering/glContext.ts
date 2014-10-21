@@ -1,5 +1,5 @@
-import canvas = require("../nemesisCanvas");
-import config = require("../nemesisConfig");
+import canvas = require("../canvas");
+import config = require("../config");
 import logger = require("../util/logging/consoleLogger");
 import debug = require("../util/debug/webgl");
 

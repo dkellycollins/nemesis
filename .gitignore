@@ -1,13 +1,9 @@
 .idea
+
 node_modules
+
+bower_components
 build
 *.js.map
-<<<<<<< .mine
-node_modules
-
-build
-=======
 
 
-
->>>>>>> .theirs

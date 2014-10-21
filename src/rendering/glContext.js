@@ -1,4 +1,4 @@
-define(["require", "exports", "../nemesisCanvas", "../nemesisConfig", "../util/logging/consoleLogger", "../util/debug/webgl"], function(require, exports, canvas, config, logger, debug) {
+define(["require", "exports", "../canvas", "../config", "../util/logging/consoleLogger", "../util/debug/webgl"], function(require, exports, canvas, config, logger, debug) {
     function throwOnGLError(err, funcName, args) {
         if (config.throwOnGLError) {
             throw debug.glEnumToString(err) + " was caused by call to: " + funcName;

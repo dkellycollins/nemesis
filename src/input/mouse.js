@@ -1,4 +1,4 @@
-define(["require", "exports", "../nemesisCanvas"], function(require, exports, canvas) {
+define(["require", "exports", "../canvas"], function(require, exports, canvas) {
     var mouse = (function () {
         function mouse() {
             canvas.addEventListener("mousedown", this._mouseDown, false);

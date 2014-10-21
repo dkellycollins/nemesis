@@ -1,10 +1,11 @@
-define(["require", "exports", "./rendering/rendering", "./util/util"], function(require, exports, Rendering, Util) {
+define(["require", "exports"], function(require, exports) {
+    /*import Rendering = require("./rendering/rendering");
+    import Util = require("./util/util");*/
     /* The nemesis module is for static varibles and static initialization. */
     var nemesis;
     (function (nemesis) {
-        nemesis.rendering = Rendering;
-        nemesis.util = Util;
-
+        //export var rendering = Rendering;
+        //export var util = Util;
         var _animate;
         ;
         function animate(animateFunc, args) {

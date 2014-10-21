@@ -19,7 +19,8 @@ module.exports = function(grunt) {
                     name: "<%= pkg.name %>",
                     paths: {
                         text: "../node_modules/text/text",
-                        json: "../lib/requirejs-plugins/json",
+                        json: "../bower_components/requirejs-plugins/src/json",
+                        image: "../bower_components/requirejs-plugins/src/image",
                         config: 'empty:',
                         lodash: "../node_modules/lodash"
                     },

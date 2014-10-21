@@ -1,4 +1,4 @@
-define(["require", "exports", "./nemesisConfig"], function(require, exports, config) {
+define(["require", "exports", "./config"], function(require, exports, config) {
     var canvas;
     if (config.canvasId) {
         canvas = document.getElementById(config.canvasId);
