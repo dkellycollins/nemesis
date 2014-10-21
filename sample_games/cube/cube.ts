@@ -22,6 +22,15 @@ require([
         nemesis.canvas().height = window.innerHeight;
         nemesis.canvas().width = window.innerWidth;
 
+        /*========================= SHADERS ========================= */
+        var cubeShader = new shaderProgram();
+        cubeShader.addShader(shaders.colorVertexShader);
+        cubeShader.addShader(shaders.colorFragmentShader);
+        cubeShader.init();
+        cubeShader.enableAttrib("color");
+        cubeShader.enableAttrib("position");
+
+        /*========================= THE CUBE ========================= */
         var vertexes = [
             -1, -1, -1, 1, 1, 0,
             1, -1, -1, 1, 1, 0,
@@ -75,15 +84,9 @@ require([
 
         ];
         var cube = new renderObject(vertexes, faces, 6 * 2 * 3);
-
-        var cubeShader = new shaderProgram();
-        cubeShader.addShader(shaders.colorVertexShader);
-        cubeShader.addShader(shaders.colorFragmentShader);
-        cubeShader.init();
-        cubeShader.enableAttrib("color");
-        cubeShader.enableAttrib("position");
         cube.setShader(cubeShader);
 
+        /*========================= MATRIX ========================= */
         var args = {
             old_time: 0,
             projMatrix: mat4.perspective(mat4.create(), 40, nemesis.canvas().width / nemesis.canvas().height, 1, 100),
@@ -92,6 +95,7 @@ require([
         };
         mat4.translate(args.moveMatrix, args.moveMatrix, vec3.fromValues(0, 0, -6));
 
+        /*========================= DRAWING ========================= */
         render.init();
         nemesis.animate((time, a) => {
             var dt = time - a.old_time;
@@ -101,12 +105,13 @@ require([
             mat4.rotateY(a.moveMatrix, a.moveMatrix, dt * 0.002);
             mat4.rotateX(a.moveMatrix, a.moveMatrix, dt * 0.003);
 
-            logger.log(mat4.str(a.moveMatrix));
+            //logger.log(mat4.str(a.moveMatrix));
 
             render.begin();
-            cubeShader.setMatrix("PMatrix", a.projMatrix);
-            cubeShader.setMatrix("VMatrix", a.viewMatrix);
-            cubeShader.setMatrix("MMatrix", a.moveMatrix);
+            cubeShader.setActive();
+            cubeShader.setMatrix("Pmatrix", a.projMatrix);
+            cubeShader.setMatrix("Vmatrix", a.viewMatrix);
+            cubeShader.setMatrix("Mmatrix", a.moveMatrix);
             cubeShader.setFloatAttrib("position", 3, 4 * (3 + 3), 0);
             cubeShader.setFloatAttrib("color", 3, 4 * (3 + 3), 3 * 4);
             cube.render();

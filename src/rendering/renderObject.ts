@@ -21,7 +21,7 @@ class renderObject {
     }
 
     public render():void {
-        gl.useProgram(this._shaderProgram.Id);
+        //gl.useProgram(this._shaderProgram.Id);
         gl.drawElements(gl.TRIANGLES, this._triangles, gl.UNSIGNED_SHORT, 0);
     }
 
