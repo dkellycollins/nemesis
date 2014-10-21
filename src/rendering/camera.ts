@@ -1,5 +1,5 @@
-import vec3 = require("util/math/vec3");
-import mat4 = require("util/math/mat4");
+import vec3 = require("../util/math/vec3");
+import mat4 = require("../util/math/mat4");
 
 class camera {
     constructor() {

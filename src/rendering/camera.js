@@ -1,4 +1,4 @@
-define(["require", "exports", "util/math/vec3", "util/math/mat4"], function(require, exports, vec3, mat4) {
+define(["require", "exports", "../util/math/vec3", "../util/math/mat4"], function(require, exports, vec3, mat4) {
     var camera = (function () {
         function camera() {
             this.orientation = vec3.fromValues(Math.PI, 0, 0);

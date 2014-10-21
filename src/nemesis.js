@@ -1,10 +1,10 @@
-define(["require", "exports", "_nemesis", "rendering/rendering", "util/math/matrix"], function(require, exports, _nemesis, Rendering, Matrix) {
+define(["require", "exports", "./_nemesis", "./rendering/rendering", "./util/util"], function(require, exports, _nemesis, Rendering, Util) {
     /* The nemesis module is for static varibles and static initialization. */
     var nemesis;
     (function (nemesis) {
         nemesis.animate = _nemesis.animate;
         nemesis.rendering = Rendering;
-        nemesis.matrix = Matrix;
+        nemesis.util = Util;
 
         if (_nemesis.config().fullscreen) {
             _nemesis.canvas().width = window.innerWidth;

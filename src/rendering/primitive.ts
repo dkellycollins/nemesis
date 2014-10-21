@@ -1,25 +1,21 @@
+import gl = require("./glContext");
 import Logger = require("../util/logging/consoleLogger");
 
-class primitive {
-    constructor(gl) {
-        this._gl = gl;
-
-        this._gl.clearColor(0.0, 0.0, 0.0, 0.0);
-        this._gl.enable(this._gl.DEPTH_TEST);
-        this._gl.depthFunc(this._gl.LEQUAL);
-        this._gl.clearDepth(1.0);
+module primitive {
+    export function init() {
+        gl.clearColor(0.0, 0.0, 0.0, 0.0);
+        gl.enable(this._gl.DEPTH_TEST);
+        gl.depthFunc(this._gl.LEQUAL);
+        gl.clearDepth(1.0);
     }
 
-    private _gl: WebGLRenderingContext;
-
-    public begin(): void {
-        this._gl.viewport(0.0, 0.0, this._gl.canvas.width, this._gl.canvas.height);
-        this._gl.clear(this._gl.COLOR_BUFFER_BIT | this._gl.DEPTH_BUFFER_BIT);
+    export function begin(): void {
+        gl.viewport(0.0, 0.0, gl.canvas.width, gl.canvas.height);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
 
-    public end(): void {
-        this._gl.flush();
+    export function end(): void {
+        gl.flush();
     }
 }
-
 export = primitive;
