@@ -15,9 +15,10 @@ require([
         'nemesis/rendering/renderObject',
         'nemesis/rendering/shaders',
         'nemesis/rendering/shaderProgram',
+        'nemesis/util/logging/consoleLogger',
         'nemesis/util/math/mat4',
         'nemesis/util/math/vec3'],
-    (nemesis, camera, render, renderObject, shaders, shaderProgram, mat4, vec3) => {
+    (nemesis, camera, render, renderObject, shaders, shaderProgram, logger, mat4, vec3) => {
         nemesis.canvas().height = window.innerHeight;
         nemesis.canvas().width = window.innerWidth;
 
@@ -83,9 +84,6 @@ require([
         cubeShader.enableAttrib("position");
         cube.setShader(cubeShader);
 
-        /*var cubeCamera = new camera();
-         cube.setCamera(cubeCamera);*/
-
         var args = {
             old_time: 0,
             projMatrix: mat4.perspective(mat4.create(), 40, nemesis.canvas().width / nemesis.canvas().height, 1, 100),
@@ -94,6 +92,7 @@ require([
         };
         mat4.translate(args.moveMatrix, args.moveMatrix, vec3.fromValues(0, 0, -6));
 
+        render.init();
         nemesis.animate((time, a) => {
             var dt = time - a.old_time;
             a.old_time = time;
@@ -101,6 +100,8 @@ require([
             mat4.rotateZ(a.moveMatrix, a.moveMatrix, dt * 0.001);
             mat4.rotateY(a.moveMatrix, a.moveMatrix, dt * 0.002);
             mat4.rotateX(a.moveMatrix, a.moveMatrix, dt * 0.003);
+
+            logger.log(mat4.str(a.moveMatrix));
 
             render.begin();
             cubeShader.setMatrix("PMatrix", a.projMatrix);

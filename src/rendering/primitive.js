@@ -3,8 +3,8 @@ define(["require", "exports", "./glContext"], function(require, exports, gl) {
     (function (primitive) {
         function init() {
             gl.clearColor(0.0, 0.0, 0.0, 0.0);
-            gl.enable(this._gl.DEPTH_TEST);
-            gl.depthFunc(this._gl.LEQUAL);
+            gl.enable(gl.DEPTH_TEST);
+            gl.depthFunc(gl.LEQUAL);
             gl.clearDepth(1.0);
         }
         primitive.init = init;

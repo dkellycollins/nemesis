@@ -1,6 +1,6 @@
 define(["require", "exports", "./glContext"], function(require, exports, gl) {
     var renderObject = (function () {
-        function renderObject(gl, vertexes, faces, triangles) {
+        function renderObject(vertexes, faces, triangles) {
             this._triangles = triangles;
             this._vertexBuffer = this._createArrayBuffer(vertexes);
             this._faceBuffer = this._createElementArrayBuffer(faces);

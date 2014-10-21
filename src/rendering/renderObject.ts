@@ -2,7 +2,7 @@ import gl = require("./glContext");
 import shaderProgram = require("./shaderProgram");
 
 class renderObject {
-    constructor(gl:WebGLRenderingContext, vertexes: number[], faces: number[], triangles: number) {
+    constructor(vertexes: number[], faces: number[], triangles: number) {
         this._triangles = triangles;
         this._vertexBuffer = this._createArrayBuffer(vertexes);
         this._faceBuffer = this._createElementArrayBuffer(faces);

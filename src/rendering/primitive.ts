@@ -4,8 +4,8 @@ import Logger = require("../util/logging/consoleLogger");
 module primitive {
     export function init() {
         gl.clearColor(0.0, 0.0, 0.0, 0.0);
-        gl.enable(this._gl.DEPTH_TEST);
-        gl.depthFunc(this._gl.LEQUAL);
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LEQUAL);
         gl.clearDepth(1.0);
     }
 
