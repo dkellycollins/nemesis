@@ -24,13 +24,13 @@ class _nemesis {
         return this._canvas;
     }
 
-    public static _animate: (args:any) => void;
-    public static animate(animateFunc: (args:any) => void, args?: any) {
-        this._animate = (args: any) => {
-            animateFunc(args);
-            window.requestAnimationFrame(() => {this._animate(args)});
-        }; //TODO will this cause a memory leak?
-        this._animate(args);
+    public static _animate: (time: any, args:any) => void;
+    public static animate(animateFunc: (time: any, args:any) => void, args?: any) {
+        this._animate = (time, args: any) => {
+            animateFunc(time, args);
+            window.requestAnimationFrame((t) => {this._animate(t, args)});
+        };
+        window.requestAnimationFrame((t) => {this._animate(t, args)});
     }
 }
 export = _nemesis;

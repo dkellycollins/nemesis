@@ -1,43 +1,43 @@
+import gl = require("./glContext");
+
 class shaderProgram {
-    constructor(gl: WebGLRenderingContext) {
-        this._gl = gl;
-        this.Id = this._gl.createProgram();
-        this._attributes = {};
+    constructor() {
+        this.Id = gl.createProgram();
     }
 
     public Id;
 
-    private _gl: WebGLRenderingContext;
-    private _attributes: {
-        [name: string]: number
-    };
-
     public addShader(shader:WebGLShader[]):void {
         if(shader instanceof Array) {
             shader.forEach(s => {
-               this._gl.attachShader(this.Id, s);
+               gl.attachShader(this.Id, s);
             });
         } else {
-            this._gl.attachShader(this.Id, shader);
+            gl.attachShader(this.Id, shader);
         }
     }
 
     public init():void {
-        this._gl.linkProgram(this.Id);
+        gl.linkProgram(this.Id);
     }
 
     public setActive() {
-        this._gl.useProgram(this.Id);
+        gl.useProgram(this.Id);
     }
 
     public enableAttrib(attribName: string) {
-        var attrib = this._gl.getAttribLocation(this.Id, attribName);
-        this._gl.enableVertexAttribArray(attrib);
-        this._attributes[attribName] = attrib;
+        var attrib = gl.getAttribLocation(this.Id, attribName);
+        gl.enableVertexAttribArray(attrib);
     }
 
-    public setFloat(attribName:string, index:number, stride: number, value: number) {
-        this._gl.vertexAttribPointer(this._attributes[attribName], index, this._gl.FLOAT, false, stride, value);
+    public setFloatAttrib(attribName:string, index: number, stride:number, value: number) {
+        var attrib = gl.getAttribLocation(this.Id, attribName);
+        gl.vertexAttribPointer(attrib, index, gl.FLOAT, false, stride, value);
+    }
+
+    public setMatrix(uniName: string, value: number[]) {
+        var uniform = gl.getUniformLocation(this.Id, uniName);
+        gl.uniformMatrix4fv(uniform, false, value);
     }
 }
 export = shaderProgram;

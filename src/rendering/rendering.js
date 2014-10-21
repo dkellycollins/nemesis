@@ -1,20 +1,13 @@
-define(["require", "exports", "_nemesis", "./shaders", "./shaderProgram", "./primitive", "util/logging/consoleLogger"], function(require, exports, nemesis, Shaders, ShaderProgram, Render, Logger) {
+define(["require", "exports", "./glContext", "./shaders", "./shaderProgram", "./primitive", "./renderObject", "./camera"], function(require, exports, gl, Shaders, ShaderProgram, Render, RenderObject, Camera) {
     var rendering;
     (function (rendering) {
-        rendering.GL;
-        try  {
-            rendering.GL = nemesis.canvas().getContext('experimental-webgl', { antialias: true });
-        } catch (e) {
-            Logger.logError('Error getting webgl context.', e);
-        }
-
-        rendering.shaders = new Shaders(rendering.GL);
-        rendering.shaderProgram = function () {
-            return new ShaderProgram(rendering.GL);
-        };
-        rendering.render = new Render(rendering.GL);
+        rendering.GL = gl;
+        rendering.shaders = Shaders;
+        rendering.shaderProgram = ShaderProgram;
+        rendering.render = Render;
+        rendering.renderObject = RenderObject;
+        rendering.camera = Camera;
     })(rendering || (rendering = {}));
-
     
     return rendering;
 });

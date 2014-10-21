@@ -24,13 +24,15 @@ define(["require", "exports", "json!config.json"], function(require, exports, co
 
         _nemesis.animate = function (animateFunc, args) {
             var _this = this;
-            this._animate = function (args) {
-                animateFunc(args);
-                window.requestAnimationFrame(function () {
-                    _this._animate(args);
+            this._animate = function (time, args) {
+                animateFunc(time, args);
+                window.requestAnimationFrame(function (t) {
+                    _this._animate(t, args);
                 });
-            }; //TODO will this cause a memory leak?
-            this._animate(args);
+            };
+            window.requestAnimationFrame(function (t) {
+                _this._animate(t, args);
+            });
         };
         return _nemesis;
     })();
