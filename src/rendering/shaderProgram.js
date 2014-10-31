@@ -22,14 +22,15 @@ define(["require", "exports", "./glContext"], function(require, exports, gl) {
             gl.useProgram(this.Id);
         };
 
-        shaderProgram.prototype.enableAttrib = function (attribName) {
+        shaderProgram.prototype.enableAttrib = function (attribName, index, stride, offset) {
             var attrib = gl.getAttribLocation(this.Id, attribName);
             gl.enableVertexAttribArray(attrib);
+            gl.vertexAttribPointer(attrib, index, gl.FLOAT, false, stride, offset);
         };
 
-        shaderProgram.prototype.setFloatAttrib = function (attribName, index, stride, value) {
+        shaderProgram.prototype.setFloatAttrib = function (attribName, value) {
             var attrib = gl.getAttribLocation(this.Id, attribName);
-            gl.vertexAttribPointer(attrib, index, gl.FLOAT, false, stride, value);
+            gl.vertexAttrib1f(attrib, value);
         };
 
         shaderProgram.prototype.setMatrix = function (uniName, value) {

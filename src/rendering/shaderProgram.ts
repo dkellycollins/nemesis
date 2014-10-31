@@ -25,14 +25,15 @@ class shaderProgram {
         gl.useProgram(this.Id);
     }
 
-    public enableAttrib(attribName: string) {
+    public enableAttrib(attribName: string, index: number, stride:number, offset: number) {
         var attrib = gl.getAttribLocation(this.Id, attribName);
         gl.enableVertexAttribArray(attrib);
+        gl.vertexAttribPointer(attrib, index, gl.FLOAT, false, stride, offset);
     }
 
-    public setFloatAttrib(attribName:string, index: number, stride:number, value: number) {
+    public setFloatAttrib(attribName:string, value:number) {
         var attrib = gl.getAttribLocation(this.Id, attribName);
-        gl.vertexAttribPointer(attrib, index, gl.FLOAT, false, stride, value);
+        gl.vertexAttrib1f(attrib, value);
     }
 
     public setMatrix(uniName: string, value: number[]) {
