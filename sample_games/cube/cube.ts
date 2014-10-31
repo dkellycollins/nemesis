@@ -4,14 +4,15 @@ require.config({
     paths: {
         nemesis: "../../src",
         text: "../../node_modules/text/text",
-        json: "../../bower_components/requirejs-plugins/json",
-        image: "../../bower_components/requirejs-plugins/image"
+        json: "../../bower_components/requirejs-plugins/src/json",
+        image: "../../bower_components/requirejs-plugins/src/image",
+        lodash: "../../node_modules/lodash/lodash"
     }
 });
 
 require([
         'nemesis/nemesis',
-        'nemesis/nemesisCanvas',
+        'nemesis/canvas',
         'nemesis/rendering/camera',
         'nemesis/rendering/primitive',
         'nemesis/rendering/renderObject',
@@ -19,18 +20,11 @@ require([
         'nemesis/rendering/shaderProgram',
         'nemesis/util/logging/consoleLogger',
         'nemesis/util/math/mat4',
-        'nemesis/util/math/vec3'],
-    (canvas, camera, render, renderObject, shaders, shaderProgram, logger, mat4, vec3) => {
+        'nemesis/util/math/vec3',
+        'image!cube_texture.jpg'],
+    (nemesis, canvas, camera, render, renderObject, shaders, shaderProgram, logger, mat4, vec3) => {
         canvas.height = window.innerHeight;
         canvas.width = window.innerWidth;
-
-        /*========================= SHADERS ========================= */
-        var cubeShader = new shaderProgram();
-        cubeShader.addShader(shaders.colorVertexShader);
-        cubeShader.addShader(shaders.colorFragmentShader);
-        cubeShader.init();
-        cubeShader.enableAttrib("color");
-        cubeShader.enableAttrib("position");
 
         /*========================= THE CUBE ========================= */
         var vertexes = [
@@ -86,10 +80,18 @@ require([
 
         ];
         var cube = new renderObject(vertexes, faces, 6 * 2 * 3);
+
+        /*========================= SHADERS ========================= */
+        var cubeShader = new shaderProgram();
+        cubeShader.addShader(shaders.colorVertexShader);
+        cubeShader.addShader(shaders.colorFragmentShader);
+        cubeShader.init();
+        cubeShader.enableAttrib("position", 3, 4 * (3 + 3), 0);
+        cubeShader.enableAttrib("color", 3, 4 * (3 + 3), 3 * 4);
         cube.setShader(cubeShader);
 
-        /*========================= MATRIX ========================= */
-        var args = {
+        /*========================= CAMERA ========================= */
+        /*var args = {
             old_time: 0,
             projMatrix: mat4.perspective(mat4.create(), 40, canvas.width / canvas.height, 1, 100),
             moveMatrix: mat4.create(),
@@ -98,27 +100,34 @@ require([
         mat4.translate(args.moveMatrix, args.moveMatrix, vec3.fromValues(0, 0, -6));
 
         /*========================= DRAWING ========================= */
+        var modelMatrix = mat4.create();
+        mat4.translate(modelMatrix, modelMatrix, vec3.fromValues(0, 0, -6));
+        var mainCamera = new camera();
+        mainCamera.setPerspective(40, canvas.width / canvas.height, 1, 100);
+
+        var args = {
+            old_time: 0
+        };
+
         render.init();
-        nemesis.animate((time, a) => {
+        nemesis.registerUpdateCallback((time, a) => {
             var dt = time - a.old_time;
             a.old_time = time;
 
-            mat4.rotateZ(a.moveMatrix, a.moveMatrix, dt * 0.001);
-            mat4.rotateY(a.moveMatrix, a.moveMatrix, dt * 0.002);
-            mat4.rotateX(a.moveMatrix, a.moveMatrix, dt * 0.003);
-
-            //logger.log(mat4.str(a.moveMatrix));
-
+            mat4.rotateZ(modelMatrix, modelMatrix, dt * 0.001);
+            mat4.rotateY(modelMatrix, modelMatrix, dt * 0.002);
+            mat4.rotateX(modelMatrix, modelMatrix, dt * 0.003);
+        });
+        nemesis.registerRenderCallback((time, a) => {
             render.begin();
             cubeShader.setActive();
-            cubeShader.setMatrix("Pmatrix", a.projMatrix);
-            cubeShader.setMatrix("Vmatrix", a.viewMatrix);
-            cubeShader.setMatrix("Mmatrix", a.moveMatrix);
-            cubeShader.setFloatAttrib("position", 3, 4 * (3 + 3), 0);
-            cubeShader.setFloatAttrib("color", 3, 4 * (3 + 3), 3 * 4);
+            cubeShader.setMatrix("Pmatrix", mainCamera.getProjection());
+            cubeShader.setMatrix("Vmatrix", mainCamera.getView());
+            cubeShader.setMatrix("Mmatrix", modelMatrix);
             cube.render();
             render.end();
-        }, args);
+        });
+        nemesis.run(args);
     });
 
 
