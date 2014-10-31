@@ -1,43 +1,43 @@
 import canvas = require("../canvas");
 
-class mouse {
-    constructor() {
-        canvas.addEventListener("mousedown", this._mouseDown, false);
-        canvas.addEventListener("mouseup", this._mouseUp, false);
-        canvas.addEventListener("mouseout", this._mouseLeave, false);
-        canvas.addEventListener("mouseenter", this._mouseEnter, false);
-        canvas.addEventListener("mousemove", this._mouseMove, false);
-    }
+module mouse {
+    export var posX: number = 0;
+    export var posY: number = 0;
 
-    public posX: number;
-    public posY: number;
+    var _state: {
+        [button:number]:boolean
+    } = {};
 
-    private _button: number;
-
-    public getButton(b:number):boolean {
+    export function getButton(b:number):boolean {
         return this._button == b;
     }
 
-    private _mouseDown(e) {
-        this._button = e.button;
+    function _mouseDown(e) {
+        _state[e.button] = true;
     }
 
-    private _mouseUp(e) {
-        this._button = -1;
+    function _mouseUp(e) {
+        _state[e.button] = false;
     }
 
-    private _mouseLeave(e) {
+    function _mouseLeave(e) {
         this.posX = 0;
         this.posY = 0;
     }
 
-    private _mouseEnter(e) {
+    function _mouseEnter(e) {
         this.posX = e.clientX;
         this.posY = e.clientY;
     }
 
-    private _mouseMove(e) {
+    function _mouseMove(e) {
         this.posX = e.clientX;
         this.posY = e.clientY;
     }
+
+    canvas.addEventListener("mousedown", _mouseDown, false);
+    canvas.addEventListener("mouseup", _mouseUp, false);
+    canvas.addEventListener("mouseout", _mouseLeave, false);
+    canvas.addEventListener("mouseenter", _mouseEnter, false);
+    canvas.addEventListener("mousemove", _mouseMove, false);
 }

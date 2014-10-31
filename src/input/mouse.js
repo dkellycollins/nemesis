@@ -1,38 +1,43 @@
 define(["require", "exports", "../canvas"], function(require, exports, canvas) {
-    var mouse = (function () {
-        function mouse() {
-            canvas.addEventListener("mousedown", this._mouseDown, false);
-            canvas.addEventListener("mouseup", this._mouseUp, false);
-            canvas.addEventListener("mouseout", this._mouseLeave, false);
-            canvas.addEventListener("mouseenter", this._mouseEnter, false);
-            canvas.addEventListener("mousemove", this._mouseMove, false);
-        }
-        mouse.prototype.getButton = function (b) {
+    var mouse;
+    (function (mouse) {
+        mouse.posX = 0;
+        mouse.posY = 0;
+
+        var _state = {};
+
+        function getButton(b) {
             return this._button == b;
-        };
+        }
+        mouse.getButton = getButton;
 
-        mouse.prototype._mouseDown = function (e) {
-            this._button = e.button;
-        };
+        function _mouseDown(e) {
+            _state[e.button] = true;
+        }
 
-        mouse.prototype._mouseUp = function (e) {
-            this._button = -1;
-        };
+        function _mouseUp(e) {
+            _state[e.button] = false;
+        }
 
-        mouse.prototype._mouseLeave = function (e) {
+        function _mouseLeave(e) {
             this.posX = 0;
             this.posY = 0;
-        };
+        }
 
-        mouse.prototype._mouseEnter = function (e) {
+        function _mouseEnter(e) {
             this.posX = e.clientX;
             this.posY = e.clientY;
-        };
+        }
 
-        mouse.prototype._mouseMove = function (e) {
+        function _mouseMove(e) {
             this.posX = e.clientX;
             this.posY = e.clientY;
-        };
-        return mouse;
-    })();
+        }
+
+        canvas.addEventListener("mousedown", _mouseDown, false);
+        canvas.addEventListener("mouseup", _mouseUp, false);
+        canvas.addEventListener("mouseout", _mouseLeave, false);
+        canvas.addEventListener("mouseenter", _mouseEnter, false);
+        canvas.addEventListener("mousemove", _mouseMove, false);
+    })(mouse || (mouse = {}));
 });
