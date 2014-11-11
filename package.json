@@ -30,7 +30,9 @@
     "grunt-contrib-nodeunit": "^0.4.1",
     "grunt-contrib-requirejs": "^0.4.4",
     "grunt-contrib-uglify": "^0.6.0",
-    "mocha": "^1.21.4"
+    "grunt-typescript": "^0.4.2",
+    "mocha": "^1.21.4",
+    "typescript": "^1.1.0-1"
   },
   "dependencies": {
     "lodash": "^2.4.1",

@@ -1,7 +1,7 @@
 ///<reference path="../../lib/requirejs/require.d.ts" />
 require.config({
     paths: {
-        nemesis: "../../src",
+        nemesis: "../../src/nemesis",
         text: "../../node_modules/text/text",
         json: "../../bower_components/requirejs-plugins/src/json",
         image: "../../bower_components/requirejs-plugins/src/image",
@@ -16,14 +16,10 @@ require([
     'nemesis/rendering/primitive',
     'nemesis/rendering/renderObject',
     'nemesis/rendering/shaders',
-    'nemesis/rendering/shaderProgram',
     'nemesis/util/logging/consoleLogger',
     'nemesis/util/math/mat4',
     'nemesis/util/math/vec3',
-    'image!cube_texture.jpg'], function (nemesis, canvas, camera, render, renderObject, shaders, shaderProgram, logger, mat4, vec3) {
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-
+    'image!cube_texture.jpg'], function (nemesis, canvas, camera, render, renderObject, shaders, logger, mat4, vec3) {
     /*========================= THE CUBE ========================= */
     var vertexes = [
         -1, -1, -1, 1, 1, 0,
@@ -65,16 +61,10 @@ require([
         20, 21, 22,
         20, 22, 23
     ];
-    var cube = new renderObject(vertexes, faces, 6 * 2 * 3);
-
-    /*========================= SHADERS ========================= */
-    var cubeShader = new shaderProgram();
-    cubeShader.addShader(shaders.colorVertexShader);
-    cubeShader.addShader(shaders.colorFragmentShader);
-    cubeShader.init();
-    cubeShader.enableAttrib("position", 3, 4 * (3 + 3), 0);
-    cubeShader.enableAttrib("color", 3, 4 * (3 + 3), 3 * 4);
-    cube.setShader(cubeShader);
+    var cube = new renderObject(vertexes, faces, 6 * 2 * 3, shaders.createProgram(shaders.colorVertexShader, shaders.colorFragmentShader));
+    cube.init();
+    cube.enableAttrib("position", 3, 4 * (3 + 3), 0);
+    cube.enableAttrib("color", 3, 4 * (3 + 3), 3 * 4);
 
     /*========================= CAMERA ========================= */
     /*var args = {
@@ -106,10 +96,10 @@ require([
     });
     nemesis.registerRenderCallback(function (time, a) {
         render.begin();
-        cubeShader.setActive();
-        cubeShader.setMatrix("Pmatrix", mainCamera.getProjection());
-        cubeShader.setMatrix("Vmatrix", mainCamera.getView());
-        cubeShader.setMatrix("Mmatrix", modelMatrix);
+        cube.setActive();
+        cube.setMatrix("Pmatrix", mainCamera.getProjection());
+        cube.setMatrix("Vmatrix", mainCamera.getView());
+        cube.setMatrix("Mmatrix", modelMatrix);
         cube.render();
         render.end();
     });

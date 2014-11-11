@@ -15,7 +15,7 @@ module.exports = function(grunt) {
         requirejs: {
             compile: {
                 options: {
-                    baseUrl: "src/",
+                    baseUrl: "src/nemesis",
                     name: "<%= pkg.name %>",
                     paths: {
                         text: "../node_modules/text/text",
@@ -28,14 +28,31 @@ module.exports = function(grunt) {
                     optimize: 'none'
                 }
             }
+        },
+        typescript: {
+            base: {
+                src: ['src/**/*.ts'],
+                dest: 'src',
+                options: {
+                    module: 'amd',
+                    target: 'es5',
+                    basePath: 'src',
+                    sourceMap: false,
+                    declaration: false,
+                    references: [
+                        'lib/**/ *.d.ts'
+                    ]
+                }
+            }
         }
     });
 
     // Load the plugins.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
+    grunt.loadNpmTasks('grunt-typescript');
 
     // Default task(s).
     grunt.registerTask('default', ['requirejs']);
-    grunt.registerTask('production' ['requirejs', 'uglify']);
+    grunt.registerTask('production' ['typescript', 'requirejs', 'uglify']);
 };

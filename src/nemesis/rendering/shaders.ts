@@ -20,6 +20,15 @@ module shaders {
         return shader;
     }
 
+    export function createProgram(vertexShader: WebGLShader, fragmentShader: WebGLShader) {
+        var prog = gl.createProgram();
+        gl.attachShader(prog, vertexShader);
+        gl.attachShader(prog, fragmentShader);
+        gl.linkProgram(prog);
+
+        return prog;
+    }
+
     colorVertexShader = compile(<string>colorVertexShader_source, gl.VERTEX_SHADER);
     colorFragmentShader = compile(<string>colorFragmentShader_source, gl.FRAGMENT_SHADER);
 }

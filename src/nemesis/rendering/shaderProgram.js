@@ -22,7 +22,7 @@ define(["require", "exports", "./glContext"], function(require, exports, gl) {
                     gl.attachShader(_this.id, s);
                 });
             } else {
-                gl.attachShader(this.id, shader);
+                gl.attachShader(this.is, shader);
             }
         };
 

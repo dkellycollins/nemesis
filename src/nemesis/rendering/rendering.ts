@@ -1,6 +1,5 @@
 import gl = require("./glContext");
 import Shaders = require("./shaders");
-import ShaderProgram = require("./shaderProgram");
 import Render = require("./primitive");
 import Logger = require("../util/logging/consoleLogger");
 import RenderObject = require("./renderObject");
@@ -9,7 +8,6 @@ import Camera = require("./camera");
 module rendering {
     export var GL = gl;
     export var shaders = Shaders;
-    export var shaderProgram = ShaderProgram;
     export var render = Render;
     export var renderObject = RenderObject;
     export var camera = Camera;

@@ -33,3 +33,4 @@ class texture {
 
     private _glTexture;
 }
+export = texture;

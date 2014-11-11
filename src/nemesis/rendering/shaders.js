@@ -17,6 +17,16 @@ define(["require", "exports", "./glContext", "../util/logging/consoleLogger", "t
         }
         shaders.compile = compile;
 
+        function createProgram(vertexShader, fragmentShader) {
+            var prog = gl.createProgram();
+            gl.attachShader(prog, vertexShader);
+            gl.attachShader(prog, fragmentShader);
+            gl.linkProgram(prog);
+
+            return prog;
+        }
+        shaders.createProgram = createProgram;
+
         shaders.colorVertexShader = compile(colorVertexShader_source, gl.VERTEX_SHADER);
         shaders.colorFragmentShader = compile(colorFragmentShader_source, gl.FRAGMENT_SHADER);
     })(shaders || (shaders = {}));

@@ -1,41 +1,82 @@
 import gl = require("./glContext");
-import shaderProgram = require("./shaderProgram");
+import _ = require("lodash");
+
+class attribData {
+    constructor(id, index, type, normalize, stride, offset) {
+        this.id = id;
+        this.index = index;
+        this.type = type;
+        this.normalize = normalize;
+        this.stride = stride;
+        this.offset = offset;
+    }
+
+    public id;
+    public index:number;
+    public type;
+    public normalize:boolean;
+    public stride:number;
+    public offset:number;
+}
 
 class renderObject {
 
-    constructor(vertexes: number[], faces: number[], triangles: number) {
+    constructor(data: number[], faces:number[], triangles: number, shaderProgram) {
+        this._vertexData = new Float32Array(data);
+        this._faces = new Uint16Array(faces);
         this._triangles = triangles;
-        this._vertexBuffer = this._createArrayBuffer(vertexes);
-        this._faceBuffer = this._createElementArrayBuffer(faces);
+        this._shaderProgram = shaderProgram;
     }
 
     public staticDraw: boolean;
     private _triangles: number;
-    private _vertexBuffer: WebGLBuffer;
+    private _vertexDataBuffer: WebGLBuffer;
+    private _vertexData: Float32Array;
     private _faceBuffer: WebGLBuffer;
-    private _shaderProgram: shaderProgram;
+    private _faces: Uint16Array;
+    private _shaderProgram;
+    private _attribData: {
+        [attrib:string]: attribData;
+    };
 
-    public setShader(shader: shaderProgram) {
-        this._shaderProgram = shader;
+    public init(): void {
+        this._vertexDataBuffer = gl.createBuffer();
+        this._faceBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexDataBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this._vertexData, gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._faceBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this._faces, gl.STATIC_DRAW);
     }
 
-    public getShader():shaderProgram {
-        return this._shaderProgram;
+    public setActive():void {
+        gl.useProgram(this._shaderProgram.id);
     }
 
     public render(time:number, args?:any):void {
         gl.useProgram(this._shaderProgram.id);
-        this._shaderProgram.update(time, args);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexDataBuffer);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._faceBuffer);
+        _.forEach(this._attribData, (attrib: attribData) => {
+           gl.vertexAttribPointer(attrib.id, attrib.index, attrib.type, attrib.normalize, attrib.stride, attrib.offset);
+        });
         gl.drawElements(gl.TRIANGLES, this._triangles, gl.UNSIGNED_SHORT, 0);
     }
 
-    public clone(): renderObject {
-        return null;
+    public dispose(): void {
+        gl.deleteBuffer(this._vertexDataBuffer);
+        gl.deleteBuffer(this._faceBuffer);
     }
 
-    public dispose(): void {
-        gl.deleteBuffer(this._vertexBuffer);
-        gl.deleteBuffer(this._faceBuffer);
+    public enableAttrib(attribName: string, index: number, stride:number, offset: number) {
+        var attrib = gl.getAttribLocation(this._shaderProgram, attribName);
+        gl.enableVertexAttribArray(attrib);
+        this._attribData[attribName] = new attribData(attrib, index, gl.FLOAT, false, stride, offset);
+        gl.vertexAttribPointer(attrib, index, gl.FLOAT, false, stride, offset);
+    }
+
+    public setMatrix(uniName: string, value: number[]) {
+        var uniform = gl.getUniformLocation(this._shaderProgram, uniName);
+        gl.uniformMatrix4fv(uniform, false, value);
     }
 
     private _createArrayBuffer(bufferData: number[]): WebGLBuffer {

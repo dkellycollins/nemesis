@@ -29,4 +29,6 @@ define(["require", "exports", "./glContext", "../util/util"], function(require, 
         };
         return texture;
     })();
+    
+    return texture;
 });
