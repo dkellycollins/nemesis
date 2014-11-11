@@ -1,4 +1,4 @@
-define(["require", "exports", "../util/math/vec3", "../util/math/mat4"], function(require, exports, vec3, mat4) {
+define(["require", "exports", "../math/vec3", "../math/mat4"], function(require, exports, vec3, mat4) {
     var camera = (function () {
         function camera(pos, target) {
             this._pos = pos || vec3.create();

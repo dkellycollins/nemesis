@@ -2,11 +2,14 @@ import gl = require("./glContext");
 import shaderProgram = require("./shaderProgram");
 
 class renderObject {
+
     constructor(vertexes: number[], faces: number[], triangles: number) {
         this._triangles = triangles;
         this._vertexBuffer = this._createArrayBuffer(vertexes);
         this._faceBuffer = this._createElementArrayBuffer(faces);
     }
+
+    public staticDraw: boolean;
     private _triangles: number;
     private _vertexBuffer: WebGLBuffer;
     private _faceBuffer: WebGLBuffer;
@@ -20,8 +23,9 @@ class renderObject {
         return this._shaderProgram;
     }
 
-    public render():void {
-        //gl.useProgram(this._shaderProgram.Id);
+    public render(time:number, args?:any):void {
+        gl.useProgram(this._shaderProgram.id);
+        this._shaderProgram.update(time, args);
         gl.drawElements(gl.TRIANGLES, this._triangles, gl.UNSIGNED_SHORT, 0);
     }
 

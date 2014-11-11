@@ -1,4 +1,4 @@
-///<reference path="../lib/lodash/lodash.d.ts" />
+///<reference path="../../lib/lodash/lodash.d.ts" />
 ///<reference path="nemesisConfig.d.ts" />
 
 import config = require("json!config.json");

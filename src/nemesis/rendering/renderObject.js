@@ -13,8 +13,9 @@ define(["require", "exports", "./glContext"], function(require, exports, gl) {
             return this._shaderProgram;
         };
 
-        renderObject.prototype.render = function () {
-            //gl.useProgram(this._shaderProgram.Id);
+        renderObject.prototype.render = function (time, args) {
+            gl.useProgram(this._shaderProgram.id);
+            this._shaderProgram.update(time, args);
             gl.drawElements(gl.TRIANGLES, this._triangles, gl.UNSIGNED_SHORT, 0);
         };
 
