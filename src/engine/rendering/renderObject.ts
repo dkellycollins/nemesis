@@ -28,7 +28,6 @@ class renderObject {
         this._shaderProgram = shaderProgram;
     }
 
-    public staticDraw: boolean;
     private _triangles: number;
     private _vertexDataBuffer: WebGLBuffer;
     private _vertexData: Float32Array;
