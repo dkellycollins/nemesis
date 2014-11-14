@@ -2,7 +2,7 @@
   "name": "nemesis",
   "version": "0.0.0",
   "description": "An open sourced javascrpt game engine.",
-  "main": "index.js",
+  "main": "nemesis",
   "directories": {
     "doc": "docs",
     "test": "test"
@@ -30,7 +30,7 @@
     "grunt-contrib-nodeunit": "^0.4.1",
     "grunt-contrib-requirejs": "^0.4.4",
     "grunt-contrib-uglify": "^0.6.0",
-    "grunt-typescript": "^0.4.2",
+    "grunt-ts": "^1.12.1",
     "mocha": "^1.21.4",
     "typescript": "^1.1.0-1"
   },

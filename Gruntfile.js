@@ -15,34 +15,30 @@ module.exports = function(grunt) {
         requirejs: {
             compile: {
                 options: {
-                    baseUrl: "src/nemesis",
+                    baseUrl: "src/engine",
                     name: "<%= pkg.name %>",
                     paths: {
-                        text: "../node_modules/text/text",
-                        json: "../bower_components/requirejs-plugins/src/json",
-                        image: "../bower_components/requirejs-plugins/src/image",
-                        config: 'empty:',
-                        lodash: "../node_modules/lodash"
+                        text: "../../node_modules/text/text",
+                        json: "../../bower_components/requirejs-plugins/src/json",
+                        image: "../../bower_components/requirejs-plugins/src/image",
+                        nemesisconfig: 'empty:',
+                        lodash: "../../node_modules/lodash/lodash"
                     },
                     out: 'build/<%= pkg.name %>.js',
                     optimize: 'none'
                 }
             }
         },
-        typescript: {
-            base: {
-                src: ['src/**/*.ts'],
-                dest: 'src',
-                options: {
-                    module: 'amd',
-                    target: 'es5',
-                    basePath: 'src',
-                    sourceMap: false,
-                    declaration: false,
-                    references: [
-                        'lib/**/ *.d.ts'
-                    ]
-                }
+        ts: {
+            options: {
+                target: 'es5',
+                module: 'amd',
+                sourceMap: false,
+                declaration: true,
+                removeComments: false
+            },
+            build: {
+                src: ['src/**/*.ts']
             }
         }
     });
@@ -50,9 +46,11 @@ module.exports = function(grunt) {
     // Load the plugins.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
-    grunt.loadNpmTasks('grunt-typescript');
+    grunt.loadNpmTasks('grunt-ts');
 
     // Default task(s).
-    grunt.registerTask('default', ['requirejs']);
-    grunt.registerTask('production' ['typescript', 'requirejs', 'uglify']);
+    grunt.registerTask('debug', ['ts:build', 'requirejs']);
+    grunt.registerTask('release' ['ts:build', 'requirejs', 'uglify']);
+    grunt.registerTask('default', ['debug']);
+
 };

@@ -1,7 +1,7 @@
 ///<reference path="../../lib/requirejs/require.d.ts" />
 require.config({
     paths: {
-        nemesis: "../../src/nemesis",
+        nemesis: "../../build/nemesis",
         text: "../../node_modules/text/text",
         json: "../../bower_components/requirejs-plugins/src/json",
         image: "../../bower_components/requirejs-plugins/src/image",
@@ -10,16 +10,7 @@ require.config({
 });
 
 require([
-    'nemesis/nemesis',
-    'nemesis/canvas',
-    'nemesis/rendering/camera',
-    'nemesis/rendering/primitive',
-    'nemesis/rendering/renderObject',
-    'nemesis/rendering/shaders',
-    'nemesis/util/logging/consoleLogger',
-    'nemesis/util/math/mat4',
-    'nemesis/util/math/vec3',
-    'image!cube_texture.jpg'], function (nemesis, canvas, camera, render, renderObject, shaders, logger, mat4, vec3) {
+    'nemesis'], function (nemesis) {
     /*========================= THE CUBE ========================= */
     var vertexes = [
         -1, -1, -1, 1, 1, 0,
@@ -61,7 +52,11 @@ require([
         20, 21, 22,
         20, 22, 23
     ];
-    var cube = new renderObject(vertexes, faces, 6 * 2 * 3, shaders.createProgram(shaders.colorVertexShader, shaders.colorFragmentShader));
+    var shader = nemesis.rendering.shaders.createProgram(
+        nemesis.rendering.shaders.colorVertexShader,
+        nemesis.rendering.shaders.colorFragmentShader
+    );
+    var cube = new nemesis.rendering.renderObject(vertexes, faces, 6 * 2 * 3, shader);
     cube.init();
     cube.enableAttrib("position", 3, 4 * (3 + 3), 0);
     cube.enableAttrib("color", 3, 4 * (3 + 3), 3 * 4);
@@ -76,32 +71,30 @@ require([
     mat4.translate(args.moveMatrix, args.moveMatrix, vec3.fromValues(0, 0, -6));
     
     /*========================= DRAWING ========================= */
-    var modelMatrix = mat4.create();
-    mat4.translate(modelMatrix, modelMatrix, vec3.fromValues(0, 0, -6));
-    var mainCamera = new camera();
-    mainCamera.setPerspective(40, canvas.width / canvas.height, 1, 100);
+    var modelMatrix = nemesis.math.mat4.create();
+    nemesis.math.mat4.translate(modelMatrix, modelMatrix, nemesis.math.vec3.fromValues(0, 0, -6));
+    var mainCamera = new nemesis.rendering.camera();
+    mainCamera.setPerspective(40, nemesis.canvas.width / nemesis.canvas.height, 1, 100);
 
     var args = {
         old_time: 0
     };
 
-    render.init();
+    nemesis.rendering.render.init();
     nemesis.registerUpdateCallback(function (time, a) {
         var dt = time - a.old_time;
         a.old_time = time;
 
-        mat4.rotateZ(modelMatrix, modelMatrix, dt * 0.001);
-        mat4.rotateY(modelMatrix, modelMatrix, dt * 0.002);
-        mat4.rotateX(modelMatrix, modelMatrix, dt * 0.003);
+        nemesis.math.mat4.rotateZ(modelMatrix, modelMatrix, dt * 0.001);
+        nemesis.math.mat4.rotateY(modelMatrix, modelMatrix, dt * 0.002);
+        nemesis.math.mat4.rotateX(modelMatrix, modelMatrix, dt * 0.003);
     });
     nemesis.registerRenderCallback(function (time, a) {
-        render.begin();
         cube.setActive();
         cube.setMatrix("Pmatrix", mainCamera.getProjection());
         cube.setMatrix("Vmatrix", mainCamera.getView());
         cube.setMatrix("Mmatrix", modelMatrix);
         cube.render();
-        render.end();
     });
     nemesis.run(args);
 });
