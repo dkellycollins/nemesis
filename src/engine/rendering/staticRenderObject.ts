@@ -22,11 +22,8 @@ class renderObject {
     private _buffer: attribData[] = [];
     //private _buffer: WebGLBuffer[] = [];
 
-    public setActive():void {
-        gl.useProgram(this._shaderProgram);
-    }
-
     public render(time:number, args?:any):void {
+        gl.useProgram(this._shaderProgram);
         _.forEach(this._buffer, (buffer) => {
             gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buf);
             gl.vertexAttribPointer(buffer.attrib, buffer.size, gl.FLOAT, false, 0, 0);
@@ -53,13 +50,19 @@ class renderObject {
         var buf = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, buf);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
-        debugger;
         this._buffer.push(new attribData(attrib, size, buf));
     }
 
-    public setMatrix(uniName: string, value: number[]) {
+    public setMatrix4(uniName: string, value: number[]) {
+        gl.useProgram(this._shaderProgram);
         var uniform = gl.getUniformLocation(this._shaderProgram, uniName);
         gl.uniformMatrix4fv(uniform, false, value);
+    }
+
+    public setVector3(uniName: string, value: number[]) {
+        gl.useProgram(this._shaderProgram);
+        var uniform = gl.getUniformLocation(this._shaderProgram, uniName);
+        gl.uniform3f(uniform, value[0], value[1], value[2]);
     }
 }
 export = renderObject;

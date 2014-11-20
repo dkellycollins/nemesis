@@ -74,68 +74,6 @@ require([
         1, 1, 1,
         1, 1, -1
     ];
-    var colors = [
-        1, 1, 0, //0
-        1, 1, 0, //1
-        1, 1, 0, //2
-        1, 1, 0, //3
-
-        0, 0, 1, //4
-        0, 0, 1, //5
-        0, 0, 1, //6
-        0, 0, 1, //7
-
-        0, 1, 1, //8
-        0, 1, 1, //9
-        0, 1, 1, //10
-        0, 1, 1, //11
-
-        1, 0, 0, //12
-        1, 0, 0, //13
-        1, 0, 0, //14
-        1, 0, 0, //15
-
-        1, 0, 1, //16
-        1, 0, 1, //17
-        1, 0, 1, //18
-        1, 0, 1, //19
-
-        0, 1, 0, //20
-        0, 1, 0, //21
-        0, 1, 0, //22
-        0, 1, 0 //23
-    ]
-    var colors2 = [
-        1, 0, 1, //16
-        1, 0, 1, //17
-        1, 0, 1, //18
-        1, 0, 1, //19
-
-        0, 0, 1, //4
-        0, 0, 1, //5
-        0, 0, 1, //6
-        0, 0, 1, //7
-
-        1, 1, 0, //0
-        1, 1, 0, //1
-        1, 1, 0, //2
-        1, 1, 0, //3
-
-        1, 0, 0, //12
-        1, 0, 0, //13
-        1, 0, 0, //14
-        1, 0, 0, //15
-
-        0, 1, 0, //20
-        0, 1, 0, //21
-        0, 1, 0, //22
-        0, 1, 0, //23
-
-        0, 1, 1, //8
-        0, 1, 1, //9
-        0, 1, 1, //10
-        0, 1, 1, //11
-    ]
     var faces = [
         0, 1, 2,
         0, 2, 3,
@@ -151,21 +89,21 @@ require([
         20, 22, 23
     ];
     var shader1 = nemesis.rendering.shaders.createProgram(
-        nemesis.rendering.shaders.colorVertexShader,
+        nemesis.rendering.shaders.baseVertexShader,
         nemesis.rendering.shaders.colorFragmentShader
     );
     var shader2 = nemesis.rendering.shaders.createProgram(
-        nemesis.rendering.shaders.colorVertexShader,
+        nemesis.rendering.shaders.baseVertexShader,
         nemesis.rendering.shaders.colorFragmentShader
     );
     var cube1 = new nemesis.rendering.staticRenderObject(shader1);
     cube1.setVertexes(faces);
     cube1.enableAttrib("position", 3, vertexes1);
-    cube1.enableAttrib("color", 3, colors);
+    cube1.setVector3("vColor", [1, 1, 0]);
     var cube2 = new nemesis.rendering.staticRenderObject(shader2);
     cube2.setVertexes(faces);
     cube2.enableAttrib("position", 3, vertexes2);
-    cube2.enableAttrib("color", 3, colors2);
+    cube2.setVector3("vColor", [1, 0, 1]);
 
     /*========================= CAMERA ========================= */
     /*var args = {
@@ -196,15 +134,12 @@ require([
         nemesis.math.mat4.rotateX(modelMatrix, modelMatrix, dt * 0.003);
     });
     nemesis.registerRenderCallback(function (time, a) {
-        cube1.setActive();
-        cube1.setMatrix("Pmatrix", mainCamera.getProjection());
-        cube1.setMatrix("Vmatrix", mainCamera.getView());
-        cube1.setMatrix("Mmatrix", modelMatrix);
+        var mvp = nemesis.math.mat4.clone(mainCamera.getProjection());
+        nemesis.math.mat4.multiply(mvp, mvp, mainCamera.getView());
+        nemesis.math.mat4.multiply(mvp, mvp, modelMatrix);
+        cube1.setMatrix4("mvp", mvp);
         cube1.render();
-        cube2.setActive();
-        cube2.setMatrix("Pmatrix", mainCamera.getProjection());
-        cube2.setMatrix("Vmatrix", mainCamera.getView());
-        cube2.setMatrix("Mmatrix", modelMatrix);
+        cube2.setMatrix4("mvp", mvp);
         cube2.render();
     });
     nemesis.run(args);

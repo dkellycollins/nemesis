@@ -3,14 +3,14 @@
 import gl = require("./glContext");
 import logger = require("../util/logging/consoleLogger");
 import common = require("text!./shader_source/common.glsl");
-import color_vertex = require("text!./shader_source/color_vertex.glsl");
+import base_vertex = require("text!./shader_source/base_vertex.glsl");
 import color_frag = require("text!./shader_source/color_frag.glsl");
 
 /**
  * Handles compiling shaders and creating shader programs.
  */
 module shaders {
-    export var colorVertexShader: WebGLShader;
+    export var baseVertexShader: WebGLShader;
     export var colorFragmentShader: WebGLShader;
 
     /**
@@ -91,7 +91,7 @@ module shaders {
     compileLib("common.glsl", <string>common);
 
     /* Shaders */
-    colorVertexShader = compile(<string>color_vertex, gl.VERTEX_SHADER);
+    baseVertexShader = compile(<string>base_vertex, gl.VERTEX_SHADER);
     colorFragmentShader = compile(<string>color_frag, gl.FRAGMENT_SHADER);
 }
 export = shaders;

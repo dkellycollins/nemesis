@@ -14,10 +14,8 @@ define(["require", "exports", "./glContext", "lodash"], function (require, expor
             this._shaderProgram = shaderProgram;
         }
         //private _buffer: WebGLBuffer[] = [];
-        renderObject.prototype.setActive = function () {
-            gl.useProgram(this._shaderProgram);
-        };
         renderObject.prototype.render = function (time, args) {
+            gl.useProgram(this._shaderProgram);
             _.forEach(this._buffer, function (buffer) {
                 gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buf);
                 gl.vertexAttribPointer(buffer.attrib, buffer.size, gl.FLOAT, false, 0, 0);
@@ -41,12 +39,17 @@ define(["require", "exports", "./glContext", "lodash"], function (require, expor
             var buf = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, buf);
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
-            debugger;
             this._buffer.push(new attribData(attrib, size, buf));
         };
-        renderObject.prototype.setMatrix = function (uniName, value) {
+        renderObject.prototype.setMatrix4 = function (uniName, value) {
+            gl.useProgram(this._shaderProgram);
             var uniform = gl.getUniformLocation(this._shaderProgram, uniName);
             gl.uniformMatrix4fv(uniform, false, value);
+        };
+        renderObject.prototype.setVector3 = function (uniName, value) {
+            gl.useProgram(this._shaderProgram);
+            var uniform = gl.getUniformLocation(this._shaderProgram, uniName);
+            gl.uniform3f(uniform, value[0], value[1], value[2]);
         };
         return renderObject;
     })();
