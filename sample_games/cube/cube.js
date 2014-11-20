@@ -92,27 +92,14 @@ require([
         nemesis.rendering.shaders.baseVertexShader,
         nemesis.rendering.shaders.colorFragmentShader
     );
-    var shader2 = nemesis.rendering.shaders.createProgram(
-        nemesis.rendering.shaders.baseVertexShader,
-        nemesis.rendering.shaders.colorFragmentShader
-    );
     var cube1 = new nemesis.rendering.staticRenderObject(shader1);
     cube1.setVertexes(faces);
     cube1.enableAttrib("position", 3, vertexes1);
     cube1.setVector3("vColor", [1, 1, 0]);
-    var cube2 = new nemesis.rendering.staticRenderObject(shader2);
+    var cube2 = new nemesis.rendering.staticRenderObject(shader1);
     cube2.setVertexes(faces);
     cube2.enableAttrib("position", 3, vertexes2);
     cube2.setVector3("vColor", [1, 0, 1]);
-
-    /*========================= CAMERA ========================= */
-    /*var args = {
-    old_time: 0,
-    projMatrix: mat4.perspective(mat4.create(), 40, canvas.width / canvas.height, 1, 100),
-    moveMatrix: mat4.create(),
-    viewMatrix: mat4.create()
-    };
-    mat4.translate(args.moveMatrix, args.moveMatrix, vec3.fromValues(0, 0, -6));
     
     /*========================= DRAWING ========================= */
     var modelMatrix = nemesis.math.mat4.create();
@@ -124,7 +111,9 @@ require([
         old_time: 0
     };
 
-    nemesis.rendering.render.init();
+    window.resize(function() {
+       mainCamera.setPerspective(40, nemesis.canvas.width / nemesis.canvas.height, 1, 100);
+    });
     nemesis.registerUpdateCallback(function (time, a) {
         var dt = time - a.old_time;
         a.old_time = time;

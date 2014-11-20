@@ -32,9 +32,10 @@ module nemesis {
     }
 
     export function run(context?:any):void {
+        _rendering.render.init();
         var animateFrame = (time) => {
             _updateCallbacks.forEach(callback => {
-                callback(time, context);
+                callback(time, context);init
             });
             _rendering.render.begin();
             _renderCallbacks.forEach(callback => {
