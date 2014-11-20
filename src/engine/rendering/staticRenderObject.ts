@@ -1,5 +1,15 @@
+///<reference path="../../../lib/lodash/lodash.d.ts" />
+
 import gl = require("./glContext");
 import _ = require("lodash");
+
+class attribData {
+    constructor(
+        public attrib,
+        public size,
+        public buf
+    ) {}
+}
 
 class renderObject {
 
@@ -9,20 +19,25 @@ class renderObject {
 
     private _vertexes: number;
     private _shaderProgram;
-    private _buffer: WebGLBuffer[] = [];
+    private _buffer: attribData[] = [];
+    //private _buffer: WebGLBuffer[] = [];
 
     public setActive():void {
         gl.useProgram(this._shaderProgram);
     }
 
     public render(time:number, args?:any):void {
+        _.forEach(this._buffer, (buffer) => {
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buf);
+            gl.vertexAttribPointer(buffer.attrib, buffer.size, gl.FLOAT, false, 0, 0);
+        });
         gl.drawElements(gl.TRIANGLES, this._vertexes, gl.UNSIGNED_SHORT, 0);
     }
 
     public dispose(): void {
         _.forEach(this._buffer, (buffer:number) => {
             gl.deleteBuffer(buffer);
-        })
+        });
     }
 
     public setVertexes(vertexes:number[]): void {
@@ -38,8 +53,8 @@ class renderObject {
         var buf = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, buf);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
-        gl.vertexAttribPointer(attrib, size, gl.FLOAT, false, 0, 0);
-        this._buffer.push(buf);
+        debugger;
+        this._buffer.push(new attribData(attrib, size, buf));
     }
 
     public setMatrix(uniName: string, value: number[]) {

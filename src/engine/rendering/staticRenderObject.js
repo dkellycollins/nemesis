@@ -1,13 +1,27 @@
+///<reference path="../../../lib/lodash/lodash.d.ts" />
 define(["require", "exports", "./glContext", "lodash"], function (require, exports, gl, _) {
+    var attribData = (function () {
+        function attribData(attrib, size, buf) {
+            this.attrib = attrib;
+            this.size = size;
+            this.buf = buf;
+        }
+        return attribData;
+    })();
     var renderObject = (function () {
         function renderObject(shaderProgram) {
             this._buffer = [];
             this._shaderProgram = shaderProgram;
         }
+        //private _buffer: WebGLBuffer[] = [];
         renderObject.prototype.setActive = function () {
             gl.useProgram(this._shaderProgram);
         };
         renderObject.prototype.render = function (time, args) {
+            _.forEach(this._buffer, function (buffer) {
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buf);
+                gl.vertexAttribPointer(buffer.attrib, buffer.size, gl.FLOAT, false, 0, 0);
+            });
             gl.drawElements(gl.TRIANGLES, this._vertexes, gl.UNSIGNED_SHORT, 0);
         };
         renderObject.prototype.dispose = function () {
@@ -27,8 +41,8 @@ define(["require", "exports", "./glContext", "lodash"], function (require, expor
             var buf = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, buf);
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
-            gl.vertexAttribPointer(attrib, size, gl.FLOAT, false, 0, 0);
-            this._buffer.push(buf);
+            debugger;
+            this._buffer.push(new attribData(attrib, size, buf));
         };
         renderObject.prototype.setMatrix = function (uniName, value) {
             var uniform = gl.getUniformLocation(this._shaderProgram, uniName);

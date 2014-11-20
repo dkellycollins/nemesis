@@ -3,7 +3,7 @@ import gl = require('./glContext'); ///ts:import:generated
 import _ = require('lodash')
 
 class texture {
-    constructor(img: Image) {
+    constructor(img: any) {
         this._glTexture = gl.createTexture();
         this._glTexture.image = img;
         if(this._imgLoaded(img)) {
@@ -13,7 +13,7 @@ class texture {
         }
     }
 
-    private _imgLoaded(img:Image):boolean {
+    private _imgLoaded(img:any):boolean {
         if(img.complete) { //IE
             return true;
         }
