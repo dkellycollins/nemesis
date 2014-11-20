@@ -35,7 +35,7 @@ module nemesis {
         _rendering.render.init();
         var animateFrame = (time) => {
             _updateCallbacks.forEach(callback => {
-                callback(time, context);init
+                callback(time, context);
             });
             _rendering.render.begin();
             _renderCallbacks.forEach(callback => {

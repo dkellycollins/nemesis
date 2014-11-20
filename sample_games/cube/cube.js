@@ -12,38 +12,7 @@ require.config({
 require([
     'nemesis'], function (nemesis) {
     /*========================= THE CUBE ========================= */
-    var vertexes1 = [
-        -1, -1, -4, //0
-        1, -1, -4,  //1
-        1, 1, -4,   //2
-        -1, 1, -4,  //3
-
-        -1, -1, -2,  //4
-        1, -1, -2,   //5
-        1, 1, -2,    //6
-        -1, 1, -2,   //7
-
-        -1, -1, -4, //8
-        -1, 1, -4,  //9
-        -1, 1, -2,   //10
-        -1, -1, -2,  //11
-
-        1, -1, -4,  //12
-        1, 1, -4,   //13
-        1, 1, -2,    //14
-        1, -1, -2,   //15
-
-        -1, -1, -4, //16
-        -1, -1, -2,  //17
-        1, -1, -2,   //18
-        1, -1, -4,  //19
-
-        -1, 1, -4,  //20
-        -1, 1, -2,   //21
-        1, 1, -2,    //22
-        1, 1, -4,   //23
-    ];
-    var vertexes2 = [
+    var vertexes = [
         -1, -1, -1,
         1, -1, -1,
         1, 1, -1,
@@ -88,48 +57,72 @@ require([
         20, 21, 22,
         20, 22, 23
     ];
-    var shader1 = nemesis.rendering.shaders.createProgram(
+    var cube1 = new nemesis.rendering.staticRenderObject(nemesis.rendering.shaders.createProgram(
         nemesis.rendering.shaders.baseVertexShader,
         nemesis.rendering.shaders.colorFragmentShader
-    );
-    var cube1 = new nemesis.rendering.staticRenderObject(shader1);
+    ));
     cube1.setVertexes(faces);
-    cube1.enableAttrib("position", 3, vertexes1);
-    cube1.setVector3("vColor", [1, 1, 0]);
-    var cube2 = new nemesis.rendering.staticRenderObject(shader1);
+    cube1.enableAttrib("aPosition", 3, vertexes);
+    var cube2 = new nemesis.rendering.staticRenderObject(nemesis.rendering.shaders.createProgram(
+        nemesis.rendering.shaders.baseVertexShader,
+        nemesis.rendering.shaders.colorFragmentShader
+    ));
     cube2.setVertexes(faces);
-    cube2.enableAttrib("position", 3, vertexes2);
-    cube2.setVector3("vColor", [1, 0, 1]);
+    cube2.enableAttrib("aPosition", 3, vertexes);
+    var cube3 = new nemesis.rendering.staticRenderObject(nemesis.rendering.shaders.createProgram(
+        nemesis.rendering.shaders.baseVertexShader,
+        nemesis.rendering.shaders.colorFragmentShader
+    ));
+    cube3.setVertexes(faces);
+    cube3.enableAttrib("aPosition", 3, vertexes);
     
     /*========================= DRAWING ========================= */
-    var modelMatrix = nemesis.math.mat4.create();
-    nemesis.math.mat4.translate(modelMatrix, modelMatrix, nemesis.math.vec3.fromValues(0, 0, -6));
+    var modelMatrix1 = nemesis.math.mat4.translate(nemesis.math.mat4.create(), nemesis.math.mat4.create(), nemesis.math.vec3.fromValues(0, 0, -6));
+    var modelMatrix2 = nemesis.math.mat4.clone(modelMatrix1);
+    var modelMatrix3 = nemesis.math.mat4.clone(modelMatrix1);
+
     var mainCamera = new nemesis.rendering.camera();
     mainCamera.setPerspective(40, nemesis.canvas.width / nemesis.canvas.height, 1, 100);
 
     var args = {
         old_time: 0
     };
+    args.m1 = modelMatrix1;
+    args.m2 = modelMatrix2;
+    args.m3 = modelMatrix3;
+    args.mvp = nemesis.math.mat4.create();
 
-    window.resize(function() {
-       mainCamera.setPerspective(40, nemesis.canvas.width / nemesis.canvas.height, 1, 100);
-    });
     nemesis.registerUpdateCallback(function (time, a) {
         var dt = time - a.old_time;
         a.old_time = time;
 
-        nemesis.math.mat4.rotateZ(modelMatrix, modelMatrix, dt * 0.001);
-        nemesis.math.mat4.rotateY(modelMatrix, modelMatrix, dt * 0.002);
-        nemesis.math.mat4.rotateX(modelMatrix, modelMatrix, dt * 0.003);
+        nemesis.math.mat4.rotateZ(a.m1, a.m1, dt * 0.003);
+        nemesis.math.mat4.rotateY(a.m1, a.m1, dt * 0.002);
+        nemesis.math.mat4.rotateX(a.m1, a.m1, dt * 0.001);
+
+        nemesis.math.mat4.rotateZ(a.m2, a.m2, dt * 0.002);
+        nemesis.math.mat4.rotateY(a.m2, a.m2, dt * 0.004);
+        nemesis.math.mat4.rotateX(a.m2, a.m2, dt * 0.006);
+
+        nemesis.math.mat4.rotateZ(a.m3, a.m3, dt * 0.001);
+        nemesis.math.mat4.rotateY(a.m3, a.m3, dt * 0.002);
+        nemesis.math.mat4.rotateX(a.m3, a.m3, dt * 0.003);
     });
     nemesis.registerRenderCallback(function (time, a) {
-        var mvp = nemesis.math.mat4.clone(mainCamera.getProjection());
-        nemesis.math.mat4.multiply(mvp, mvp, mainCamera.getView());
-        nemesis.math.mat4.multiply(mvp, mvp, modelMatrix);
-        cube1.setMatrix4("mvp", mvp);
+        nemesis.math.mat4.copy(a.mvp, mainCamera.getProjection());
+        nemesis.math.mat4.multiply(a.mvp, a.mvp, mainCamera.getView());
+        cube1.setMatrix4("mvp", nemesis.math.mat4.multiply(nemesis.math.mat4.create(), a.mvp, a.m1));
+        cube1.setVector3("uPosition", [0, -3, 0]);
+        cube1.setVector3("vColor", [1, 1, 0]);
         cube1.render();
-        cube2.setMatrix4("mvp", mvp);
+        cube2.setMatrix4("mvp", nemesis.math.mat4.multiply(nemesis.math.mat4.create(), a.mvp, a.m2));
+        cube2.setVector3("uPosition", [0, 0, 0]);
+        cube2.setVector3("vColor", [1, 0, 1]);
         cube2.render();
+        cube3.setMatrix4("mvp", nemesis.math.mat4.multiply(nemesis.math.mat4.create(), a.mvp, a.m3));
+        cube3.setVector3("uPosition", [0, 3, 0]);
+        cube3.setVector3("vColor", [0, 0, 1]);
+        cube3.render();
     });
     nemesis.run(args);
 });

@@ -26,6 +26,7 @@ define(["require", "exports", './input/index', './math/index', './rendering/inde
         }
         nemesis.deregisterRenderCallback = deregisterRenderCallback;
         function run(context) {
+            _rendering.render.init();
             var animateFrame = function (time) {
                 _updateCallbacks.forEach(function (callback) {
                     callback(time, context);

@@ -19,20 +19,19 @@ class renderObject {
 
     private _vertexes: number;
     private _shaderProgram;
-    private _buffer: attribData[] = [];
-    //private _buffer: WebGLBuffer[] = [];
+    private _attribs: attribData[] = [];
 
     public render(time:number, args?:any):void {
         gl.useProgram(this._shaderProgram);
-        _.forEach(this._buffer, (buffer) => {
-            gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buf);
-            gl.vertexAttribPointer(buffer.attrib, buffer.size, gl.FLOAT, false, 0, 0);
+        _.forEach(this._attribs, (attrib) => {
+            gl.bindBuffer(gl.ARRAY_BUFFER, attrib.buf);
+            gl.vertexAttribPointer(attrib.attrib, attrib.size, gl.FLOAT, false, 0, 0);
         });
         gl.drawElements(gl.TRIANGLES, this._vertexes, gl.UNSIGNED_SHORT, 0);
     }
 
     public dispose(): void {
-        _.forEach(this._buffer, (buffer:number) => {
+        _.forEach(this._attribs, (buffer:number) => {
             gl.deleteBuffer(buffer);
         });
     }
@@ -50,7 +49,7 @@ class renderObject {
         var buf = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, buf);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
-        this._buffer.push(new attribData(attrib, size, buf));
+        this._attribs.push(new attribData(attrib, size, buf));
     }
 
     public setMatrix4(uniName: string, value: number[]) {
