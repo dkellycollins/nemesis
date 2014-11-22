@@ -815,6 +815,11 @@ define(["require", "exports", "./glMatrix"], function (require, exports, glMatri
             return (Math.sqrt(Math.pow(a[0], 2) + Math.pow(a[1], 2) + Math.pow(a[2], 2) + Math.pow(a[3], 2) + Math.pow(a[4], 2) + Math.pow(a[5], 2) + Math.pow(a[6], 2) + Math.pow(a[7], 2) + Math.pow(a[8], 2) + Math.pow(a[9], 2) + Math.pow(a[10], 2) + Math.pow(a[11], 2) + Math.pow(a[12], 2) + Math.pow(a[13], 2) + Math.pow(a[14], 2) + Math.pow(a[15], 2)));
         }
         mat4.frob = frob;
+        /**
+         * A static identity matrix.
+         * @type {mat4}
+         */
+        mat4.IDENTITY = create();
     })(mat4 || (mat4 = {}));
     return mat4;
 });

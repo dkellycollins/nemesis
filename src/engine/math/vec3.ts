@@ -392,7 +392,7 @@ module vec3 {
      * @param {Number} [scale] Length of the resulting vector. If ommitted, a unit vector will be returned
      * @returns {vec3} out
      */
-    export function random(out, scale) {
+    export function random(out, scale?) {
         scale = scale || 1.0;
 
         var r = glMatrix.GLMAT_RANDOM() * 2.0 * Math.PI;

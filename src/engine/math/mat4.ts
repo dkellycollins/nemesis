@@ -39,14 +39,17 @@ module mat4 {
         out[1] = 0;
         out[2] = 0;
         out[3] = 0;
+
         out[4] = 0;
         out[5] = 1;
         out[6] = 0;
         out[7] = 0;
+
         out[8] = 0;
         out[9] = 0;
         out[10] = 1;
         out[11] = 0;
+
         out[12] = 0;
         out[13] = 0;
         out[14] = 0;
@@ -987,5 +990,11 @@ module mat4 {
     export function frob(a) {
         return(Math.sqrt(Math.pow(a[0], 2) + Math.pow(a[1], 2) + Math.pow(a[2], 2) + Math.pow(a[3], 2) + Math.pow(a[4], 2) + Math.pow(a[5], 2) + Math.pow(a[6], 2) + Math.pow(a[7], 2) + Math.pow(a[8], 2) + Math.pow(a[9], 2) + Math.pow(a[10], 2) + Math.pow(a[11], 2) + Math.pow(a[12], 2) + Math.pow(a[13], 2) + Math.pow(a[14], 2) + Math.pow(a[15], 2)))
     }
+
+    /**
+     * A static identity matrix.
+     * @type {mat4}
+     */
+    export var IDENTITY = create();
 }
 export = mat4;

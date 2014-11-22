@@ -1,9 +1,8 @@
 #include common.glsl
 
-attribute vec3 aPosition;
-uniform vec3 uPosition;
+attribute vec3 aVertex;
 uniform mat4 mvp;
 
 void main(void) {
-    gl_Position = getPosition(mvp, aPosition + uPosition);
+    gl_Position = mvp * vec4(aVertex, 1.);
 }

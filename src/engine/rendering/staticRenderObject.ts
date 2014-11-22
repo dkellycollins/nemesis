@@ -2,6 +2,8 @@
 
 import gl = require("./glContext");
 import _ = require("lodash");
+import math = require("../math/index");
+import camera = require("./camera");
 
 class attribData {
     constructor(
@@ -15,14 +17,34 @@ class renderObject {
 
     constructor(shaderProgram) {
         this._shaderProgram = shaderProgram;
+        this._modelMat = math.mat4.create();
+        this._mvp = math.mat4.create();
     }
 
+    private _modelMat;
+    private _mvp;
     private _vertexes: number;
     private _shaderProgram;
+    private _camera: camera;
     private _attribs: attribData[] = [];
+
+    public modelMatrix(m?) {
+        if(!!m) {
+            math.mat4.copy(this._modelMat, m);
+        }
+        return math.mat4.clone(this._modelMat);
+    }
+
+    public camera(c?:camera):camera {
+        if(!!c) {
+            this._camera = c;
+        }
+        return this._camera;
+    }
 
     public render(time:number, args?:any):void {
         gl.useProgram(this._shaderProgram);
+        this.setMatrix4("mvp", math.mat4.mul(this._mvp, this._camera.projectionView(), this._modelMat));
         _.forEach(this._attribs, (attrib) => {
             gl.bindBuffer(gl.ARRAY_BUFFER, attrib.buf);
             gl.vertexAttribPointer(attrib.attrib, attrib.size, gl.FLOAT, false, 0, 0);
