@@ -1,6 +1,5 @@
 ///<refernece path="./logger.d.ts" />
 
-import config = require("../../config");
 import consoleLogger = require("./consoleLogger");
 
 module logger {
