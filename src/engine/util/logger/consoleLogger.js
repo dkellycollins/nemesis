@@ -1,3 +1,4 @@
+///<reference path="./logger.d.ts" />
 define(["require", "exports"], function (require, exports) {
     var consoleLogger;
     (function (consoleLogger) {

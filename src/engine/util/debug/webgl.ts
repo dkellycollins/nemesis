@@ -20,7 +20,7 @@
  ** TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  ** MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
  */
-import logger = require("../logging/consoleLogger");
+import logger = require("../logger/consoleLogger");
 
 module WebGLDebugUtils {
     /**

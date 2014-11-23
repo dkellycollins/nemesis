@@ -1,4 +1,4 @@
-import logger = require("./util/logging/consoleLogger");
+import logger = require("util/logger/consoleLogger");
 import config = require("./config");
 
 var canvas;

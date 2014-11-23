@@ -1,3 +1,5 @@
+///<reference path="./logger.d.ts" />
+
 module consoleLogger {
     var _MAX_ERRORS_REPORTED = 500;
     var _maxErrorsReached: boolean = false;

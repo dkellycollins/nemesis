@@ -1,17 +1,17 @@
 ///<reference path="./shaders.d.ts" />
 
 import gl = require("./glContext");
-import logger = require("../util/logging/consoleLogger");
-import common = require("text!./shader_source/common.glsl");
-import base_vertex = require("text!./shader_source/base_vertex.glsl");
-import color_frag = require("text!./shader_source/color_frag.glsl");
+import logger = require("../util/logger/consoleLogger");
+import common = require("text!../shaders/common.glsl");
+import base_vertex = require("text!../shaders/base_vertex.glsl");
+import color_frag = require("text!../shaders/color_frag.glsl");
+import tex_frag = require("text!../shaders/tex_frag.glsl");
+import tex_vertex = require("text!../shaders/tex_vertex.glsl");
 
 /**
  * Handles compiling shaders and creating shader programs.
  */
 module shaders {
-    export var baseVertexShader: WebGLShader;
-    export var colorFragmentShader: WebGLShader;
 
     /**
      * RegExp for fining include statements in shaders.
@@ -91,7 +91,9 @@ module shaders {
     compileLib("common.glsl", <string>common);
 
     /* Shaders */
-    baseVertexShader = compile(<string>base_vertex, gl.VERTEX_SHADER);
-    colorFragmentShader = compile(<string>color_frag, gl.FRAGMENT_SHADER);
+    export var baseVertexShader: WebGLShader = compile(<string>base_vertex, gl.VERTEX_SHADER);
+    export var colorFragmentShader: WebGLShader = compile(<string>color_frag, gl.FRAGMENT_SHADER);
+    export var textureVertexShader: WebGLShader = compile(<string>tex_vertex, gl.VERTEX_SHADER);
+    export var textureFragmentShader: WebGLShader = compile(<string>tex_frag, gl.FRAGMENT_SHADER);
 }
 export = shaders;

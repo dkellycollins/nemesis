@@ -1,4 +1,4 @@
-define(["require", "exports", "../logging/consoleLogger"], function (require, exports, logger) {
+define(["require", "exports", "../logger/consoleLogger"], function (require, exports, logger) {
     var WebGLDebugUtils;
     (function (WebGLDebugUtils) {
         /**

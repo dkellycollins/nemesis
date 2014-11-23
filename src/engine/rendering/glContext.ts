@@ -1,6 +1,6 @@
 import canvas = require("../canvas");
 import config = require("../config");
-import logger = require("../util/logging/consoleLogger");
+import logger = require("../util/logger/consoleLogger");
 import debug = require("../util/debug/webgl");
 
 function throwOnGLError(err, funcName, args) {

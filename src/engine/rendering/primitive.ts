@@ -1,5 +1,5 @@
 import gl = require("./glContext");
-import Logger = require("../util/logging/consoleLogger");
+import Logger = require("../util/logger/consoleLogger");
 
 module primitive {
     export function init() {

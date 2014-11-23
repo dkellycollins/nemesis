@@ -1,12 +1,10 @@
 ///<reference path="./shaders.d.ts" />
-define(["require", "exports", "./glContext", "../util/logging/consoleLogger", "text!./shader_source/common.glsl", "text!./shader_source/base_vertex.glsl", "text!./shader_source/color_frag.glsl"], function (require, exports, gl, logger, common, base_vertex, color_frag) {
+define(["require", "exports", "./glContext", "../util/logger/consoleLogger", "text!../shaders/common.glsl", "text!../shaders/base_vertex.glsl", "text!../shaders/color_frag.glsl", "text!../shaders/tex_frag.glsl", "text!../shaders/tex_vertex.glsl"], function (require, exports, gl, logger, common, base_vertex, color_frag, tex_frag, tex_vertex) {
     /**
      * Handles compiling shaders and creating shader programs.
      */
     var shaders;
     (function (shaders) {
-        shaders.baseVertexShader;
-        shaders.colorFragmentShader;
         /**
          * RegExp for fining include statements in shaders.
          * @type {RegExp}
@@ -80,6 +78,8 @@ define(["require", "exports", "./glContext", "../util/logging/consoleLogger", "t
         /* Shaders */
         shaders.baseVertexShader = compile(base_vertex, gl.VERTEX_SHADER);
         shaders.colorFragmentShader = compile(color_frag, gl.FRAGMENT_SHADER);
+        shaders.textureVertexShader = compile(tex_vertex, gl.VERTEX_SHADER);
+        shaders.textureFragmentShader = compile(tex_frag, gl.FRAGMENT_SHADER);
     })(shaders || (shaders = {}));
     return shaders;
 });

@@ -4,6 +4,8 @@ import gl = require("./glContext");
 import _ = require("lodash");
 import math = require("../math/index");
 import camera = require("./camera");
+import texture = require("./texture");
+import verify = require("../util/debug/verifier");
 
 class attribData {
     constructor(
@@ -26,6 +28,7 @@ class renderObject {
     private _vertexes: number;
     private _shaderProgram;
     private _camera: camera;
+    private _texture: texture;
     private _attribs: attribData[] = [];
 
     public modelMatrix(m?) {
@@ -42,13 +45,30 @@ class renderObject {
         return this._camera;
     }
 
+    public texture(t?:texture):texture {
+        if(!!t) {
+            this._texture = t;
+        }
+        return this._texture;
+    }
+
     public render(time:number, args?:any):void {
         gl.useProgram(this._shaderProgram);
+        //Set mvp matrix.
         this.setMatrix4("mvp", math.mat4.mul(this._mvp, this._camera.projectionView(), this._modelMat));
+
+        //If we have a texture activate it
+        if(!!this._texture && this._texture.loaded()) {
+            this._texture.activate();
+        }
+
+        //Reactivate the shader attributes.
         _.forEach(this._attribs, (attrib) => {
             gl.bindBuffer(gl.ARRAY_BUFFER, attrib.buf);
             gl.vertexAttribPointer(attrib.attrib, attrib.size, gl.FLOAT, false, 0, 0);
         });
+
+        //Draw!
         gl.drawElements(gl.TRIANGLES, this._vertexes, gl.UNSIGNED_SHORT, 0);
     }
 
@@ -66,6 +86,9 @@ class renderObject {
     }
 
     public enableAttrib(attribName: string, size: number, data:number[]) {
+        verify.that(size, "size").isDefined().isGreaterThan(0);
+        verify.that(data, "data").isDefined().isNotEmpty();
+
         var attrib = gl.getAttribLocation(this._shaderProgram, attribName);
         gl.enableVertexAttribArray(attrib);
         var buf = gl.createBuffer();
@@ -75,12 +98,16 @@ class renderObject {
     }
 
     public setMatrix4(uniName: string, value: number[]) {
+        verify.that(value, "value").isDefined().isNotEmpty();
+
         gl.useProgram(this._shaderProgram);
         var uniform = gl.getUniformLocation(this._shaderProgram, uniName);
         gl.uniformMatrix4fv(uniform, false, value);
     }
 
     public setVector3(uniName: string, value: number[]) {
+        verify.that(value, "value").isDefined().isNotEmpty();
+
         gl.useProgram(this._shaderProgram);
         var uniform = gl.getUniformLocation(this._shaderProgram, uniName);
         gl.uniform3f(uniform, value[0], value[1], value[2]);

@@ -16,3 +16,6 @@ export var staticRenderObject = staticRenderObject_file; ///ts:export:generated
 ///ts:export=camera
 import camera_file = require('./camera'); ///ts:export:generated
 export var camera = camera_file; ///ts:export:generated
+///ts:export=texture
+import texture_file = require('./texture'); ///ts:export:generated
+export var texture = texture_file; ///ts:export:generated

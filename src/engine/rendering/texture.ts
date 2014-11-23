@@ -1,37 +1,41 @@
-///ts:import=glContext,gl
-import gl = require('./glContext'); ///ts:import:generated
-import _ = require('lodash')
+import gl = require('./glContext');
+import _ = require('lodash');
 
 class texture {
     constructor(img: any) {
-        this._glTexture = gl.createTexture();
-        this._glTexture.image = img;
-        if(this._imgLoaded(img)) {
+        this._img = img;
+        this._tex = gl.createTexture();
+        if(this.loaded()) {
             this._handleLoadedImage();
         } else {
-            img.onload = this._handleLoadedImage();
+            this._img.onload = this._handleLoadedImage();
         }
     }
 
-    private _imgLoaded(img:any):boolean {
-        if(img.complete) { //IE
+    private _tex: WebGLTexture;
+    private _img: any;
+
+    public loaded():boolean {
+        if(this._img.complete) { //IE
             return true;
         }
-        if(_.isUndefined(img.naturalWidth) || img.naturalWidth > 0) {
-            return true;
-        }
-        return false;
+        return !!(_.isUndefined(this._img.naturalWidth) || this._img.naturalWidth > 0);
     }
 
-    private _handleLoadedImage() {
-        gl.bindTexture(gl.TEXTURE_2D, this._glTexture);
+    public activate(texNumber?: number):void {
+        texNumber = _.isUndefined(texNumber) ? gl.TEXTURE0 : texNumber;
+        gl.activeTexture(texNumber);
+        gl.bindTexture(gl.TEXTURE_2D, this._tex);
+    }
+
+    private _handleLoadedImage():void {
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._glTexture.image);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.bindTexture(gl.TEXTURE_2D, this._tex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._img);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR);
+        gl.generateMipmap(gl.TEXTURE_2D);
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
-
-    private _glTexture;
 }
 export = texture;
