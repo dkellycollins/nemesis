@@ -1,4 +1,5 @@
 ///<reference path="../../lib/node/node.d.ts" />
+//declare function require(m: string): any;
 var fs = require('fs');
 function processObj(src, dest) {
     var destObj = {
