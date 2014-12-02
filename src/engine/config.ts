@@ -1,6 +1,6 @@
 var config = {
     canvasId: "",
-    fullscreen: true,
+    fullscreen: false,
     throwOnGLError: true,
     logGLCalls: false,
     validateGLArgs: true

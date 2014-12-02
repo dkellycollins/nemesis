@@ -1,7 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     var config = {
         canvasId: "",
-        fullscreen: true,
+        fullscreen: false,
         throwOnGLError: true,
         logGLCalls: false,
         validateGLArgs: true

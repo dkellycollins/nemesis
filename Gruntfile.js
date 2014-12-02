@@ -8,15 +8,15 @@ module.exports = function(grunt) {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
             },
             build: {
-                src: 'build/<%= pkg.name %>.js',
-                dest: 'build/<%= pkg.name %>.min.js'
+                src: 'build/nemesis.js',
+                dest: 'build/nemesis.min.js'
             }
         },
         requirejs: {
-            compile: {
+            engine: {
                 options: {
                     baseUrl: "src/engine",
-                    name: "<%= pkg.name %>",
+                    name: "nemesis",
                     paths: {
                         text: "../../node_modules/text/text",
                         json: "../../bower_components/requirejs-plugins/src/json",
@@ -24,7 +24,15 @@ module.exports = function(grunt) {
                         nemesisconfig: 'empty:',
                         lodash: "../../node_modules/lodash/lodash"
                     },
-                    out: 'build/<%= pkg.name %>.js',
+                    out: 'build/nemesis.js',
+                    optimize: 'none'
+                }
+            },
+            importer: {
+                options: {
+                    baseUrl: "src/importer",
+                    name: "main",
+                    out: 'build/importer.js',
                     optimize: 'none'
                 }
             }
@@ -50,7 +58,7 @@ module.exports = function(grunt) {
 
     // Default task(s).
     grunt.registerTask('debug', ['ts:build', 'requirejs']);
-    grunt.registerTask('release' ['ts:build', 'requirejs', 'uglify']);
+    grunt.registerTask('release', ['ts:build', 'requirejs', 'uglify']);
     grunt.registerTask('default', ['debug']);
 
 };
