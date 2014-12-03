@@ -57,8 +57,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-ts');
 
     // Default task(s).
-    grunt.registerTask('debug', ['ts:build', 'requirejs']);
-    grunt.registerTask('release', ['ts:build', 'requirejs', 'uglify']);
+    grunt.registerTask('debug', ['ts:build', 'requirejs:engine']);
+    grunt.registerTask('release', ['ts:build', 'requirejs:engine', 'uglify']);
     grunt.registerTask('default', ['debug']);
 
 };
