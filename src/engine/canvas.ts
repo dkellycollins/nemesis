@@ -1,16 +1,20 @@
+///<reference path="../../lib/lodash/lodash.d.ts" />
+
 import logger = require("util/logger/consoleLogger");
-import config = require("./config");
 
+var elements = document.getElementsByTagName('canvas');
 var canvas;
-if(config.canvasId) {
-    canvas = <HTMLCanvasElement>document.getElementById(config.canvasId);
-} else {
-    canvas = document.getElementsByTagName('canvas')[0];
-}
 
-if(config.fullscreen) {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+if(elements.length == 0) {
+    logger.logError('No canvas elements found.');
+} else {
+    for(var i = 0; i < elements.length; i++) {
+        if(elements[i].hasAttribute('nemesis')) {
+            canvas = elements[i];
+            break;
+        }
+    }
+    canvas = canvas || elements[0];
 }
 
 export = canvas;
