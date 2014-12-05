@@ -1,10 +1,10 @@
-define(["require", "exports"], function (require, exports) {
-    var config = {
-        canvasId: "",
-        fullscreen: false,
-        throwOnGLError: true,
-        logGLCalls: false,
-        validateGLArgs: true
-    };
+//<reference path="./nemesisConfig.d.ts" />
+define(["require", "exports", './canvas'], function (require, exports, canvas) {
+    var config = {};
+    if (canvas.getAttribute('debug') == "true") {
+        config.throwOnGLError = true;
+        config.logGLCalls = true;
+        config.validateGLArgs = true;
+    }
     return config;
 });

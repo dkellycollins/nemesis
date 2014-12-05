@@ -12,6 +12,9 @@ require.config({
 require([
         'nemesis', 'lodash', 'json!cube.json', 'image!cube_texture.png', 'image!cube_texture_2.png'],
     function (nemesis, _, cubeData, cubeTexture, cubeTexture2) {
+        //Make canvas fullscreen.
+        nemesis.canvas.height = window.innerHeight;
+        nemesis.canvas.width = window.innerWidth;
 
         var mod = 0;
         function getRandomPos() {

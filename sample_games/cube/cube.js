@@ -11,6 +11,10 @@ require.config({
 
 require([
     'nemesis', 'lodash', 'json!cube.json'], function (nemesis, _, cubeData) {
+    //Make canvas fullscreen.
+    nemesis.canvas.height = window.innerHeight;
+    nemesis.canvas.width = window.innerWidth;
+
     function getRandomColor() {
         var color = [];
         for(var i = 0; i < 3; i++) {

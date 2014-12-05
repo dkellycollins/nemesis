@@ -1,14 +1,18 @@
-define(["require", "exports", "./config"], function (require, exports, config) {
+///<reference path="../../lib/lodash/lodash.d.ts" />
+define(["require", "exports", "util/logger/consoleLogger"], function (require, exports, logger) {
+    var elements = document.getElementsByTagName('canvas');
     var canvas;
-    if (config.canvasId) {
-        canvas = document.getElementById(config.canvasId);
+    if (elements.length == 0) {
+        logger.logError('No canvas elements found.');
     }
     else {
-        canvas = document.getElementsByTagName('canvas')[0];
-    }
-    if (config.fullscreen) {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        for (var i = 0; i < elements.length; i++) {
+            if (elements[i].hasAttribute('nemesis')) {
+                canvas = elements[i];
+                break;
+            }
+        }
+        canvas = canvas || elements[0];
     }
     return canvas;
 });
