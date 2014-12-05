@@ -10,7 +10,7 @@ require.config({
 });
 
 require([
-        'nemesis', 'lodash', 'json!cube.json', 'image!cube_texture.png', 'image!cube_texture_2.png'],
+        'nemesis', 'lodash', 'json!cube2.json', 'image!cube_texture.png', 'image!cube_texture_2.png'],
     function (nemesis, _, cubeData, cubeTexture, cubeTexture2) {
         //Make canvas fullscreen.
         nemesis.canvas.height = window.innerHeight;
@@ -42,7 +42,7 @@ require([
                 }
             }
             mod++;
-            return math.mat4.translate(math.mat4.create(), math.mat4.IDENTITY, math.vec3.fromValues(x, y, -6));;
+            return math.mat4.translate(math.mat4.create(), math.mat4.IDENTITY, math.vec3.fromValues(x, y, -15));;
         }
 
         function createCube(scene, camera, texture) {
@@ -63,6 +63,7 @@ require([
 
         /*========================= THE CUBE ========================= */
         var mainCamera = new nemesis.rendering.camera();
+        mainCamera.fov(45);
         var texture1 = new nemesis.rendering.texture(cubeTexture);
         var texture2 = new nemesis.rendering.texture(cubeTexture2);
         var scene = [];

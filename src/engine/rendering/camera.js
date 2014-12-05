@@ -12,6 +12,7 @@ define(["require", "exports", "../canvas", "../math/vec3", "../math/mat4"], func
         camera.prototype.fov = function (fov) {
             if (!!fov) {
                 this._fov = fov;
+                mat4.perspective(this._proj, this._fov, this._aspect, this._nearClip, this._farClip);
             }
             return this._fov;
         };

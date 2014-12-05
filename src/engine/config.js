@@ -1,4 +1,4 @@
-//<reference path="./nemesisConfig.d.ts" />
+///<reference path="./nemesisConfig.d.ts" />
 define(["require", "exports", './canvas'], function (require, exports, canvas) {
     var config = {};
     if (canvas.getAttribute('debug') == "true") {

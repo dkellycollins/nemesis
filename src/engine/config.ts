@@ -1,4 +1,4 @@
-//<reference path="./nemesisConfig.d.ts" />
+///<reference path="./nemesisConfig.d.ts" />
 
 import canvas = require('./canvas');
 

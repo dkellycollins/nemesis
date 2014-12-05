@@ -27,7 +27,7 @@ define(["require", "exports", '../canvas'], function (require, exports, canvas) 
          * @returns {boolean} True if the button is currently pressed. False otherwise.
          */
         function getButton(b) {
-            return this._state[b];
+            return _state[b];
         }
         mouse.getButton = getButton;
         /**
@@ -52,8 +52,8 @@ define(["require", "exports", '../canvas'], function (require, exports, canvas) 
          * @private
          */
         function _mouseLeave(e) {
-            this.posX = 0;
-            this.posY = 0;
+            mouse.posX = 0;
+            mouse.posY = 0;
             for (var button in _state) {
                 _state[button] = false;
             }
@@ -64,8 +64,8 @@ define(["require", "exports", '../canvas'], function (require, exports, canvas) 
          * @private
          */
         function _mouseEnter(e) {
-            this.posX = e.clientX;
-            this.posY = e.clientY;
+            mouse.posX = e.clientX;
+            mouse.posY = e.clientY;
             for (var button in e.buttons) {
                 _state[button] = true;
             }
@@ -76,8 +76,8 @@ define(["require", "exports", '../canvas'], function (require, exports, canvas) 
          * @private
          */
         function _mouseMove(e) {
-            this.posX = e.clientX;
-            this.posY = e.clientY;
+            mouse.posX = e.clientX;
+            mouse.posY = e.clientY;
         }
         //Setup event listeners.
         canvas.addEventListener("mousedown", _mouseDown, false);
@@ -86,4 +86,5 @@ define(["require", "exports", '../canvas'], function (require, exports, canvas) 
         canvas.addEventListener("mouseenter", _mouseEnter, false);
         canvas.addEventListener("mousemove", _mouseMove, false);
     })(mouse || (mouse = {}));
+    return mouse;
 });

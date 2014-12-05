@@ -12,7 +12,6 @@ interface IArguments {
 
 function main(args:IArguments):void {
     var parser = createParser(args);
-
     var input = process.stdin;
     var output = process.stdout;
     if(!!args._[0]) {
@@ -22,6 +21,10 @@ function main(args:IArguments):void {
         output = fs.createWriteStream(args._[1]);
     }
 
+    input.on('end', () => {
+        parser.push(JSON.stringify(parser.obj));
+        parser.end();
+    });
     input.pipe(parser).pipe(output);
 }
 
@@ -30,10 +33,16 @@ function createParser(args) {
     parser._transform = function(data, encoding, done) {
         parseObj(parser, data, encoding, done);
     };
+    parser.vertexCount = 0;
+    parser.uvCount = 0;
+    parser.normalCount = 0;
+    parser.faceCount = 0;
     parser.obj = {
         vertexes: [],
         uv: [],
         faces: [],
+        textureCoordinates: [],
+        normalCoordinates: [],
         normals: []
     };
 
@@ -47,36 +56,42 @@ function parseObj(parser, data, encoding, done) {
 
     data = data.toString().split('\n');
     while(data.length > 1) {
-        var d = data[0];
+        var d = data.shift().split(' ');
         switch (d[0]) {
             case 'v':
+                parser.vertexCount += 3;
                 parser.obj.vertexes.push(parseFloat(d[1]));
                 parser.obj.vertexes.push(parseFloat(d[2]));
                 parser.obj.vertexes.push(parseFloat(d[3]));
                 break;
             case 'f':
-                parser.obj.faces.push(parseInt(d[1]) - 1);
-                parser.obj.faces.push(parseInt(d[2]) - 1);
-                parser.obj.faces.push(parseInt(d[3]) - 1);
+                for(var i = 1; i < d.length; i++) {
+                    var d2 = d[i].split('/');
+                    parser.faceCount += d2.length;
+                    parser.obj.faces.push(parseInt(d2[0]) - 1);
+                    if(!!d2[1]) {
+                        parser.obj.textureCoordinates.push(parseInt(d2[1]) - 1);
+                    }
+                    if(!!d2[2]) {
+                        parser.obj.normalCoordinates.push(parseInt(d2[2]) - 1);
+                    }
+                }
                 break;
             case 'vt':
+                parser.uvCount += 2;
                 parser.obj.uv.push(parseFloat(d[1]));
                 parser.obj.uv.push(parseFloat(d[2]));
                 break;
             case 'vn':
+                parser.normalCount += 3;
                 parser.obj.normals.push(parseFloat(d[1]));
                 parser.obj.normals.push(parseFloat(d[2]));
                 parser.obj.normals.push(parseFloat(d[3]));
                 break;
         }
-        data.pop();
     }
 
-    if(data[0].length == 0) {
-        parser.push(JSON.stringify(parser.obj));
-    } else {
-        parser.prevData = data[0];
-    }
+    parser.prevData = data[0];
     done();
 }
 

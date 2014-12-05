@@ -24,7 +24,7 @@ class camera {
     public fov(fov?:number):number {
         if(!!fov) {
             this._fov = fov;
-
+            mat4.perspective(this._proj, this._fov, this._aspect, this._nearClip, this._farClip);
         }
         return this._fov;
     }

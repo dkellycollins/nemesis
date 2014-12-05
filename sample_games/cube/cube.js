@@ -49,7 +49,7 @@ require([
             }
         }
         mod++;
-        return math.mat4.translate(math.mat4.create(), math.mat4.IDENTITY, math.vec3.fromValues(x, y, -6));;
+        return math.mat4.translate(math.mat4.create(), math.mat4.IDENTITY, math.vec3.fromValues(x, y, -15));;
     }
 
     function createCube(scene, camera) {
@@ -68,6 +68,7 @@ require([
 
     /*========================= THE CUBE ========================= */
     var mainCamera = new nemesis.rendering.camera();
+    mainCamera.fov(45);
     var scene = [];
     var numOfCubes = parseInt(window.location.hash.replace('#', '')) || 1;
     for(var i = 0; i < numOfCubes; i++) {

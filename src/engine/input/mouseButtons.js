@@ -8,17 +8,17 @@ define(["require", "exports"], function (require, exports) {
          * The left mouse button.
          * @type {number}
          */
-        mouseButtons.Left = 0;
+        mouseButtons.LEFT = 0;
         /**
          * The middle button or scroll wheel.
          * @type {number}
          */
-        mouseButtons.Middle = 1;
+        mouseButtons.MIDDLE = 1;
         /**
          * The right button.
          * @type {number}
          */
-        mouseButtons.Right = 2;
+        mouseButtons.RIGHT = 2;
     })(mouseButtons || (mouseButtons = {}));
     return mouseButtons;
 });

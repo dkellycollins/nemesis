@@ -6,12 +6,13 @@ class orthoCamera {
     constructor(pos?, target?) {
         this._pos = pos || vec3.create();
         this._target = target || vec3.create();
+        var ratio = canvas.width / canvas.height;
         this._nearClip = 1;
-        this._farClip = 100;
-        this._left = 0;
-        this._bottom = 0;
-        this._right = canvas.width;
-        this._top = canvas.height;
+        this._farClip = 1000;
+        this._left = -ratio;
+        this._bottom = -1;
+        this._right = ratio;
+        this._top = 1;
         this._proj = mat4.ortho(mat4.create(), this._left, this._right, this._bottom, this._top, this._nearClip, this._farClip);
     }
 
@@ -87,5 +88,4 @@ class orthoCamera {
         return mat4.lookAt(mat4.create(), this._pos, this._target, vec3.UNIT_Y);
     }
 }
-
 export = orthoCamera

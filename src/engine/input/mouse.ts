@@ -33,7 +33,7 @@ module mouse {
      * @returns {boolean} True if the button is currently pressed. False otherwise.
      */
     export function getButton(b:number):boolean {
-        return this._state[b];
+        return _state[b];
     }
 
     /**
@@ -60,8 +60,8 @@ module mouse {
      * @private
      */
     function _mouseLeave(e) {
-        this.posX = 0;
-        this.posY = 0;
+        posX = 0;
+        posY = 0;
         for(var button in _state) {
             _state[button] = false;
         }
@@ -73,8 +73,8 @@ module mouse {
      * @private
      */
     function _mouseEnter(e) {
-        this.posX = e.clientX;
-        this.posY = e.clientY;
+        posX = e.clientX;
+        posY = e.clientY;
         for(var button in e.buttons) {
             _state[button] = true;
         }
@@ -86,8 +86,8 @@ module mouse {
      * @private
      */
     function _mouseMove(e) {
-        this.posX = e.clientX;
-        this.posY = e.clientY;
+        posX = e.clientX;
+        posY = e.clientY;
     }
 
     //Setup event listeners.
@@ -97,3 +97,5 @@ module mouse {
     canvas.addEventListener("mouseenter", _mouseEnter, false);
     canvas.addEventListener("mousemove", _mouseMove, false);
 }
+
+export = mouse;
