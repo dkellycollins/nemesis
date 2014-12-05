@@ -19,3 +19,6 @@ export var camera = camera_file; ///ts:export:generated
 ///ts:export=texture
 import texture_file = require('./texture'); ///ts:export:generated
 export var texture = texture_file; ///ts:export:generated
+///ts:export=orthoCamera
+import orthoCamera_file = require('./orthoCamera'); ///ts:export:generated
+export var orthoCamera = orthoCamera_file; ///ts:export:generated
