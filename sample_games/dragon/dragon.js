@@ -16,21 +16,21 @@ require([
         nemesis.canvas.height = window.innerHeight;
 
         function createDragon(scene, camera, texture) {
-            /*var dragon = new nemesis.rendering.staticRenderObject(nemesis.rendering.shaders.createProgram(
+            var dragon = new nemesis.rendering.staticRenderObject(nemesis.rendering.shaders.createProgram(
              nemesis.rendering.shaders.textureVertexShader,
              nemesis.rendering.shaders.textureFragmentShader
-             ));*/
-            var dragon = new nemesis.rendering.staticRenderObject(nemesis.rendering.shaders.createProgram(
+             ));
+            /*var dragon = new nemesis.rendering.staticRenderObject(nemesis.rendering.shaders.createProgram(
                 nemesis.rendering.shaders.baseVertexShader,
                 nemesis.rendering.shaders.colorFragmentShader
-            ));
+            ));*/
             dragon.setVertexes(dragonData.faces);
             dragon.enableAttrib("aVertex", 3, dragonData.vertexes);
-            //dragon.enableAttrib("aUV", 2, cubeData.uv);
-            dragon.setVector3("vColor", [1, 0, 0]);
+            dragon.enableAttrib("aUV", 2, dragonData.uv);
+            //dragon.setVector3("vColor", [1, 0, 0]);
             dragon.modelMatrix(nemesis.math.mat4.translate(nemesis.math.mat4.create(), nemesis.math.mat4.IDENTITY, nemesis.math.vec3.fromValues(0, 0, -25)));
             dragon.camera(camera);
-            //dragon.texture(texture);
+            dragon.texture(texture);
             scene.push(dragon);
             return dragon;
         }

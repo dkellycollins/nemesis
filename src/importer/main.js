@@ -14,6 +14,7 @@ function main(args) {
         output = fs.createWriteStream(args._[1]);
     }
     input.on('end', function () {
+        finalize(parser);
         parser.push(JSON.stringify(parser.obj));
         parser.end();
     });
@@ -24,13 +25,10 @@ function createParser(args) {
     parser._transform = function (data, encoding, done) {
         parseObj(parser, data, encoding, done);
     };
-    parser.vertexCount = 0;
-    parser.uvCount = 0;
-    parser.normalCount = 0;
-    parser.faceCount = 0;
     parser.obj = {
         vertexes: [],
         uv: [],
+        tempUv: [],
         faces: [],
         textureCoordinates: [],
         normalCoordinates: [],
@@ -67,8 +65,8 @@ function parseObj(parser, data, encoding, done) {
                 break;
             case 'vt':
                 parser.uvCount += 2;
-                parser.obj.uv.push(parseFloat(d[1]));
-                parser.obj.uv.push(parseFloat(d[2]));
+                parser.obj.tempUv.push(parseFloat(d[1]));
+                parser.obj.tempUv.push(parseFloat(d[2]));
                 break;
             case 'vn':
                 parser.normalCount += 3;
@@ -80,5 +78,17 @@ function parseObj(parser, data, encoding, done) {
     }
     parser.prevData = data[0];
     done();
+}
+function finalize(parser) {
+    for (var i = 0; i < parser.obj.faces.length; i++) {
+        var f = parser.obj.faces[i];
+        var tc = parser.obj.textureCoordinates[i];
+        parser.obj.uv[f * 2] = parser.obj.tempUv[tc * 2];
+        parser.obj.uv[f * 2 + 1] = parser.obj.tempUv[tc * 2 + 1];
+    }
+    //Remove useless data from obj.
+    delete parser.obj.tempUv;
+    delete parser.obj.textureCoordinates;
+    delete parser.obj.normalCoordinates;
 }
 main(parseArgs(process.argv.slice(2)));
