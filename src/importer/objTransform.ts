@@ -1,43 +1,9 @@
 ///<reference path="../../lib/node/node.d.ts" />
-///<reference path="../../lib/node/minimist.d.ts" />
 
-var parseArgs = require('minimist');
 var transform = require('stream').Transform;
-var fs = require('fs');
 
-interface IArguments {
-    _: string[];
-    h: boolean;
-}
+class objTransform extends Trans {
 
-function main(args:IArguments):void {
-    var parser = createParser(args);
-
-    var input = process.stdin;
-    var output = process.stdout;
-    if(!!args._[0]) {
-        input = fs.createReadStream(args._[0]);
-    }
-    if(!!args._[1]) {
-        output = fs.createWriteStream(args._[1]);
-    }
-
-    input.pipe(parser).pipe(output);
-}
-
-function createParser(args) {
-    var parser = new transform();
-    parser._transform = function(data, encoding, done) {
-        parseObj(parser, data, encoding, done);
-    };
-    parser.obj = {
-        vertexes: [],
-        uv: [],
-        faces: [],
-        normals: []
-    };
-
-    return parser;
 }
 
 function parseObj(parser, data, encoding, done) {
@@ -79,5 +45,3 @@ function parseObj(parser, data, encoding, done) {
     }
     done();
 }
-
-main(parseArgs(process.argv.slice(2)));
