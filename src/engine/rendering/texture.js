@@ -1,4 +1,4 @@
-define(["require", "exports", './glContext', '../util/debug/verifier'], function (require, exports, gl, verify) {
+define(["require", "exports", './glContext'], function (require, exports, gl) {
     /**
      * Manages a texture on the graphics card.
      */
@@ -33,7 +33,7 @@ define(["require", "exports", './glContext', '../util/debug/verifier'], function
          */
         texture.prototype.activate = function (texNumber) {
             texNumber = typeof (texNumber) == 'undefined' ? gl.TEXTURE0 : texNumber;
-            verify.that(texNumber, "texNumber").isGreaterThan(-1).isLessThan(32);
+            //verify.that(texNumber, "texNumber").isGreaterThan(-1).isLessThan(32);
             gl.activeTexture(texNumber);
             gl.bindTexture(gl.TEXTURE_2D, this._tex);
         };

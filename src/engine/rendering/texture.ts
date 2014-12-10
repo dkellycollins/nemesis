@@ -47,7 +47,7 @@ class texture {
     public activate(texNumber?: number):void {
         texNumber = typeof(texNumber) == 'undefined' ? gl.TEXTURE0 : texNumber;
 
-        verify.that(texNumber, "texNumber").isGreaterThan(-1).isLessThan(32);
+        //verify.that(texNumber, "texNumber").isGreaterThan(-1).isLessThan(32);
 
         gl.activeTexture(texNumber);
         gl.bindTexture(gl.TEXTURE_2D, this._tex);

@@ -5520,6 +5520,63 @@ define('rendering/camera',["require", "exports", "../canvas", "../math/vec3", ".
     return camera;
 });
 
+define('rendering/texture',["require", "exports", './glContext'], function (require, exports, gl) {
+    /**
+     * Manages a texture on the graphics card.
+     */
+    var texture = (function () {
+        /**
+         * Creates a new texture with the given image.
+         * @param img The image to send to the graphics card
+         */
+        function texture(img) {
+            this._img = img;
+            this._tex = gl.createTexture();
+            if (this.loaded()) {
+                this._handleLoadedImage();
+            }
+            else {
+                this._img.onload = this._handleLoadedImage();
+            }
+        }
+        /**
+         * Gets if the texture has been loaded on the graphics card
+         * @returns {boolean} True if the texture has been sent to the graphics card. False, otherwise.
+         */
+        texture.prototype.loaded = function () {
+            if (this._img.complete) {
+                return true;
+            }
+            return !!(typeof (this._img.naturalWidth) == 'undefined' || this._img.naturalWidth > 0);
+        };
+        /**
+         * Sets this texture as active on graphics card.
+         * @param texNumber The texture number on the graphics card
+         */
+        texture.prototype.activate = function (texNumber) {
+            texNumber = typeof (texNumber) == 'undefined' ? gl.TEXTURE0 : texNumber;
+            //verify.that(texNumber, "texNumber").isGreaterThan(-1).isLessThan(32);
+            gl.activeTexture(texNumber);
+            gl.bindTexture(gl.TEXTURE_2D, this._tex);
+        };
+        /**
+         * Sends the image
+         * @private
+         */
+        texture.prototype._handleLoadedImage = function () {
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+            gl.bindTexture(gl.TEXTURE_2D, this._tex);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._img);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR);
+            gl.generateMipmap(gl.TEXTURE_2D);
+            gl.bindTexture(gl.TEXTURE_2D, null);
+        };
+        return texture;
+    })();
+    return texture;
+});
+
 ///<refernece path="./logger.d.ts" />
 define('util/logger/index',["require", "exports", "./consoleLogger"], function (require, exports, consoleLogger) {
     /**
@@ -5531,7 +5588,7 @@ define('util/logger/index',["require", "exports", "./consoleLogger"], function (
          */
         function logger() {
             /**
-             * The actve loggers
+             * The active loggers
              * @type {Array}
              * @private
              */
@@ -5543,7 +5600,7 @@ define('util/logger/index',["require", "exports", "./consoleLogger"], function (
          * @param msg The message to log
          */
         logger.prototype.log = function (msg) {
-            _.forEach(this._loggers, function (logger) {
+            this._loggers.forEach(function (logger) {
                 logger.log(msg);
             });
         };
@@ -5553,7 +5610,7 @@ define('util/logger/index',["require", "exports", "./consoleLogger"], function (
          * @param e Error
          */
         logger.prototype.logError = function (msg, e) {
-            _.forEach(this._loggers, function (logger) {
+            this._loggers.forEach(function (logger) {
                 logger.logError(msg, e);
             });
         };
@@ -5648,63 +5705,6 @@ define('util/debug/verifier',["require", "exports", "../logger/index"], function
         verify.that = that;
     })(verify || (verify = {}));
     return verify;
-});
-
-define('rendering/texture',["require", "exports", './glContext', '../util/debug/verifier'], function (require, exports, gl, verify) {
-    /**
-     * Manages a texture on the graphics card.
-     */
-    var texture = (function () {
-        /**
-         * Creates a new texture with the given image.
-         * @param img The image to send to the graphics card
-         */
-        function texture(img) {
-            this._img = img;
-            this._tex = gl.createTexture();
-            if (this.loaded()) {
-                this._handleLoadedImage();
-            }
-            else {
-                this._img.onload = this._handleLoadedImage();
-            }
-        }
-        /**
-         * Gets if the texture has been loaded on the graphics card
-         * @returns {boolean} True if the texture has been sent to the graphics card. False, otherwise.
-         */
-        texture.prototype.loaded = function () {
-            if (this._img.complete) {
-                return true;
-            }
-            return !!(typeof (this._img.naturalWidth) == 'undefined' || this._img.naturalWidth > 0);
-        };
-        /**
-         * Sets this texture as active on graphics card.
-         * @param texNumber The texture number on the graphics card
-         */
-        texture.prototype.activate = function (texNumber) {
-            texNumber = typeof (texNumber) == 'undefined' ? gl.TEXTURE0 : texNumber;
-            verify.that(texNumber, "texNumber").isGreaterThan(-1).isLessThan(32);
-            gl.activeTexture(texNumber);
-            gl.bindTexture(gl.TEXTURE_2D, this._tex);
-        };
-        /**
-         * Sends the image
-         * @private
-         */
-        texture.prototype._handleLoadedImage = function () {
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-            gl.bindTexture(gl.TEXTURE_2D, this._tex);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._img);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR);
-            gl.generateMipmap(gl.TEXTURE_2D);
-            gl.bindTexture(gl.TEXTURE_2D, null);
-        };
-        return texture;
-    })();
-    return texture;
 });
 
 ///<reference path="../../../lib/lodash/lodash.d.ts" />
@@ -5896,7 +5896,6 @@ define('nemesis',["require", "exports", "./eventObject", './input/index', './mat
          */
         nemesis.prototype.run = function (context) {
             var _this = this;
-            debugger;
             _rendering.render.init();
             var animateFrame = function (time) {
                 _this.emit("update", time, context);

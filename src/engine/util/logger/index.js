@@ -9,7 +9,7 @@ define(["require", "exports", "./consoleLogger"], function (require, exports, co
          */
         function logger() {
             /**
-             * The actve loggers
+             * The active loggers
              * @type {Array}
              * @private
              */
@@ -21,7 +21,7 @@ define(["require", "exports", "./consoleLogger"], function (require, exports, co
          * @param msg The message to log
          */
         logger.prototype.log = function (msg) {
-            _.forEach(this._loggers, function (logger) {
+            this._loggers.forEach(function (logger) {
                 logger.log(msg);
             });
         };
@@ -31,7 +31,7 @@ define(["require", "exports", "./consoleLogger"], function (require, exports, co
          * @param e Error
          */
         logger.prototype.logError = function (msg, e) {
-            _.forEach(this._loggers, function (logger) {
+            this._loggers.forEach(function (logger) {
                 logger.logError(msg, e);
             });
         };

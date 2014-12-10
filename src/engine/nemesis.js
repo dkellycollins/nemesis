@@ -29,7 +29,6 @@ define(["require", "exports", "./eventObject", './input/index', './math/index', 
          */
         nemesis.prototype.run = function (context) {
             var _this = this;
-            debugger;
             _rendering.render.init();
             var animateFrame = function (time) {
                 _this.emit("update", time, context);

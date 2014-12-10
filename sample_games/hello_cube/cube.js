@@ -36,7 +36,6 @@ var cubeData = {
  */
 require(['nemesis'], function(nemesis) {
     /*** Creating the cube ***/
-
     //First create a new staticRenderObject with the shaders you want to use.
     var cube = new nemesis.rendering.renderObject(nemesis.rendering.shaders.createProgram(
         nemesis.rendering.shaders.baseVertexShader, //Base vertex shader just calculates the vertex position.
@@ -60,7 +59,6 @@ require(['nemesis'], function(nemesis) {
     cube.camera(camera); //Associate this camera with our cube.
 
     /** Update and Render ***/
-
     //Register an update callback, for now just rotate the cube.
     var oldTime = 0;
     nemesis.on("update", function(args) {

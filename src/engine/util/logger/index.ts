@@ -14,7 +14,7 @@ class logger implements ILogger {
     }
 
     /**
-     * The actve loggers
+     * The active loggers
      * @type {Array}
      * @private
      */
@@ -25,7 +25,7 @@ class logger implements ILogger {
      * @param msg The message to log
      */
     public log(msg:string):void {
-        _.forEach(this._loggers, (logger: ILogger) => {
+        this._loggers.forEach((logger: ILogger) => {
             logger.log(msg);
         });
     }
@@ -36,7 +36,7 @@ class logger implements ILogger {
      * @param e Error
      */
     public logError(msg:string, e?:ExceptionInformation) {
-        _.forEach(this._loggers, (logger: ILogger) => {
+        this._loggers.forEach((logger:ILogger) => {
             logger.logError(msg, e);
         });
     }

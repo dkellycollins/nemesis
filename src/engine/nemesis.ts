@@ -55,7 +55,6 @@ class nemesis extends eventObject {
      * @param context An object that gets passed to each function, each time a frame is rendered.
      */
     public run(context?:any):void {
-        debugger;
         _rendering.render.init();
         var animateFrame = (time) => {
             this.emit("update", time, context);
