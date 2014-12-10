@@ -65,7 +65,6 @@ require([
                 a.phi += dy;
                 a.old_x = nemesis.input.mouse.posX;
                 a.old_y = nemesis.input.mouse.posY;
-                console.log(nemesis.input.mouse.posX + ", " + nemesis.input.mouse.posY  );
             }
 
             dx *= a.amortization;

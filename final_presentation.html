@@ -1,0 +1,290 @@
+<html>
+<head>
+    <link href="stylesheets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="scripts/lib/jquery.js"></script>
+    <script src="stylesheets/bootstrap/js/bootstrap.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="stylesheets/gh-fork-ribbon.css">
+
+    <link href="stylesheets/impress-demo.css" rel="stylesheet"/>
+    <style>
+        pre {
+            font-size: 23px;
+            border: 0;
+        }
+
+        h1 {
+            margin-top: 150px;
+            font-size: 150px;
+        }
+
+        h2 {
+            font-size: 60px;
+            margin-bottom: 25px;
+        }
+
+        h3 {
+            font-size: 50px;
+            margin-bottom: 25px;
+        }
+
+        li {
+            line-height: 3em;
+        }
+    </style>
+</head>
+<body class="impress-not-supported">
+<div id="impress">
+    <div id="title" class="step slide" data-x="-1000" data-y="0">
+        <div class="text-center">
+            <h1>Nemesis</h1>
+
+            <h3>A javascript <s>game</s> rendering engine</h3>
+
+            <h3>Devin Kelly-Collins</h3>
+        </div>
+    </div>
+    <div id="goals" class="step slide" data-x="0" data-y="0">
+        <h3>Semester Goals</h3>
+        <ul>
+            <li><i class="fa fa-square-o" style="margin: 0 30px 0 -15px"></i>Develop a rendering engine using WebGL</li>
+            <li><i class="fa fa-square-o" style="margin: 0 30px 0 -15px"></i>Develop importer for custom models,
+                scripts, etc.
+            </li>
+            <li><i class="fa fa-square-o" style="margin: 0 30px 0 -15px"></i>Ensure functionality through unit testing.
+            </li>
+        </ul>
+    </div>
+    <div id="Tools" class="step slide" data-x="1000" data-y="0">
+        <h3>Tools</h3>
+        <dl class="dl-horizontal" style="margin-top: 70px;">
+            <dt>Typescript</dt>
+            <dd>Typed superset of JavaScript that compiles to plain JavaScript</dd>
+            <dt>Node</dt>
+            <dd>Platform built on Chrome's JavaScript runtime. Runs javascript.</dd>
+            <dt>npm</dt>
+            <dd>Package manager. Comes with node.</dd>
+            <dt>Grunt</dt>
+            <dd>Task runner. Simplifies building the project.</dd>
+            <dt>Requirejs</dt>
+            <dd>File and module loader.</dd>
+            <dt>Mocha</dt>
+            <dd>Testing framework.</dd>
+        </dl>
+    </div>
+    <div id="completed" class="step slide" data-x="2000" data-y="0">
+        <h3>What was done</h3>
+        <ul>
+            <li><i class="fa fa-check-square-o" style="margin: 0 30px 0 -15px"></i>Simple rendering engine implemented.
+            </li>
+            <li>
+                <i class="fa fa-check-square-o" style="margin: 0 30px 0 -15px"></i>
+                <span>Obj file importing working (mostly)</span>
+                <ul>
+                    <li><i class="fa fa-circle" style="margin: 0 20px 0 -5px; font-size: 20px"></i>Just pulls vertex
+                        data
+                    </li>
+                    <li><i class="fa fa-circle" style="margin: 0 20px 0 -5px; font-size: 20px"></i>Textures are not
+                        imported correctly.
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div id="hello_cube_data" class="step slide" data-x="3000" data-y="0">
+        <h3>Hello Cube - Data</h3>
+        <pre style="background:#fff;color:#3b3b3b"><span style="color:#af82d4">/**
+ * Cube data. Nemesis requires that faces are defined, rather
+ * then just repeating points in the vertexes array.
+ */</span>
+<span style="color:#ff5600">var</span> cubeData <span style="color:#069;font-weight:700">=</span> {
+    <span style="color:#af82d4">//Each group of three numbers defines a point.</span>
+    vertexes: [
+        <span style="color:#a8017e">1</span>,<span style="color:#069;font-weight:700">-</span><span
+                    style="color:#a8017e">1</span>,<span style="color:#069;font-weight:700">-</span><span
+                    style="color:#a8017e">1</span>,  <span style="color:#af82d4">//0</span>
+        <span style="color:#a8017e">1</span>,<span style="color:#069;font-weight:700">-</span><span
+                    style="color:#a8017e">1</span>,<span style="color:#a8017e">1</span>,   <span style="color:#af82d4">//1</span>
+        <span style="color:#069;font-weight:700">-</span><span style="color:#a8017e">1</span>,<span
+                    style="color:#069;font-weight:700">-</span><span style="color:#a8017e">1</span>,<span
+                    style="color:#a8017e">1</span>,  <span style="color:#af82d4">//2</span>
+        <span style="color:#069;font-weight:700">-</span><span style="color:#a8017e">1</span>,<span
+                    style="color:#069;font-weight:700">-</span><span style="color:#a8017e">1</span>,<span
+                    style="color:#069;font-weight:700">-</span><span style="color:#a8017e">1</span>, <span
+                    style="color:#af82d4">//3</span>
+        <span style="color:#a8017e">1</span>,<span style="color:#a8017e">1</span>,<span
+                    style="color:#069;font-weight:700">-</span><span style="color:#a8017e">1</span>,   <span
+                    style="color:#af82d4">//4</span>
+        <span style="color:#a8017e">1</span>,<span style="color:#a8017e">1</span>,<span style="color:#a8017e">1</span>,    <span
+                    style="color:#af82d4">//5</span>
+        <span style="color:#069;font-weight:700">-</span><span style="color:#a8017e">1</span>,<span
+                    style="color:#a8017e">1</span>,<span style="color:#a8017e">1</span>,   <span style="color:#af82d4">//6</span>
+        <span style="color:#069;font-weight:700">-</span><span style="color:#a8017e">1</span>,<span
+                    style="color:#a8017e">1</span>,<span style="color:#069;font-weight:700">-</span><span
+                    style="color:#a8017e">1</span>   <span style="color:#af82d4">//7</span>
+    ],</pre>
+    </div>
+    <div class="step slide" data-x="4000" data-y="0">
+        <h3>Hello Cube - Data</h3>
+    <pre style="background:#fff;color:#3b3b3b">
+<span style="color:#af82d4">//Each number is an index for the vertexes above. Each
+    group of three numbers defines a triangle to be drawn.</span>
+faces: [
+    <span style="color:#a8017e">1</span>,<span style="color:#a8017e">2</span>,<span style="color:#a8017e">3</span>,
+    <span style="color:#a8017e">7</span>,<span style="color:#a8017e">6</span>,<span style="color:#a8017e">5</span>,
+    <span style="color:#a8017e">0</span>,<span style="color:#a8017e">4</span>,<span style="color:#a8017e">5</span>,
+    <span style="color:#a8017e">1</span>,<span style="color:#a8017e">5</span>,<span style="color:#a8017e">6</span>,
+    <span style="color:#a8017e">6</span>,<span style="color:#a8017e">7</span>,<span style="color:#a8017e">3</span>,
+    <span style="color:#a8017e">0</span>,<span style="color:#a8017e">3</span>,<span style="color:#a8017e">7</span>,
+    <span style="color:#a8017e">0</span>,<span style="color:#a8017e">1</span>,<span style="color:#a8017e">3</span>,
+    <span style="color:#a8017e">4</span>,<span style="color:#a8017e">7</span>,<span style="color:#a8017e">5</span>,
+    <span style="color:#a8017e">1</span>,<span style="color:#a8017e">0</span>,<span style="color:#a8017e">5</span>,
+    <span style="color:#a8017e">2</span>,<span style="color:#a8017e">1</span>,<span style="color:#a8017e">6</span>,
+    <span style="color:#a8017e">2</span>,<span style="color:#a8017e">6</span>,<span style="color:#a8017e">3</span>,
+    <span style="color:#a8017e">4</span>,<span style="color:#a8017e">0</span>,<span style="color:#a8017e">7</span>
+]};
+</pre>
+    </div>
+    <div id="hello_cube_main" class="step slide" data-x="5000" data-y="0">
+        <h3>Hello Cube - Main</h3>
+        <pre style="background:#fff;color:#3b3b3b"><span style="color:#af82d4">/**
+ * Our "main" function. This function will not be
+ * called until nemesis has been loaded.
+ */</span>
+require([<span style="color:#666">'nemesis'</span>], <span style="color:#ff5600">function</span>(nemesis) {
+    <span style="color:#af82d4">//Add your code here.</span>
+});
+</pre>
+    </div>
+    <div id="hello_cube_create" class="step slide" data-x="6000" data-y="0">
+        <h3>Hello Cube - The Cube</h3>
+<pre style="background:#fff;color:#3b3b3b">
+<span style="color:#af82d4">//First create a new renderObject with the shaders
+    you want to use.</span>
+<span style="color:#ff5600">var</span> cube <span style="color:#069;font-weight:700">=</span> <span
+            style="color:#069;font-weight:700">new</span> <span style="color:#21439c">nemesis.rendering</span>.renderObject(
+    nemesis.rendering.shaders.createProgram(
+        <span style="color:#af82d4">//Base vertex shader just calculates the vertex position.</span>
+        nemesis.rendering.shaders.baseVertexShader,
+        <span style="color:#af82d4">//Color fragment shader colors the object a single color.</span>
+        nemesis.rendering.shaders.colorFragmentShader
+));
+<span style="color:#af82d4">//Then set what vertexes to draw and in what order.</span>
+cube.setVertexes(cubeData.faces);
+<span style="color:#af82d4">//Next set the data for your cube. Here we set the vertex data
+    (points) and color the cube red.</span>
+cube.enableAttrib(<span style="color:#666">"aVertex"</span>, <span style="color:#a8017e">3</span>, cubeData.vertexes);
+cube.setVector3(<span style="color:#666">"vColor"</span>, [<span style="color:#a8017e">1</span>, <span
+            style="color:#a8017e">0</span>, <span style="color:#a8017e">0</span>]);
+</pre>
+    </div>
+    <div class="step slide" data-x="7000" data-y="0">
+        <h3>Hello Cube - The Cube</h3>
+        <pre style="background:#fff;color:#3b3b3b">
+<span style="color:#af82d4">//So that we can see the cube when it is drawn,
+    move it on the z-axis.</span>
+<span style="color:#ff5600">var</span> cubePosition <span style="color:#069;font-weight:700">=</span> cube.modelMatrix();
+nemesis.math.mat4.translate(cubePosition,
+            cubePosition,
+            [<span style="color:#a8017e">0</span>, <span
+                style="color:#a8017e">0</span>, <span style="color:#069;font-weight:700">-</span><span
+                style="color:#a8017e">15</span>]);
+cube.modelMatrix(cubePosition);
+
+<span style="color:#af82d4">//Finally create a camera that will render the cube.</span>
+<span style="color:#ff5600">var</span> camera <span style="color:#069;font-weight:700">=</span> <span
+                style="color:#069;font-weight:700">new</span> <span style="color:#21439c">nemesis.rendering</span>.camera();
+cube.camera(camera); <span style="color:#af82d4">//Associate this camera with our cube.</span>
+</pre>
+    </div>
+    <div id="hello_cube_update_and_render" class="step slide" data-x="8000" data-y="0">
+        <h3>Hello cube - Update</h3>
+<pre style="background:#fff;color:#3b3b3b">
+<span style="color:#ff5600">var</span> oldTime <span style="color:#069;font-weight:700">=</span> <span
+            style="color:#a8017e">0</span>;
+nemesis.on(<span style="color:#666">"update"</span>, <span style="color:#ff5600">function</span>(args) {
+    <span style="color:#af82d4">//The first argument passed into the update event is time.</span>
+    <span style="color:#ff5600">var</span> time <span style="color:#069;font-weight:700">=</span> args[<span
+            style="color:#a8017e">0</span>];
+    <span style="color:#ff5600">var</span> deltaTime <span style="color:#069;font-weight:700">=</span> time <span
+            style="color:#069;font-weight:700">-</span> oldTime;
+    oldTime <span style="color:#069;font-weight:700">=</span> time;
+    <span style="color:#af82d4">//Rotate the cube</span>
+    <span style="color:#ff5600">var</span> cubeRotation <span style="color:#069;font-weight:700">=</span> cube.modelMatrix();
+    nemesis.math.mat4.rotateZ(cubeRotation,
+        cubeRotation, deltaTime <span
+            style="color:#069;font-weight:700">*</span> <span style="color:#a8017e">0.001</span>);
+    nemesis.math.mat4.rotateY(cubeRotation,
+        cubeRotation, deltaTime <span
+            style="color:#069;font-weight:700">*</span> <span style="color:#a8017e">0.002</span>);
+    nemesis.math.mat4.rotateX(cubeRotation,
+        cubeRotation, deltaTime <span
+            style="color:#069;font-weight:700">*</span> <span style="color:#a8017e">0.003</span>);
+    cube.modelMatrix(cubeRotation);
+});
+</pre>
+    </div>
+<div class="step slide" data-x="9000" data-y="0">
+    <h3>Hello cube - Render</h3>
+    <pre style="background:#fff;color:#3b3b3b">
+<span style="color:#af82d4">//Register a render callback.</span>
+nemesis.on(<span style="color:#666">"render"</span>, <span style="color:#ff5600">function</span>() {
+   cube.render();
+});
+
+<span style="color:#af82d4">//Run the game!</span>
+nemesis.run();
+</pre>
+    </div>
+    <div id="ex_cubes" class="step slide" data-x="10000" data-y="0">
+        <h3>The result (with some additions)</h3>
+        <iframe src="cube.html#5" style="width:100%; height: 85%"></iframe>
+    </div>
+    <div id="importer" class="step slide" data-x="11000" data-y="0">
+        <h3>Importer</h3>
+        <ul>
+            <li><i class="fa fa-circle" style="margin: 0 20px 0 -5px; font-size: 20px"></i>Written in using node</li>
+            <li><i class="fa fa-circle" style="margin: 0 20px 0 -5px; font-size: 20px"></i>Reads the given file, converts to json.</li>
+            <li><i class="fa fa-circle" style="margin: 0 20px 0 -5px; font-size: 20px"></i>Usage: node importer.js path/to/obj/file path/to/dest</li>
+        </ul>
+    </div>
+    <div id="ex_dragon" class="step slide" data-x="12000" data-y="0">
+        <h3>Assimp dragon imported</h3>
+        <iframe src="dragon.html" style="width:100%; height: 85%"></iframe>
+    </div>
+    <div id="todo" class="step slide" data-x="13000" data-y="0">
+        <div class="center-block">
+            <h3>Whats left</h3>
+            <ul>
+                <li><i class="fa fa-share-square-o" style="margin: 0 20px 0 -5px; font-size: 20px"></i>Improve importer.
+                </li>
+                <li><i class="fa fa-share-square-o" style="margin: 0 20px 0 -5px; font-size: 20px"></i>Tests for
+                    existing source code.
+                </li>
+                <li><i class="fa fa-share-square-o" style="margin: 0 20px 0 -5px; font-size: 20px"></i>And a lot more...
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="challenges" class="step slide" data-x="14000" data-y="0">
+        <h3>Challenges</h3>
+        <ul>
+            <li><i class="fa fa-circle" style="margin: 0 20px 0 -5px; font-size: 20px"></i>Many new frameworks to learn.</li>
+            <li><i class="fa fa-circle" style="margin: 0 20px 0 -5px; font-size: 20px"></i>Not a lot of help on WebGL online.</li>
+            <li><i class="fa fa-circle" style="margin: 0 20px 0 -5px; font-size: 20px"></i>Difficult to debug the graphics card.</li>
+        </ul>
+    </div>
+    <div id="github" class="step slide text-center" data-x="15000" data-y="0">
+        <h1>Source</h1>
+        <h2><a href="https://github.com/dkellycollins/nemesis" style="margin-left:-30px;">github.com/dkellycollins/nemesis</a>
+        </h2>
+    </div>
+    <div id="question" class="step slide" data-x="16000" data-y="0">
+        <h1>Questions?</h1>
+    </div>
+
+</div>
+<script src="scripts/lib/impress.js"></script>
+<script>impress().init();</script>
+</body>
+</html>

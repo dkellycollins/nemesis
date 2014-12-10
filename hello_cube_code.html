@@ -1,0 +1,86 @@
+<pre style="background:#f9f9f9;color:#080808"><span style="color:#5a525f;font-style:italic">/**
+ * Cube data. Nemesis requires that faces are defined, rather then just repeating points in the vertexes array.
+ */</span>
+<span style="color:#a71d5d;font-style:italic">var</span> cubeData <span style="color:#794938">=</span> {
+    <span style="color:#5a525f;font-style:italic">//Each group of three numbers defines a point.</span>
+    vertexes: [
+        <span style="color:#811f24;font-weight:700">1</span>,<span style="color:#794938">-</span><span style="color:#811f24;font-weight:700">1</span>,<span style="color:#794938">-</span><span style="color:#811f24;font-weight:700">1</span>,  <span style="color:#5a525f;font-style:italic">//0</span>
+        <span style="color:#811f24;font-weight:700">1</span>,<span style="color:#794938">-</span><span style="color:#811f24;font-weight:700">1</span>,<span style="color:#811f24;font-weight:700">1</span>,   <span style="color:#5a525f;font-style:italic">//1</span>
+        <span style="color:#794938">-</span><span style="color:#811f24;font-weight:700">1</span>,<span style="color:#794938">-</span><span style="color:#811f24;font-weight:700">1</span>,<span style="color:#811f24;font-weight:700">1</span>,  <span style="color:#5a525f;font-style:italic">//2</span>
+        <span style="color:#794938">-</span><span style="color:#811f24;font-weight:700">1</span>,<span style="color:#794938">-</span><span style="color:#811f24;font-weight:700">1</span>,<span style="color:#794938">-</span><span style="color:#811f24;font-weight:700">1</span>, <span style="color:#5a525f;font-style:italic">//3</span>
+        <span style="color:#811f24;font-weight:700">1</span>,<span style="color:#811f24;font-weight:700">1</span>,<span style="color:#794938">-</span><span style="color:#811f24;font-weight:700">1</span>,   <span style="color:#5a525f;font-style:italic">//4</span>
+        <span style="color:#811f24;font-weight:700">1</span>,<span style="color:#811f24;font-weight:700">1</span>,<span style="color:#811f24;font-weight:700">1</span>,    <span style="color:#5a525f;font-style:italic">//5</span>
+        <span style="color:#794938">-</span><span style="color:#811f24;font-weight:700">1</span>,<span style="color:#811f24;font-weight:700">1</span>,<span style="color:#811f24;font-weight:700">1</span>,   <span style="color:#5a525f;font-style:italic">//6</span>
+        <span style="color:#794938">-</span><span style="color:#811f24;font-weight:700">1</span>,<span style="color:#811f24;font-weight:700">1</span>,<span style="color:#794938">-</span><span style="color:#811f24;font-weight:700">1</span>   <span style="color:#5a525f;font-style:italic">//7</span>
+    ],
+    <span style="color:#5a525f;font-style:italic">//Each number is an index for the vertexes above. Each group of three numbers defines a triangle to be drawn.</span>
+    faces: [
+        <span style="color:#811f24;font-weight:700">1</span>,<span style="color:#811f24;font-weight:700">2</span>,<span style="color:#811f24;font-weight:700">3</span>,
+        <span style="color:#811f24;font-weight:700">7</span>,<span style="color:#811f24;font-weight:700">6</span>,<span style="color:#811f24;font-weight:700">5</span>,
+        <span style="color:#811f24;font-weight:700">0</span>,<span style="color:#811f24;font-weight:700">4</span>,<span style="color:#811f24;font-weight:700">5</span>,
+        <span style="color:#811f24;font-weight:700">1</span>,<span style="color:#811f24;font-weight:700">5</span>,<span style="color:#811f24;font-weight:700">6</span>,
+        <span style="color:#811f24;font-weight:700">6</span>,<span style="color:#811f24;font-weight:700">7</span>,<span style="color:#811f24;font-weight:700">3</span>,
+        <span style="color:#811f24;font-weight:700">0</span>,<span style="color:#811f24;font-weight:700">3</span>,<span style="color:#811f24;font-weight:700">7</span>,
+        <span style="color:#811f24;font-weight:700">0</span>,<span style="color:#811f24;font-weight:700">1</span>,<span style="color:#811f24;font-weight:700">3</span>,
+        <span style="color:#811f24;font-weight:700">4</span>,<span style="color:#811f24;font-weight:700">7</span>,<span style="color:#811f24;font-weight:700">5</span>,
+        <span style="color:#811f24;font-weight:700">1</span>,<span style="color:#811f24;font-weight:700">0</span>,<span style="color:#811f24;font-weight:700">5</span>,
+        <span style="color:#811f24;font-weight:700">2</span>,<span style="color:#811f24;font-weight:700">1</span>,<span style="color:#811f24;font-weight:700">6</span>,
+        <span style="color:#811f24;font-weight:700">2</span>,<span style="color:#811f24;font-weight:700">6</span>,<span style="color:#811f24;font-weight:700">3</span>,
+        <span style="color:#811f24;font-weight:700">4</span>,<span style="color:#811f24;font-weight:700">0</span>,<span style="color:#811f24;font-weight:700">7</span>
+    ]
+};
+
+<span style="color:#5a525f;font-style:italic">/**
+ * Essentially our "main" function. This function will not be called until
+ * nemesis has been loaded.
+ */</span>
+require([<span style="color:#0b6125">'nemesis'</span>], <span style="color:#a71d5d;font-style:italic">function</span>(nemesis) {
+    <span style="color:#5a525f;font-style:italic">/*** Creating the cube ***/</span>
+
+    <span style="color:#5a525f;font-style:italic">//First create a new staticRenderObject with the shaders you want to use.</span>
+    <span style="color:#a71d5d;font-style:italic">var</span> cube <span style="color:#794938">=</span> <span style="color:#794938">new</span> <span style="color:#bf4f24">nemesis.rendering</span>.renderObject(nemesis.rendering.shaders.createProgram(
+        nemesis.rendering.shaders.baseVertexShader, <span style="color:#5a525f;font-style:italic">//Base vertex shader just calculates the vertex position.</span>
+        nemesis.rendering.shaders.colorFragmentShader <span style="color:#5a525f;font-style:italic">//Color fragment shader colors the object a single color.</span>
+    ));
+
+    <span style="color:#5a525f;font-style:italic">//Then set what vertexes to draw and in what order.</span>
+    cube.setVertexes(cubeData.faces);
+
+    <span style="color:#5a525f;font-style:italic">//Next set the data for your cube. Here we set the vertex data (points) and color the cube red.</span>
+    cube.enableAttrib(<span style="color:#0b6125">"aVertex"</span>, <span style="color:#811f24;font-weight:700">3</span>, cubeData.vertexes);
+    cube.setVector3(<span style="color:#0b6125">"vColor"</span>, [<span style="color:#811f24;font-weight:700">1</span>, <span style="color:#811f24;font-weight:700">0</span>, <span style="color:#811f24;font-weight:700">0</span>]);
+
+    <span style="color:#5a525f;font-style:italic">//So that we can see the cube when it is drawn, move it on the z-axis.</span>
+    <span style="color:#a71d5d;font-style:italic">var</span> cubePosition <span style="color:#794938">=</span> cube.modelMatrix();
+    nemesis.math.mat4.translate(cubePosition, cubePosition, [<span style="color:#811f24;font-weight:700">0</span>, <span style="color:#811f24;font-weight:700">0</span>, <span style="color:#794938">-</span><span style="color:#811f24;font-weight:700">15</span>]);
+    cube.modelMatrix(cubePosition);
+
+    <span style="color:#5a525f;font-style:italic">//Finally create a camera that will render the cube.</span>
+    <span style="color:#a71d5d;font-style:italic">var</span> camera <span style="color:#794938">=</span> <span style="color:#794938">new</span> <span style="color:#bf4f24">nemesis.rendering</span>.camera();
+    cube.camera(camera); <span style="color:#5a525f;font-style:italic">//Associate this camera with our cube.</span>
+
+    <span style="color:#5a525f;font-style:italic">/** Update and Render ***/</span>
+
+    <span style="color:#5a525f;font-style:italic">//Register an update callback, for now just rotate the cube.</span>
+    <span style="color:#a71d5d;font-style:italic">var</span> oldTime <span style="color:#794938">=</span> <span style="color:#811f24;font-weight:700">0</span>;
+    nemesis.on(<span style="color:#0b6125">"update"</span>, <span style="color:#a71d5d;font-style:italic">function</span>(args) {
+        <span style="color:#a71d5d;font-style:italic">var</span> time <span style="color:#794938">=</span> args[<span style="color:#811f24;font-weight:700">0</span>]; <span style="color:#5a525f;font-style:italic">//The first argument passed into the update event is time.</span>
+        <span style="color:#a71d5d;font-style:italic">var</span> deltaTime <span style="color:#794938">=</span> time <span style="color:#794938">-</span> oldTime;
+        oldTime <span style="color:#794938">=</span> time;
+
+        <span style="color:#a71d5d;font-style:italic">var</span> cubeRotation <span style="color:#794938">=</span> cube.modelMatrix();
+        nemesis.math.mat4.rotateZ(cubeRotation, cubeRotation, deltaTime <span style="color:#794938">*</span> <span style="color:#811f24;font-weight:700">0.001</span>);
+        nemesis.math.mat4.rotateY(cubeRotation, cubeRotation, deltaTime <span style="color:#794938">*</span> <span style="color:#811f24;font-weight:700">0.002</span>);
+        nemesis.math.mat4.rotateX(cubeRotation, cubeRotation, deltaTime <span style="color:#794938">*</span> <span style="color:#811f24;font-weight:700">0.003</span>);
+        cube.modelMatrix(cubeRotation);
+    });
+
+    <span style="color:#5a525f;font-style:italic">//Register a render callback.</span>
+    nemesis.on(<span style="color:#0b6125">"render"</span>, <span style="color:#a71d5d;font-style:italic">function</span>() {
+       cube.render();
+    });
+
+    <span style="color:#5a525f;font-style:italic">//Run the game!</span>
+    nemesis.run();
+});
+</pre>
