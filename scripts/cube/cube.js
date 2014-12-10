@@ -1,178 +1,114 @@
-
-var main=function(canvasId, fullscreen) {
-    var CANVAS=document.getElementById(canvasId);
-    if(fullscreen) {
-        CANVAS.width=window.innerWidth;
-        CANVAS.height=window.innerHeight;
+///<reference path="../../lib/requirejs/require.d.ts" />
+require.config({
+    baseUrl: "scripts/cube",
+    paths: {
+        nemesis: "../lib/nemesis",
+        text: "../lib/text",
+        json: "../lib/json",
+        image: "../lib/image",
+        lodash: "../lib/lodash"
     }
+});
 
-    /*========================= GET WEBGL CONTEXT ========================= */
-    try {
-        var GL = CANVAS.getContext("experimental-webgl", {antialias: true});
-    } catch (e) {
-        alert("You are not webgl compatible :(") ;
-        return false;
-    } ;
+require([
+        'nemesis', 'lodash', 'json!cube.json', 'image!cube_texture.png', 'image!cube_texture_2.png'],
+    function (nemesis, _, cubeData, cubeTexture, cubeTexture2) {
 
-    /*========================= SHADERS ========================= */
-
-    var shader_vertex_source="\n\
-attribute vec3 position;\n\
-uniform mat4 Pmatrix;\n\
-uniform mat4 Vmatrix;\n\
-uniform mat4 Mmatrix;\n\
-attribute vec3 color; //the color of the point\n\
-varying vec3 vColor;\n\
-void main(void) { //pre-built function\n\
-gl_Position = Pmatrix*Vmatrix*Mmatrix*vec4(position, 1.);\n\
-vColor=color;\n\
-}";
-
-    var shader_fragment_source="\n\
-precision mediump float;\n\
-varying vec3 vColor;\n\
-void main(void) {\n\
-gl_FragColor = vec4(vColor, 1.);\n\
-}";
-
-    var get_shader=function(source, type, typeString) {
-        var shader = GL.createShader(type);
-        GL.shaderSource(shader, source);
-        GL.compileShader(shader);
-        if (!GL.getShaderParameter(shader, GL.COMPILE_STATUS)) {
-            alert("ERROR IN "+typeString+ " SHADER : " + GL.getShaderInfoLog(shader));
-            return false;
+        var mod = 0;
+        function getRandomPos() {
+            var math = nemesis.math;
+            var x = 0;
+            var y = 0;
+            if(mod > 0) {
+                switch(mod % 4) {
+                    case 0: //First quadrant
+                        x = Math.random() * -5 - 1;
+                        y = Math.random() * 5 + 1;
+                        break;
+                    case 1: //Second quadrant
+                        x = Math.random() * 5 + 1;
+                        y = Math.random() * 5 + 1;
+                        break;
+                    case 2: //Third quadrant
+                        x = Math.random() * -5 - 1;
+                        y = Math.random() * -5 - 1;
+                        break;
+                    case 3: //Fourth quadrant
+                        x = Math.random() * 5 + 1;
+                        y = Math.random() * -5 - 1;
+                        break;
+                }
+            }
+            mod++;
+            return math.mat4.translate(math.mat4.create(), math.mat4.IDENTITY, math.vec3.fromValues(x, y, -6));;
         }
-        return shader;
-    };
 
-    var shader_vertex=get_shader(shader_vertex_source, GL.VERTEX_SHADER, "VERTEX");
-    var shader_fragment=get_shader(shader_fragment_source, GL.FRAGMENT_SHADER, "FRAGMENT");
+        function createCube(scene, camera, texture) {
+            var cube = new nemesis.rendering.staticRenderObject(nemesis.rendering.shaders.createProgram(
+                nemesis.rendering.shaders.textureVertexShader,
+                nemesis.rendering.shaders.textureFragmentShader
+            ));
+            cube.setVertexes(cubeData.faces);
+            cube.enableAttrib("aVertex", 3, cubeData.vertexes);
+            cube.enableAttrib("aUV", 2, cubeData.uv);
+            cube.setVector3("vColor", [1, 1, 1]);
+            cube.modelMatrix(getRandomPos());
+            cube.camera(camera);
+            cube.texture(texture);
+            scene.push(cube);
+            return cube;
+        }
 
-    var SHADER_PROGRAM=GL.createProgram();
-    GL.attachShader(SHADER_PROGRAM, shader_vertex);
-    GL.attachShader(SHADER_PROGRAM, shader_fragment);
+        /*========================= THE CUBE ========================= */
+        var mainCamera = new nemesis.rendering.camera();
+        var texture1 = new nemesis.rendering.texture(cubeTexture);
+        var texture2 = new nemesis.rendering.texture(cubeTexture2);
+        var scene = [];
+        var numOfCubes = parseInt(window.location.hash.replace('#', '')) || 1;
+        for(var i = 0; i < numOfCubes; i++) {
+            if(i % 2 == 0) {
+                createCube(scene, mainCamera, texture1);
+            } else {
+                createCube(scene, mainCamera, texture2);
+            }
+        }
 
-    GL.linkProgram(SHADER_PROGRAM);
+        /*========================= DRAWING ========================= */
+        var args = {
+            old_time: 0
+        };
+        args.mvp = nemesis.math.mat4.create();
 
-    var _Pmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Pmatrix");
-    var _Vmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Vmatrix");
-    var _Mmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Mmatrix");
+        nemesis.registerUpdateCallback(function (time, a) {
+            var dt = time - a.old_time;
+            a.old_time = time;
 
-    var _color = GL.getAttribLocation(SHADER_PROGRAM, "color");
-    var _position = GL.getAttribLocation(SHADER_PROGRAM, "position");
-
-    GL.enableVertexAttribArray(_color);
-    GL.enableVertexAttribArray(_position);
-
-    GL.useProgram(SHADER_PROGRAM);
-
-    /*========================= THE CUBE ========================= */
-    //POINTS :
-    var cube_vertex=[
-        -1,-1,-1,     1,1,0,
-        1,-1,-1,     1,1,0,
-        1, 1,-1,     1,1,0,
-        -1, 1,-1,     1,1,0,
-
-        -1,-1, 1,     0,0,1,
-        1,-1, 1,     0,0,1,
-        1, 1, 1,     0,0,1,
-        -1, 1, 1,     0,0,1,
-
-        -1,-1,-1,     0,1,1,
-        -1, 1,-1,     0,1,1,
-        -1, 1, 1,     0,1,1,
-        -1,-1, 1,     0,1,1,
-
-        1,-1,-1,     1,0,0,
-        1, 1,-1,     1,0,0,
-        1, 1, 1,     1,0,0,
-        1,-1, 1,     1,0,0,
-
-        -1,-1,-1,     1,0,1,
-        -1,-1, 1,     1,0,1,
-        1,-1, 1,     1,0,1,
-        1,-1,-1,     1,0,1,
-
-        -1, 1,-1,     0,1,0,
-        -1, 1, 1,     0,1,0,
-        1, 1, 1,     0,1,0,
-        1, 1,-1,     0,1,0,
-
-    ];
-
-    var CUBE_VERTEX= GL.createBuffer ();
-    GL.bindBuffer(GL.ARRAY_BUFFER, CUBE_VERTEX);
-    GL.bufferData(GL.ARRAY_BUFFER,
-        new Float32Array(cube_vertex),
-        GL.STATIC_DRAW);
-
-    //FACES :
-    var cube_faces = [
-        0,1,2,
-        0,2,3,
-
-        4,5,6,
-        4,6,7,
-
-        8,9,10,
-        8,10,11,
-
-        12,13,14,
-        12,14,15,
-
-        16,17,18,
-        16,18,19,
-
-        20,21,22,
-        20,22,23
-
-    ];
-    var CUBE_FACES= GL.createBuffer ();
-    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, CUBE_FACES);
-    GL.bufferData(GL.ELEMENT_ARRAY_BUFFER,
-        new Uint16Array(cube_faces),
-        GL.STATIC_DRAW);
-
-    /*========================= MATRIX ========================= */
-
-    var PROJMATRIX=LIBS.get_projection(40, CANVAS.width/CANVAS.height, 1, 100);
-    var MOVEMATRIX=LIBS.get_I4();
-    var VIEWMATRIX=LIBS.get_I4();
-
-
-
-    LIBS.translateZ(VIEWMATRIX, -6);
-
-    /*========================= DRAWING ========================= */
-    GL.enable(GL.DEPTH_TEST);
-    GL.depthFunc(GL.LEQUAL);
-    GL.clearColor(0.0, 0.0, 0.0, 0.0);
-    GL.clearDepth(1.0);
-
-    var time_old=0;
-    var animate=function(time) {
-        var dt=time-time_old;
-        LIBS.rotateZ(MOVEMATRIX, dt*0.001);
-        LIBS.rotateY(MOVEMATRIX, dt*0.002);
-        LIBS.rotateX(MOVEMATRIX, dt*0.003);
-        time_old=time;
-
-        GL.viewport(0.0, 0.0, CANVAS.width, CANVAS.height);
-        GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
-        GL.uniformMatrix4fv(_Pmatrix, false, PROJMATRIX);
-        GL.uniformMatrix4fv(_Vmatrix, false, VIEWMATRIX);
-        GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
-        GL.vertexAttribPointer(_position, 3, GL.FLOAT, false,4*(3+3),0) ;
-        GL.vertexAttribPointer(_color, 3, GL.FLOAT, false,4*(3+3),3*4) ;
-        GL.bindBuffer(GL.ARRAY_BUFFER, CUBE_VERTEX);
-        GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, CUBE_FACES);
-        GL.drawElements(GL.TRIANGLES, 6*2*3, GL.UNSIGNED_SHORT, 0);
-
-        GL.flush();
-
-        window.requestAnimationFrame(animate);
-    }
-    animate(0);
-}
+            for (var i = 0; i < scene.length; i++) {
+                var m = scene[i].modelMatrix();
+                switch (i % 3) {
+                    case 0:
+                        nemesis.math.mat4.rotateZ(m, m, dt * 0.001);
+                        nemesis.math.mat4.rotateY(m, m, dt * 0.002);
+                        nemesis.math.mat4.rotateX(m, m, dt * 0.003);
+                        break;
+                    case 1:
+                        nemesis.math.mat4.rotateX(m, m, dt * 0.001);
+                        nemesis.math.mat4.rotateZ(m, m, dt * 0.002);
+                        nemesis.math.mat4.rotateY(m, m, dt * 0.003);
+                        break;
+                    case 2:
+                        nemesis.math.mat4.rotateY(m, m, dt * 0.001);
+                        nemesis.math.mat4.rotateX(m, m, dt * 0.002);
+                        nemesis.math.mat4.rotateZ(m, m, dt * 0.003);
+                        break;
+                }
+                scene[i].modelMatrix(m);
+            }
+        });
+        nemesis.registerRenderCallback(function (time, a) {
+            _.forEach(scene, function (object) {
+                object.render();
+            });
+        });
+        nemesis.run(args);
+    });

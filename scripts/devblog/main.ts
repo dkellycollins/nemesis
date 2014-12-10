@@ -11,14 +11,16 @@ interface BlogPost {
 
 require.config({
     waitSeconds: 2,
-    baseUrl: 'scripts/lib',
     paths: {
-        blog: "../devblog"
+        blog: "../devblog",
+        jquery: "../lib/jquery.js",
+        remarkable: "../lib/remarkable.js"
     }
 });
 
 define((require) => {
     var $: JQueryStatic = require('jquery');
+    var remarkable = require('remarkable');
     var index = require('json!blog/index.json');
 
     var $nav = $('#nav');
@@ -30,6 +32,7 @@ define((require) => {
         );
     });
 
+    var md = new remarkable();
     var loadPost = () => {
         var postName = window.location.hash || index.latestPost;
         postName = postName.replace('#', ''); //Remove hash from the name.
@@ -39,7 +42,7 @@ define((require) => {
             $('#title').text(post.Title || '');
             $('#author').text(post.Author || '');
             $('#date').text(post.DatePosted || '');
-            $('#post').html(post.Content || '');
+            $('#post').html(md.render(post.Content));
         });
     };
 

@@ -95,7 +95,7 @@
                         Title: postModel.Title(),
                         Author: postModel.Author(),
                         DatePosted: postModel.DatePosted(),
-                        Content: postModel.ContentHtml()
+                        Content: postModel.ContentRaw()
                     };
                     postModel.JsonStr(JSON.stringify(downloadModel));
                 };
