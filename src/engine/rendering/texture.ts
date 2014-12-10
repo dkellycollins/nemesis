@@ -1,7 +1,14 @@
 import gl = require('./glContext');
-import _ = require('lodash');
+import verify = require('../util/debug/verifier');
 
+/**
+ * Manages a texture on the graphics card.
+ */
 class texture {
+    /**
+     * Creates a new texture with the given image.
+     * @param img The image to send to the graphics card
+     */
     constructor(img: any) {
         this._img = img;
         this._tex = gl.createTexture();
@@ -12,22 +19,44 @@ class texture {
         }
     }
 
+    /**
+     * The handle to the texture on the graphics card
+     */
     private _tex: WebGLTexture;
+
+    /**
+     * The image that was loaded on the client
+     */
     private _img: any;
 
+    /**
+     * Gets if the texture has been loaded on the graphics card
+     * @returns {boolean} True if the texture has been sent to the graphics card. False, otherwise.
+     */
     public loaded():boolean {
         if(this._img.complete) { //IE
             return true;
         }
-        return !!(_.isUndefined(this._img.naturalWidth) || this._img.naturalWidth > 0);
+        return !!(typeof(this._img.naturalWidth) == 'undefined' || this._img.naturalWidth > 0);
     }
 
+    /**
+     * Sets this texture as active on graphics card.
+     * @param texNumber The texture number on the graphics card
+     */
     public activate(texNumber?: number):void {
-        texNumber = _.isUndefined(texNumber) ? gl.TEXTURE0 : texNumber;
+        texNumber = typeof(texNumber) == 'undefined' ? gl.TEXTURE0 : texNumber;
+
+        verify.that(texNumber, "texNumber").isGreaterThan(-1).isLessThan(32);
+
         gl.activeTexture(texNumber);
         gl.bindTexture(gl.TEXTURE_2D, this._tex);
     }
 
+    /**
+     * Sends the image
+     * @private
+     */
     private _handleLoadedImage():void {
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
         gl.bindTexture(gl.TEXTURE_2D, this._tex);

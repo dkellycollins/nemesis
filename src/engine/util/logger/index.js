@@ -1,21 +1,42 @@
 ///<refernece path="./logger.d.ts" />
 define(["require", "exports", "./consoleLogger"], function (require, exports, consoleLogger) {
-    var logger;
-    (function (_logger) {
-        var _loggers = [];
-        _loggers.push(consoleLogger);
-        function log(msg) {
+    /**
+     * Logs to the currently active loggers.
+     */
+    var logger = (function () {
+        /**
+         * Default constructor
+         */
+        function logger() {
+            /**
+             * The actve loggers
+             * @type {Array}
+             * @private
+             */
+            this._loggers = [];
+            this._loggers.push(consoleLogger);
+        }
+        /**
+         * Logs a standard message
+         * @param msg The message to log
+         */
+        logger.prototype.log = function (msg) {
             _.forEach(this._loggers, function (logger) {
                 logger.log(msg);
             });
-        }
-        _logger.log = log;
-        function logError(msg, e) {
+        };
+        /**
+         * Logs an error message
+         * @param msg The error message
+         * @param e Error
+         */
+        logger.prototype.logError = function (msg, e) {
             _.forEach(this._loggers, function (logger) {
                 logger.logError(msg, e);
             });
-        }
-        _logger.logError = logError;
-    })(logger || (logger = {}));
-    return logger;
+        };
+        return logger;
+    })();
+    var _logger = new logger();
+    return _logger;
 });

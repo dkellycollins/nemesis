@@ -1,50 +1,74 @@
+import eventObject = require("./eventObject");
 import _input = require('./input/index');
 import _math = require('./math/index');
 import _rendering = require('./rendering/index');
 import _canvas = require("./canvas");
 import _config = require("./config");
 
-/* The engine module is for static varibles and static initialization. */
-module nemesis {
-    export var input = _input;
-    export var math = _math;
-    export var rendering = _rendering;
-    export var canvas = _canvas;
-    export var config = _config;
+/**
+ * The entry point class. Contains reference to other modules and manages the game loop.
+ */
+class nemesis extends eventObject {
+    /**
+     * Default constructor.
+     */
+    constructor() {
+        super();
 
-    var _updateCallbacks: any[] = [];
-    var _renderCallbacks: any[] = [];
+        this.input = _input;
+        this.math = _math;
+        this.rendering = _rendering;
+        this.canvas = _canvas;
+        this.config = _config;
 
-    export function registerUpdateCallback(update: (time:any, context: any) => void):number {
-        return _updateCallbacks.push(update);
+        this.registerEvent("update");
+        this.registerEvent("render");
     }
 
-    export function deregisterUpdateCallback(updateIndex: number):void {
-        _updateCallbacks.splice(updateIndex, 1);
-    }
+    /**
+     * The input module. Contains classes to handle user input.
+     */
+    public input;
 
-    export function registerRenderCallback(render: (time:any, context: any) => void): number {
-        return _renderCallbacks.push(render);
-    }
+    /**
+     * The math module. Contains classes to do vector and matrix math.
+     */
+    public math;
 
-    export function deregisterRenderCallback(renderIndex: number):void {
-        _renderCallbacks.splice(renderIndex, 1);
-    }
+    /**
+     * The rendering module. Contains classes to render objects to the screen.
+     */
+    public rendering;
 
-    export function run(context?:any):void {
+    /**
+     * The canvas element the engine is using.
+     */
+    public canvas;
+
+    /**
+     * The configuration options for the game.
+     */
+    public config;
+
+    /**
+     * Starts the game.
+     * @param context An object that gets passed to each function, each time a frame is rendered.
+     */
+    public run(context?:any):void {
+        debugger;
         _rendering.render.init();
         var animateFrame = (time) => {
-            _updateCallbacks.forEach(callback => {
-                callback(time, context);
-            });
+            this.emit("update", time, context);
+
             _rendering.render.begin();
-            _renderCallbacks.forEach(callback => {
-                callback(time, context);
-            });
+            this.emit("render", time, context);
             _rendering.render.end();
+
             window.requestAnimationFrame(animateFrame);
         };
         window.requestAnimationFrame(animateFrame);
     }
 }
-export = nemesis;
+
+var _nemesis = new nemesis();
+export = _nemesis;

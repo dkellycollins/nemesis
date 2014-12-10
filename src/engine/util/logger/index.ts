@@ -2,21 +2,45 @@
 
 import consoleLogger = require("./consoleLogger");
 
-module logger {
-    var _loggers: ILogger[] = [];
-    _loggers.push(consoleLogger);
+/**
+ * Logs to the currently active loggers.
+ */
+class logger implements ILogger {
+    /**
+     * Default constructor
+     */
+    constructor() {
+        this._loggers.push(consoleLogger);
+    }
 
-    export function log(msg:string):void {
+    /**
+     * The actve loggers
+     * @type {Array}
+     * @private
+     */
+    private _loggers: ILogger[] = [];
+
+    /**
+     * Logs a standard message
+     * @param msg The message to log
+     */
+    public log(msg:string):void {
         _.forEach(this._loggers, (logger: ILogger) => {
             logger.log(msg);
         });
     }
 
-    export function logError(msg:string, e?:ExceptionInformation):void {
+    /**
+     * Logs an error message
+     * @param msg The error message
+     * @param e Error
+     */
+    public logError(msg:string, e?:ExceptionInformation) {
         _.forEach(this._loggers, (logger: ILogger) => {
             logger.logError(msg, e);
         });
     }
 }
 
-export = logger;
+var _logger = new logger();
+export = _logger;

@@ -1,13 +1,19 @@
 ///require path="../../../lib/lodash/lodash.d.ts"/>
 
 import gl = require("./glContext");
-import _ = require("lodash");
 import texture = require("./texture");
+import verifier = require("../util/debug/verifier")
 
+/**
+ * A texture that is made up of multiple textures.
+ */
 class combinedTexture {
     constructor(imgs: any[]) {
+        verifier.that(imgs, "imgs").isNotEmpty();
+        verifier.that(imgs.length, "imgs.length").isLessThan(32);
+
         this._textures = [];
-        _.forEach(imgs, (img) => {
+        imgs.forEach((img) => {
             this._textures.push(new texture(img));
         });
     }
@@ -15,9 +21,11 @@ class combinedTexture {
     private _textures: texture[];
 
     public loaded(): boolean {
-        return _.all(this._textures, (texture) => {
-            return texture.loaded();
+        this._textures.forEach((texture) => {
+            if (!texture.loaded())
+                return false;
         });
+        return true;
     }
 
     public activate(): void {

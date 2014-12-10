@@ -1,46 +1,47 @@
-define(["require", "exports", './input/index', './math/index', './rendering/index', "./canvas", "./config"], function (require, exports, _input, _math, _rendering, _canvas, _config) {
-    /* The engine module is for static varibles and static initialization. */
-    var nemesis;
-    (function (nemesis) {
-        nemesis.input = _input;
-        nemesis.math = _math;
-        nemesis.rendering = _rendering;
-        nemesis.canvas = _canvas;
-        nemesis.config = _config;
-        var _updateCallbacks = [];
-        var _renderCallbacks = [];
-        function registerUpdateCallback(update) {
-            return _updateCallbacks.push(update);
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+define(["require", "exports", "./eventObject", './input/index', './math/index', './rendering/index', "./canvas", "./config"], function (require, exports, eventObject, _input, _math, _rendering, _canvas, _config) {
+    /**
+     * The entry point class. Contains reference to other modules and manages the game loop.
+     */
+    var nemesis = (function (_super) {
+        __extends(nemesis, _super);
+        /**
+         * Default constructor.
+         */
+        function nemesis() {
+            _super.call(this);
+            this.input = _input;
+            this.math = _math;
+            this.rendering = _rendering;
+            this.canvas = _canvas;
+            this.config = _config;
+            this.registerEvent("update");
+            this.registerEvent("render");
         }
-        nemesis.registerUpdateCallback = registerUpdateCallback;
-        function deregisterUpdateCallback(updateIndex) {
-            _updateCallbacks.splice(updateIndex, 1);
-        }
-        nemesis.deregisterUpdateCallback = deregisterUpdateCallback;
-        function registerRenderCallback(render) {
-            return _renderCallbacks.push(render);
-        }
-        nemesis.registerRenderCallback = registerRenderCallback;
-        function deregisterRenderCallback(renderIndex) {
-            _renderCallbacks.splice(renderIndex, 1);
-        }
-        nemesis.deregisterRenderCallback = deregisterRenderCallback;
-        function run(context) {
+        /**
+         * Starts the game.
+         * @param context An object that gets passed to each function, each time a frame is rendered.
+         */
+        nemesis.prototype.run = function (context) {
+            var _this = this;
+            debugger;
             _rendering.render.init();
             var animateFrame = function (time) {
-                _updateCallbacks.forEach(function (callback) {
-                    callback(time, context);
-                });
+                _this.emit("update", time, context);
                 _rendering.render.begin();
-                _renderCallbacks.forEach(function (callback) {
-                    callback(time, context);
-                });
+                _this.emit("render", time, context);
                 _rendering.render.end();
                 window.requestAnimationFrame(animateFrame);
             };
             window.requestAnimationFrame(animateFrame);
-        }
-        nemesis.run = run;
-    })(nemesis || (nemesis = {}));
-    return nemesis;
+        };
+        return nemesis;
+    })(eventObject);
+    var _nemesis = new nemesis();
+    return _nemesis;
 });

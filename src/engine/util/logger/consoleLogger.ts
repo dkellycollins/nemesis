@@ -1,27 +1,41 @@
 ///<reference path="./logger.d.ts" />
 
+/**
+ * Logs messages to the console.
+ */
 module consoleLogger {
+    /**
+     * The maximum number of error that can be logged before the logger is disabled.
+     * @type {number}
+     * @private
+     */
     var _MAX_ERRORS_REPORTED = 500;
-    var _maxErrorsReached: boolean = false;
+
+    /**
+     * The total number of errors reported.
+     * @type {number}
+     * @private
+     */
     var _errorsReported: number = 0;
 
-    function _checkErrorsReported() {
-        _errorsReported++;
-        if(_errorsReported > _MAX_ERRORS_REPORTED) {
-            _maxErrorsReached = true;
-            log("Max errors reached. Disabling log.");
-        }
-    }
-
+    /**
+     * Logs a standard message to the console
+     * @param msg The message to log
+     */
     export function log(msg: string): void {
-        if(_maxErrorsReached) {
+        if(_errorsReported > _MAX_ERRORS_REPORTED) {
             return;
         }
         console.log(msg);
     }
 
+    /**
+     * Logs an error message to the console
+     * @param msg The message to log
+     * @param e Error information
+     */
     export function logError(msg: string, e?: ExceptionInformation) {
-        if(_maxErrorsReached) {
+        if(_errorsReported > _MAX_ERRORS_REPORTED) {
             return;
         }
 
@@ -29,9 +43,11 @@ module consoleLogger {
         if(!!e) {
             console.error(e.toString());
         }
-        _checkErrorsReported();
+
+        _errorsReported++;
+        if(_errorsReported > _MAX_ERRORS_REPORTED) {
+            log("Max errors reached. Disabling log.");
+        }
     }
-
-
 }
 export = consoleLogger;

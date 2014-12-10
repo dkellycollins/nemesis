@@ -1,5 +1,12 @@
-define(["require", "exports", './glContext', 'lodash'], function (require, exports, gl, _) {
+define(["require", "exports", './glContext', '../util/debug/verifier'], function (require, exports, gl, verify) {
+    /**
+     * Manages a texture on the graphics card.
+     */
     var texture = (function () {
+        /**
+         * Creates a new texture with the given image.
+         * @param img The image to send to the graphics card
+         */
         function texture(img) {
             this._img = img;
             this._tex = gl.createTexture();
@@ -10,17 +17,30 @@ define(["require", "exports", './glContext', 'lodash'], function (require, expor
                 this._img.onload = this._handleLoadedImage();
             }
         }
+        /**
+         * Gets if the texture has been loaded on the graphics card
+         * @returns {boolean} True if the texture has been sent to the graphics card. False, otherwise.
+         */
         texture.prototype.loaded = function () {
             if (this._img.complete) {
                 return true;
             }
-            return !!(_.isUndefined(this._img.naturalWidth) || this._img.naturalWidth > 0);
+            return !!(typeof (this._img.naturalWidth) == 'undefined' || this._img.naturalWidth > 0);
         };
+        /**
+         * Sets this texture as active on graphics card.
+         * @param texNumber The texture number on the graphics card
+         */
         texture.prototype.activate = function (texNumber) {
-            texNumber = _.isUndefined(texNumber) ? gl.TEXTURE0 : texNumber;
+            texNumber = typeof (texNumber) == 'undefined' ? gl.TEXTURE0 : texNumber;
+            verify.that(texNumber, "texNumber").isGreaterThan(-1).isLessThan(32);
             gl.activeTexture(texNumber);
             gl.bindTexture(gl.TEXTURE_2D, this._tex);
         };
+        /**
+         * Sends the image
+         * @private
+         */
         texture.prototype._handleLoadedImage = function () {
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
             gl.bindTexture(gl.TEXTURE_2D, this._tex);

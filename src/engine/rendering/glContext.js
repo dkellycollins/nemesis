@@ -1,4 +1,7 @@
 define(["require", "exports", "../canvas", "../config", "../util/logger/consoleLogger", "../util/debug/webgl"], function (require, exports, canvas, config, logger, debug) {
+    /**
+     * Gets the gl context object from the canvas element.
+     */
     function throwOnGLError(err, funcName, args) {
         if (config.throwOnGLError) {
             throw debug.glEnumToString(err) + " was caused by call to: " + funcName;

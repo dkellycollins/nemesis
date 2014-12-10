@@ -2,6 +2,7 @@
 
 import gl = require("./glContext");
 import logger = require("../util/logger/consoleLogger");
+
 import common = require("text!../shaders/common.glsl");
 import base_vertex = require("text!../shaders/base_vertex.glsl");
 import color_frag = require("text!../shaders/color_frag.glsl");

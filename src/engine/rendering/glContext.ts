@@ -3,6 +3,10 @@ import config = require("../config");
 import logger = require("../util/logger/consoleLogger");
 import debug = require("../util/debug/webgl");
 
+/**
+ * Gets the gl context object from the canvas element.
+ */
+
 function throwOnGLError(err, funcName, args) {
     if(config.throwOnGLError) {
         throw debug.glEnumToString(err) + " was caused by call to: " + funcName;

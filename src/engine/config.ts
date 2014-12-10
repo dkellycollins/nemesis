@@ -2,9 +2,12 @@
 
 import canvas = require('./canvas');
 
-var config: NemesisConfig = {};
+/**
+ * Retrieves the configurations as defined by the user.
+ */
 
-if(canvas.getAttribute('debug') == "true") {
+var config: NemesisConfig = <NemesisConfig>{};
+if((<HTMLCanvasElement>canvas).getAttribute('debug') == "true") {
     config.throwOnGLError = true;
     config.logGLCalls = true;
     config.validateGLArgs = true;

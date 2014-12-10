@@ -1,5 +1,9 @@
 ///<reference path="../../lib/lodash/lodash.d.ts" />
 define(["require", "exports", "util/logger/consoleLogger"], function (require, exports, logger) {
+    /**
+     * The canvas element on the page.
+     * Will retrieve any element with a nemesis attribute or just the first canvas element on the page.
+     */
     var elements = document.getElementsByTagName('canvas');
     var canvas;
     if (elements.length == 0) {
@@ -13,6 +17,11 @@ define(["require", "exports", "util/logger/consoleLogger"], function (require, e
             }
         }
         canvas = canvas || elements[0];
+        //Fullscreen option must be handled here
+        if (canvas.getAttribute("fullscreen") == "true") {
+            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth;
+        }
     }
     return canvas;
 });

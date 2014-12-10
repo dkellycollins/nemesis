@@ -18,11 +18,7 @@ module.exports = function(grunt) {
                     baseUrl: "src/engine",
                     name: "nemesis",
                     paths: {
-                        text: "../../node_modules/text/text",
-                        json: "../../bower_components/requirejs-plugins/src/json",
-                        image: "../../bower_components/requirejs-plugins/src/image",
-                        nemesisconfig: 'empty:',
-                        lodash: "../../node_modules/lodash/lodash"
+                        text: "../../node_modules/text/text"
                     },
                     out: 'build/nemesis.js',
                     optimize: 'none'
