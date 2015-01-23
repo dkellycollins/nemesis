@@ -36,14 +36,30 @@ module.exports = function(grunt) {
         ts: {
             options: {
                 target: 'es5',
-                module: 'amd',
                 sourceMap: false,
                 declaration: false,
                 removeComments: false
             },
             build: {
+                options: {
+                    module: 'amd'
+                },
                 src: ['src/**/*.ts']
+            },
+            test: {
+                options: {
+                    module: 'commonjs'
+                },
+                src: ['test/**/*.ts']
             }
+        },
+        mochaTest: {
+            test: {
+                options: {
+                    reporter: 'progress'
+                },
+                src: ['test/**/*.js']
+            },
         }
     });
 
@@ -51,10 +67,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-ts');
+    grunt.loadNpmTasks('grunt-mocha-test')
 
     // Default task(s).
     grunt.registerTask('debug', ['ts:build', 'requirejs:engine']);
     grunt.registerTask('release', ['ts:build', 'requirejs:engine', 'uglify']);
-    grunt.registerTask('default', ['debug']);
+    grunt.registerTask('test', ['ts:test', 'mochaTest']);
+    grunt.registerTask('default', ['debug', 'test']);
 
 };
