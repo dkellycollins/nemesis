@@ -15,7 +15,7 @@ module.exports = function(grunt) {
         requirejs: {
             engine: {
                 options: {
-                    baseUrl: "src/engine",
+                    baseUrl: "build/src/engine",
                     name: "nemesis",
                     paths: {
                         text: "../../node_modules/text/text"
@@ -26,7 +26,7 @@ module.exports = function(grunt) {
             },
             importer: {
                 options: {
-                    baseUrl: "src/importer",
+                    baseUrl: "build/src/importer",
                     name: "main",
                     out: 'build/importer.js',
                     optimize: 'none'
@@ -44,13 +44,15 @@ module.exports = function(grunt) {
                 options: {
                     module: 'amd'
                 },
-                src: ['src/**/*.ts']
+                src: ['src/**/*.ts'],
+                outDir: 'build/src'
             },
             test: {
                 options: {
                     module: 'commonjs'
                 },
-                src: ['test/**/*.ts']
+                src: ['test/**/*.ts'],
+                outDir: 'build/test'
             }
         },
         mochaTest: {
@@ -61,7 +63,7 @@ module.exports = function(grunt) {
                 options: {
                     reporter: 'progress'
                 },
-                src: ['test/**/*.js']
+                src: ['build/test/**/*.js']
             }
         }
     });
