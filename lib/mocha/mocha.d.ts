@@ -59,6 +59,13 @@ declare var describe : {
     timeout(ms: number): void;
 }
 
+declare var suite : {
+    (description: string, spec: () => void): void;
+    only(description: string, spec: () => void): void;
+    skip(description: string, spec: () => void): void;
+    timeout(ms: number): void;
+}
+
 // alias for `describe`
 declare var context : {
     (contextTitle: string, spec: () => void): void;
@@ -68,6 +75,16 @@ declare var context : {
 }
 
 declare var it: {
+    (expectation: string, assertion?: () => void): void;
+    (expectation: string, assertion?: (done: MochaDone) => void): void;
+    only(expectation: string, assertion?: () => void): void;
+    only(expectation: string, assertion?: (done: MochaDone) => void): void;
+    skip(expectation: string, assertion?: () => void): void;
+    skip(expectation: string, assertion?: (done: MochaDone) => void): void;
+    timeout(ms: number): void;
+};
+
+declare var test: {
     (expectation: string, assertion?: () => void): void;
     (expectation: string, assertion?: (done: MochaDone) => void): void;
     only(expectation: string, assertion?: () => void): void;

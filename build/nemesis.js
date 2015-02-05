@@ -5881,13 +5881,13 @@ define('nemesis',["require", "exports", "./eventObject", './input/index', './mat
         /**
          * Default constructor.
          */
-        function nemesis() {
+        function nemesis(input, math, rendering, canvas, config) {
             _super.call(this);
-            this.input = _input;
-            this.math = _math;
-            this.rendering = _rendering;
-            this.canvas = _canvas;
-            this.config = _config;
+            this.input = input;
+            this.math = math;
+            this.rendering = rendering;
+            this.canvas = canvas;
+            this.config = config;
             this.registerEvent("update");
             this.registerEvent("render");
         }
@@ -5909,7 +5909,7 @@ define('nemesis',["require", "exports", "./eventObject", './input/index', './mat
         };
         return nemesis;
     })(eventObject);
-    var _nemesis = new nemesis();
+    var _nemesis = new nemesis(_input, _math, _rendering, _canvas, _config);
     return _nemesis;
 });
 

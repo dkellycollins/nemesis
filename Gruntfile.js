@@ -54,12 +54,15 @@ module.exports = function(grunt) {
             }
         },
         mochaTest: {
+            options: {
+                ui: 'tdd'
+            },
             test: {
                 options: {
                     reporter: 'progress'
                 },
                 src: ['test/**/*.js']
-            },
+            }
         }
     });
 
