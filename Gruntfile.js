@@ -18,7 +18,7 @@ module.exports = function(grunt) {
                     baseUrl: "build/src/engine",
                     name: "nemesis",
                     paths: {
-                        text: "../../node_modules/text/text"
+                        text: "../../../node_modules/text/text"
                     },
                     out: 'build/nemesis.js',
                     optimize: 'none'
@@ -65,19 +65,28 @@ module.exports = function(grunt) {
                 },
                 src: ['build/test/**/*.js']
             }
-        }
+        },
+        copy: {
+            shaders: {
+                src: "src/engine/shaders/*.glsl",
+                dest: "build/"
+            }
+        },
+        clean: ['build']
     });
 
-    // Load the plugins.
+    // Load the pluengins.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-ts');
-    grunt.loadNpmTasks('grunt-mocha-test')
+    grunt.loadNpmTasks('grunt-mocha-test');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
     // Default task(s).
-    grunt.registerTask('debug', ['ts:build', 'requirejs:engine']);
-    grunt.registerTask('release', ['ts:build', 'requirejs:engine', 'uglify']);
+    grunt.registerTask('build', ['clean', 'ts:build', 'copy:shaders', 'requirejs:engine']);
+    grunt.registerTask('release', ['build', 'uglify']);
     grunt.registerTask('test', ['ts:test', 'mochaTest']);
-    grunt.registerTask('default', ['debug', 'test']);
+    grunt.registerTask('default', ['build', 'test']);
 
 };
