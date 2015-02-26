@@ -36,7 +36,7 @@ var cubeData = {
  */
 require(['nemesis'], function(nemesis) {
     /*** Creating the cube ***/
-    //First create a new staticRenderObject with the shaders you want to use.
+    //First create a new staticRenderObject with the nemesis.shaders you want to use.
     var cube = new nemesis.rendering.renderObject(nemesis.rendering.shaders.createProgram(
         nemesis.rendering.shaders.baseVertexShader, //Base vertex shader just calculates the vertex position.
         nemesis.rendering.shaders.colorFragmentShader //Color fragment shader colors the object a single color.

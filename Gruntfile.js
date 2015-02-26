@@ -8,6 +8,7 @@ module.exports = function(grunt) {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
             },
             build: {
+
                 src: 'build/nemesis.js',
                 dest: 'build/nemesis.min.js'
             }
@@ -68,7 +69,7 @@ module.exports = function(grunt) {
         },
         copy: {
             shaders: {
-                src: "src/engine/shaders/*.glsl",
+                src: "src/engine/nemesis.shaders/*.glsl",
                 dest: "build/"
             }
         },

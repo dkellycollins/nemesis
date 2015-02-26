@@ -39,6 +39,7 @@
     "typescript": "^1.1.0-1"
   },
   "dependencies": {
+    "gl-matrix": "^2.1.0",
     "lodash": "^2.4.1",
     "requirejs": "^2.1.15",
     "text": "requirejs/text"

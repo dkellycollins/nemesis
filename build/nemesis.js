@@ -44,7 +44,7 @@ define('eventObject',["require", "exports"], function (require, exports) {
 });
 
 ///<reference path="./logger.d.ts" />
-define('util/logger/consoleLogger',["require", "exports"], function (require, exports) {
+define('nemesis.util/logger/consoleLogger',["require", "exports"], function (require, exports) {
     /**
      * Logs messages to the console.
      */
@@ -97,7 +97,7 @@ define('util/logger/consoleLogger',["require", "exports"], function (require, ex
 });
 
 ///<reference path="../../lib/lodash/lodash.d.ts" />
-define('canvas',["require", "exports", "util/logger/consoleLogger"], function (require, exports, logger) {
+define('canvas',["require", "exports", "nemesis.util/logger/consoleLogger"], function (require, exports, logger) {
     /**
      * The canvas element on the page.
      * Will retrieve any element with a nemesis attribute or just the first canvas element on the page.
@@ -124,7 +124,7 @@ define('canvas',["require", "exports", "util/logger/consoleLogger"], function (r
     return canvas;
 });
 
-define('input/keyboard',["require", "exports", '../canvas'], function (require, exports, canvas) {
+define('nemesis.input/keyboard',["require", "exports", '../canvas'], function (require, exports, canvas) {
     /**
      * Keeps track of the current state of the keyboard.
      */
@@ -167,7 +167,7 @@ define('input/keyboard',["require", "exports", '../canvas'], function (require, 
     return keyboard;
 });
 
-define('input/mouse',["require", "exports", '../canvas'], function (require, exports, canvas) {
+define('nemesis.input/mouse',["require", "exports", '../canvas'], function (require, exports, canvas) {
     /**
      * Keeps track of the current state of the mouse.
      */
@@ -258,7 +258,7 @@ define('input/mouse',["require", "exports", '../canvas'], function (require, exp
     return mouse;
 });
 
-define('input/mouseButtons',["require", "exports"], function (require, exports) {
+define('nemesis.input/mouseButtons',["require", "exports"], function (require, exports) {
     /**
      * Enum for all the possible mouse buttons.
      */
@@ -283,7 +283,7 @@ define('input/mouseButtons',["require", "exports"], function (require, exports) 
     return mouseButtons;
 });
 
-define('input/index',["require", "exports", './keyboard', './mouse', './mouseButtons'], function (require, exports, keyboard_file, mouse_file, mouseButtons_file) {
+define('nemesis.input/index',["require", "exports", './keyboard', './mouse', './mouseButtons'], function (require, exports, keyboard_file, mouse_file, mouseButtons_file) {
     exports.keyboard = keyboard_file; ///ts:export:generated
     exports.mouse = mouse_file; ///ts:export:generated
     exports.mouseButtons = mouseButtons_file; ///ts:export:generated
@@ -579,11 +579,11 @@ define('math/mat2',["require", "exports", "./glMatrix"], function (require, expo
         }
         mat2.frob = frob;
         /**
-         * Returns L, D and U matrices (Lower triangular, Diagonal and Upper triangular) by factorizing the input matrix
+         * Returns L, D and U matrices (Lower triangular, Diagonal and Upper triangular) by factorizing the nemesis.input matrix
          * @param {mat2} L the lower triangular matrix
          * @param {mat2} D the diagonal matrix
          * @param {mat2} U the upper triangular matrix
-         * @param {mat2} a the input matrix to factorize
+         * @param {mat2} a the nemesis.input matrix to factorize
          */
         function LDU(L, D, U, a) {
             L[2] = a[2] / a[0];
@@ -4140,7 +4140,7 @@ define('config',["require", "exports", './canvas'], function (require, exports, 
     return config;
 });
 
-define('util/debug/webgl',["require", "exports", "../logger/consoleLogger"], function (require, exports, logger) {
+define('nemesis.util/debug/webgl',["require", "exports", "../logger/consoleLogger"], function (require, exports, logger) {
     var WebGLDebugUtils;
     (function (WebGLDebugUtils) {
         /**
@@ -4860,7 +4860,7 @@ define('util/debug/webgl',["require", "exports", "../logger/consoleLogger"], fun
     return WebGLDebugUtils;
 });
 
-define('rendering/glContext',["require", "exports", "../canvas", "../config", "../util/logger/consoleLogger", "../util/debug/webgl"], function (require, exports, canvas, config, logger, debug) {
+define('nemesis.render3D/glContext',["require", "exports", "../canvas", "../config", "../nemesis.util/logger/consoleLogger", "../nemesis.util/debug/webgl"], function (require, exports, canvas, config, logger, debug) {
     /**
      * Gets the gl context object from the canvas element.
      */
@@ -5269,11 +5269,11 @@ define('text',['module'], function (module) {
 
             //XPCOM, you so crazy
             try {
-                inStream = Cc['@mozilla.org/network/file-input-stream;1']
+                inStream = Cc['@mozilla.org/network/file-nemesis.input-stream;1']
                            .createInstance(Ci.nsIFileInputStream);
                 inStream.init(fileObj, 1, 0, false);
 
-                convertStream = Cc['@mozilla.org/intl/converter-input-stream;1']
+                convertStream = Cc['@mozilla.org/intl/converter-nemesis.input-stream;1']
                                 .createInstance(Ci.nsIConverterInputStream);
                 convertStream.init(inStream, "utf-8", inStream.available(),
                 Ci.nsIConverterInputStream.DEFAULT_REPLACEMENT_CHARACTER);
@@ -5291,34 +5291,34 @@ define('text',['module'], function (module) {
 });
 
 
-define('text!shaders/common.glsl',[],function () { return 'vec4 getPosition(mat4 mvp, vec3 pos) {\r\n    return mvp * vec4(pos, 1);\r\n}';});
+define('text!nemesis.shaders/common.glsl',[],function () { return 'vec4 getPosition(mat4 mvp, vec3 pos) {\r\n    return mvp * vec4(pos, 1);\r\n}';});
 
 
-define('text!shaders/base_vertex.glsl',[],function () { return '#include common.glsl\r\n\r\nattribute vec3 aVertex;\r\nuniform mat4 mvp;\r\n\r\nvoid main(void) {\r\n    gl_Position = mvp * vec4(aVertex, 1.);\r\n}';});
+define('text!nemesis.shaders/base_vertex.glsl',[],function () { return '#include common.glsl\r\n\r\nattribute vec3 aVertex;\r\nuniform mat4 mvp;\r\n\r\nvoid main(void) {\r\n    gl_Position = mvp * vec4(aVertex, 1.);\r\n}';});
 
 
-define('text!shaders/color_frag.glsl',[],function () { return 'precision mediump float;\r\nuniform vec3 vColor;\r\nvoid main(void) {\r\n    gl_FragColor = vec4(vColor, 1.);\r\n}';});
+define('text!nemesis.shaders/color_frag.glsl',[],function () { return 'precision mediump float;\r\nuniform vec3 vColor;\r\nvoid main(void) {\r\n    gl_FragColor = vec4(vColor, 1.);\r\n}';});
 
 
-define('text!shaders/tex_frag.glsl',[],function () { return 'precision mediump float;\r\n\r\nuniform sampler2D sampler;\r\nvarying vec2 vUV;\r\n\r\nvoid main(void) {\r\n    gl_FragColor = texture2D(sampler, vUV);\r\n}';});
+define('text!nemesis.shaders/tex_frag.glsl',[],function () { return 'precision mediump float;\r\n\r\nuniform sampler2D sampler;\r\nvarying vec2 vUV;\r\n\r\nvoid main(void) {\r\n    gl_FragColor = texture2D(sampler, vUV);\r\n}';});
 
 
-define('text!shaders/tex_vertex.glsl',[],function () { return 'attribute vec3 aVertex;\r\nuniform mat4 mvp;\r\n\r\nattribute vec2 aUV;\r\nvarying vec2 vUV;\r\n\r\nvoid main(void) {\r\n    gl_Position = mvp * vec4(aVertex, 1.);\r\n    vUV = aUV;\r\n}';});
+define('text!nemesis.shaders/tex_vertex.glsl',[],function () { return 'attribute vec3 aVertex;\r\nuniform mat4 mvp;\r\n\r\nattribute vec2 aUV;\r\nvarying vec2 vUV;\r\n\r\nvoid main(void) {\r\n    gl_Position = mvp * vec4(aVertex, 1.);\r\n    vUV = aUV;\r\n}';});
 
-///<reference path="./shaders.d.ts" />
-define('rendering/shaders',["require", "exports", "./glContext", "../util/logger/consoleLogger", "text!../shaders/common.glsl", "text!../shaders/base_vertex.glsl", "text!../shaders/color_frag.glsl", "text!../shaders/tex_frag.glsl", "text!../shaders/tex_vertex.glsl"], function (require, exports, gl, logger, common, base_vertex, color_frag, tex_frag, tex_vertex) {
+///<reference path="./nemesis.shaders.d.ts" />
+define('nemesis.render3D/nemesis.shaders',["require", "exports", "./glContext", "../nemesis.util/logger/consoleLogger", "text!../nemesis.shaders/common.glsl", "text!../nemesis.shaders/base_vertex.glsl", "text!../nemesis.shaders/color_frag.glsl", "text!../nemesis.shaders/tex_frag.glsl", "text!../nemesis.shaders/tex_vertex.glsl"], function (require, exports, gl, logger, common, base_vertex, color_frag, tex_frag, tex_vertex) {
     /**
-     * Handles compiling shaders and creating shader programs.
+     * Handles compiling nemesis.shaders and creating shader programs.
      */
     var shaders;
     (function (shaders) {
         /**
-         * RegExp for fining include statements in shaders.
+         * RegExp for fining include statements in nemesis.shaders.
          * @type {RegExp}
          */
         var includeReg = /#include \S+/;
         /**
-         * Stores lib shaders compiled by compileLib
+         * Stores lib nemesis.shaders compiled by compileLib
          * @type {{}}
          */
         var lib = {};
@@ -5339,7 +5339,7 @@ define('rendering/shaders',["require", "exports", "./glContext", "../util/logger
             return source;
         }
         /**
-         * Compiles the given source a library to be included in other shaders.
+         * Compiles the given source a library to be included in other nemesis.shaders.
          * @param name The name of the library. Generally this should be the file name of the library.
          * @param source The source.
          */
@@ -5367,7 +5367,7 @@ define('rendering/shaders',["require", "exports", "./glContext", "../util/logger
         }
         shaders.compile = compile;
         /**
-         * Creates a new program with the given vertex and fragment shaders.
+         * Creates a new program with the given vertex and fragment nemesis.shaders.
          * @param vertexShader The handle to the compiled vertex shader.
          * @param fragmentShader The handle to the compiled fragment shader.
          * @returns {WebGLProgram} The handle to the shader program.
@@ -5391,14 +5391,14 @@ define('rendering/shaders',["require", "exports", "./glContext", "../util/logger
     return shaders;
 });
 
-define('rendering/render',["require", "exports", "./glContext"], function (require, exports, gl) {
+define('nemesis.render3D/render',["require", "exports", "./glContext"], function (require, exports, gl) {
     /**
      * Functions to setup and complete each frame.
      */
     var render;
     (function (render) {
         /**
-         * Performs initialization for rendering
+         * Performs initialization for nemesis.render3D
          */
         function init() {
             gl.clearColor(0.0, 0.0, 0.0, 0.0);
@@ -5426,7 +5426,7 @@ define('rendering/render',["require", "exports", "./glContext"], function (requi
     return render;
 });
 
-define('rendering/camera',["require", "exports", "../canvas", "../math/vec3", "../math/mat4"], function (require, exports, canvas, vec3, mat4) {
+define('nemesis.render3D/camera',["require", "exports", "../canvas", "../math/vec3", "../math/mat4"], function (require, exports, canvas, vec3, mat4) {
     /**
      *
      */
@@ -5521,7 +5521,7 @@ define('rendering/camera',["require", "exports", "../canvas", "../math/vec3", ".
     return camera;
 });
 
-define('rendering/texture',["require", "exports", './glContext'], function (require, exports, gl) {
+define('nemesis.render3D/texture',["require", "exports", './glContext'], function (require, exports, gl) {
     /**
      * Manages a texture on the graphics card.
      */
@@ -5579,7 +5579,7 @@ define('rendering/texture',["require", "exports", './glContext'], function (requ
 });
 
 ///<refernece path="./logger.d.ts" />
-define('util/logger/index',["require", "exports", "./consoleLogger"], function (require, exports, consoleLogger) {
+define('nemesis.util/logger/index',["require", "exports", "./consoleLogger"], function (require, exports, consoleLogger) {
     /**
      * Logs to the currently active loggers.
      */
@@ -5622,7 +5622,7 @@ define('util/logger/index',["require", "exports", "./consoleLogger"], function (
 });
 
 ///<reference path="../../../../lib/lodash/lodash.d.ts" />
-define('util/debug/verifier',["require", "exports", "../logger/index"], function (require, exports, logger) {
+define('nemesis.util/debug/verifier',["require", "exports", "../logger/index"], function (require, exports, logger) {
     /**
      * Provides methods to verify the given parameter.
      */
@@ -5709,7 +5709,7 @@ define('util/debug/verifier',["require", "exports", "../logger/index"], function
 });
 
 ///<reference path="../../../lib/lodash/lodash.d.ts" />
-define('rendering/renderObject',["require", "exports", "./glContext", "../math/index", "../util/debug/verifier"], function (require, exports, gl, math, verify) {
+define('nemesis.render3D/renderObject',["require", "exports", "./glContext", "../math/index", "../nemesis.util/debug/verifier"], function (require, exports, gl, math, verify) {
     /**
      * A private class that contains shader attribute data.
      */
@@ -5857,7 +5857,7 @@ define('rendering/renderObject',["require", "exports", "./glContext", "../math/i
     return renderObject;
 });
 
-define('rendering/index',["require", "exports", './glContext', './shaders', './render', './camera', './texture', './renderObject'], function (require, exports, GL_file, shaders_file, render_file, camera_file, texture_file, renderObject_file) {
+define('nemesis.render3D/index',["require", "exports", './glContext', './nemesis.shaders', './render', './camera', './texture', './renderObject'], function (require, exports, GL_file, shaders_file, render_file, camera_file, texture_file, renderObject_file) {
     exports.GL = GL_file; ///ts:export:generated
     exports.shaders = shaders_file; ///ts:export:generated
     exports.render = render_file; ///ts:export:generated
@@ -5872,7 +5872,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define('nemesis',["require", "exports", "./eventObject", './input/index', './math/index', './rendering/index', "./canvas", "./config"], function (require, exports, eventObject, _input, _math, _rendering, _canvas, _config) {
+define('nemesis',["require", "exports", "./eventObject", './nemesis.input/index', './math/index', './nemesis.render3D/index', "./canvas", "./config"], function (require, exports, eventObject, _input, _math, _rendering, _canvas, _config) {
     /**
      * The entry point class. Contains reference to other modules and manages the game loop.
      */

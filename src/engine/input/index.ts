@@ -1,9 +1,0 @@
-///ts:export=keyboard
-import keyboard_file = require('./keyboard'); ///ts:export:generated
-export var keyboard = keyboard_file; ///ts:export:generated
-///ts:export=mouse
-import mouse_file = require('./mouse'); ///ts:export:generated
-export var mouse = mouse_file; ///ts:export:generated
-///ts:export=mouseButtons
-import mouseButtons_file = require('./mouseButtons'); ///ts:export:generated
-export var mouseButtons = mouseButtons_file; ///ts:export:generated

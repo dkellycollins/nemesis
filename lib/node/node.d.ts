@@ -1232,7 +1232,7 @@ declare module "stream" {
     export class PassThrough extends Transform {}
 }
 
-declare module "util" {
+declare module "nemesis.util" {
     export interface InspectOptions {
         showHidden?: boolean;
         depth?: number;
