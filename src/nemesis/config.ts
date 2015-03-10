@@ -1,16 +1,15 @@
 ///<reference path="./nemesisConfig.d.ts" />
 
-import canvas = require('./canvas');
+module nemesis {
+    import canvas = nemesis.canvas;
 
-/**
- * Retrieves the configurations as defined by the user.
- */
+    var _config: NemesisConfig = <NemesisConfig>{};
 
-var config: NemesisConfig = <NemesisConfig>{};
-if((<HTMLCanvasElement>canvas).getAttribute('debug') == "true") {
-    config.throwOnGLError = true;
-    config.logGLCalls = true;
-    config.validateGLArgs = true;
+    export function config(c?: NemesisConfig):NemesisConfig {
+        if(!!c) {
+            _config = c;
+        }
+
+        return _config;
+    }
 }
-
-export = config;

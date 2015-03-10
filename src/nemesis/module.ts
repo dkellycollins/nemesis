@@ -1,73 +1,37 @@
-import eventObject = require("./eventObject");
-import _input = require('../nemesis.input/index');
-import _math = require('./math/index');
-import _rendering = require('../nemesis.render3D/index');
-import _canvas = require("./canvas");
-import _config = require("./config");
-
 /**
  * The entry point class. Contains reference to other modules and manages the game loop.
  */
-class nemesis extends eventObject {
-    /**
-     * Default constructor.
-     */
-    constructor(input,math,rendering,canvas,config) {
-        super();
+module nemesis {
+    import eventObject = nemesis.eventObject;
 
-        this.input = input;
-        this.math = math;
-        this.rendering = rendering;
-        this.canvas = canvas;
-        this.config = config;
+    var _eventObject: eventObject = new eventObject();
 
-        this.registerEvent("update");
-        this.registerEvent("render");
+    export function init(context?: any):void {
+        _eventObject.emit("init", context);
     }
-
-    /**
-     * The nemesis.input module. Contains classes to handle user nemesis.input.
-     */
-    public input;
-
-    /**
-     * The math module. Contains classes to do vector and matrix math.
-     */
-    public math;
-
-    /**
-     * The nemesis.render3D module. Contains classes to render objects to the screen.
-     */
-    public rendering;
-
-    /**
-     * The canvas element the engine is using.
-     */
-    public canvas;
-
-    /**
-     * The configuration options for the game.
-     */
-    public config;
 
     /**
      * Starts the game.
      * @param context An object that gets passed to each function, each time a frame is rendered.
      */
-    public run(context?:any):void {
-        _rendering.render.init();
+    export function run(context?: any):void {
         var animateFrame = (time) => {
-            this.emit("update", time, context);
+            _eventObject.emit("update", time, context);
 
-            _rendering.render.begin();
-            this.emit("render", time, context);
-            _rendering.render.end();
+            _eventObject.emit("prerender", time, context);
+            _eventObject.emit("render", time, context);
+            _eventObject.emit("postrender", time, context);
 
             window.requestAnimationFrame(animateFrame);
         };
         window.requestAnimationFrame(animateFrame);
     }
-}
 
-var _nemesis = new nemesis(_input, _math, _rendering, _canvas, _config);
-export = _nemesis;
+    export function quit():void {
+        _eventObject.emit("destroy");
+    }
+
+    export function on(event: string, callback: (any) => void): () => void {
+        return _eventObject.on(event, callback);
+    }
+}
