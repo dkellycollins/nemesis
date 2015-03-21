@@ -6,9 +6,9 @@ var mocha = require("gulp-mocha");
 var uglify = require("gulp-uglify");
 
 var modules = [
-   "nemesis"
+   "nemesis",
    //"nemesis.gui",
-   //"nemesis.input",
+   "nemesis.input",
    //"nemesis.logger",
    //"nemesis.render3D",
    //"nemesis.shaders",
@@ -23,20 +23,26 @@ gulp.task("scripts", ["clean"], function() {
 
    modules.forEach(function(module) {
       //Source files
-      var srcResult = gulp.src(["src/" + module + ".ts"])
-         .pipe(ts({
-            declaration: true
-         }))
-         .pipe(gulp.dest("build/"));
+      var srcResult = gulp.src([
+         "src/" + module + ".ts",
+         "src/" + module + "/**/*.ts"
+      ])
+      .pipe(ts({
+         declaration: true,
+         out: module + ".js"
+      }))
+      .pipe(gulp.dest("build/"));
 
       results.push(srcResult);
 
       //Test files
-      var testResult = gulp.src(["test/" + module + "/**/*.ts"])
-         .pipe(ts({
+      var testResult = gulp.src([
+         "test/" + module + "/**/*.ts"
+      ])
+      .pipe(ts({
 
-         }))
-         .pipe(gulp.dest("build/test/" + module));
+      }))
+      .pipe(gulp.dest("build/test/" + module));
 
       results.push(testResult);
    });
