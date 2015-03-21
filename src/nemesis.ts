@@ -109,16 +109,19 @@ module nemesis {
          * If true, calls to web gl will be checked for undefined parameters. Any calls with undefined parameters will be logged.
          */
         validateGLArgs: boolean;
+
+        logLevel: number;
     }
 
     var _config: NemesisConfig = {
         fullscreen: true,
         throwOnGLError: false,
         logGLCalls: false,
-        validateGLArgs: false
+        validateGLArgs: false,
+        logLevel: 0
     };
 
-    export function config(c?: NemesisConfig):NemesisConfig {
+    export function config(c?: any):NemesisConfig {
         if(!!c) {
             for(var property in c) {
                 if(!c.hasOwnProperty(property)) {
@@ -132,13 +135,98 @@ module nemesis {
         return _config;
     }
 
+    /***** Logger *****/
+    export enum logLevel {
+        ALL = 0,
+        ERROR = 1,
+        WARN = 2,
+        INFO = 3,
+        OFF = 100
+    }
+
+    export interface ILogWriter {
+        error(message: string, error: ExceptionInformation);
+        warn(message: string, error?: ExceptionInformation);
+        info(message: string);
+    }
+
+    export module logger {
+        var _writers = [];
+
+        export function addWriter(writer: ILogWriter) {
+            _writers.push(writer);
+        }
+
+        export function removeWriter(writer: ILogWriter) {
+            var index = _writers.indexOf(writer);
+            if(index >= 0) {
+                _writers.splice(index, 1);
+            }
+        }
+
+        /**
+         * Generic log function.
+         * @param logLevel
+         * @param message
+         * @param error
+         */
+        export function log(level: logLevel, message: string, error?: ExceptionInformation) {
+            if(level > config().logLevel) {
+                return;
+            }
+
+            _writers.forEach((writer) => {
+                switch(level) {
+                    case logLevel.ERROR:
+                        writer.error(message, error);
+                        break;
+                    case logLevel.WARN:
+                        writer.warn(message, error);
+                        break;
+                    case logLevel.INFO:
+                        writer.info(message);
+                        break;
+                }
+            });
+        }
+
+        export function error(message: string, error: ExceptionInformation) {
+            log(logLevel.ERROR, message, error);
+        }
+
+        export function warn(message: string, error?: ExceptionInformation) {
+            log(logLevel.WARN, message, error);
+        }
+
+        export function info(message: string) {
+            log(logLevel.INFO, message);
+        }
+    }
+
+    export class consoleLogger implements ILogWriter {
+
+        constructor() {}
+
+        public error(message: string, error: ExceptionInformation) {
+            console.error(message, error);
+        }
+
+        public warn(message: string, error?: ExceptionInformation) {
+            console.warn(message, error);
+        }
+
+        public info(message: string) {
+            console.info(message);
+        }
+    }
+
     /***** Canvas *****/
     function initCanvas(): HTMLCanvasElement {
         var canvas: HTMLCanvasElement;
         var elements = document.getElementsByTagName('canvas');
 
         if(elements.length == 0) {
-            //logger.logError('No canvas elements found.');
+            logger.error('No canvas elements found.', null);
         } else {
             for(var i = 0; i < elements.length; i++) {
                 if(elements[i].hasAttribute('nemesis')) {
@@ -210,7 +298,7 @@ module nemesis {
          */
         public isDefined():verifier {
             if(typeof(this._value) == 'undefined') {
-                //logger.logError(this._getMsg("Parameter [{name}, {value}] is undefined"));
+                logger.error(this._getMsg("Parameter [{name}, {value}] is undefined"), null);
             }
             return this;
         }
@@ -221,7 +309,7 @@ module nemesis {
          */
         public isNotEmpty():verifier {
             if(typeof(this._value.length) != 'undefined' && this._value.length == 0) {
-                //logger.logError(this._getMsg("Parameter [{name}, {value}] is empty."));
+                logger.error(this._getMsg("Parameter [{name}, {value}] is empty."), null);
             }
             return this;
         }
@@ -233,7 +321,7 @@ module nemesis {
          */
         public isGreaterThan(x: number) {
             if(this._value <= x) {
-                // logger.logError(this._getMsg("Parameter [{name}, {value}] is greater than [" + x + "]"));
+                logger.error(this._getMsg("Parameter [{name}, {value}] is greater than [" + x + "]"), null);
             }
             return this;
         }
@@ -245,7 +333,7 @@ module nemesis {
          */
         public isLessThan(x: number) {
             if(this._value >= x) {
-                //logger.logError(this._getMsg("Parameter [{name}, {value}] is less than [" + x + "]"));
+                logger.error(this._getMsg("Parameter [{name}, {value}] is less than [" + x + "]"), null);
             }
             return this;
         }
