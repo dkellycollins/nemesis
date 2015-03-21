@@ -22,14 +22,23 @@ gulp.task("scripts", ["clean"], function() {
    var results = [];
 
    modules.forEach(function(module) {
-      var result = gulp.src(["src/" + module + "/*.ts", "src/" + module + "/**/*.ts"])
+      //Source files
+      var srcResult = gulp.src(["src/" + module + ".ts"])
          .pipe(ts({
-            declaration: true,
-            out: module + ".js"
+            declaration: true
          }))
-         .pipe(gulp.dest("build"));
+         .pipe(gulp.dest("build/"));
 
-      results.push(result);
+      results.push(srcResult);
+
+      //Test files
+      var testResult = gulp.src(["test/" + module + "/**/*.ts"])
+         .pipe(ts({
+
+         }))
+         .pipe(gulp.dest("build/test/" + module));
+
+      results.push(testResult);
    });
 
    return merge(results);
