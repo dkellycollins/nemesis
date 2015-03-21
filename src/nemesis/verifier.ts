@@ -1,10 +1,10 @@
 module nemesis {
-    import logger = nemesis.logger;
+    //import logger = nemesis.logger;
 
     /**
      * Provides methods to verify the given parameter.
      */
-    class verifier {
+    export class verifier {
         /**
          * Create a new verifier.
          * @param value The value to verify
@@ -31,7 +31,7 @@ module nemesis {
          */
         public isDefined():verifier {
             if(typeof(this._value) == 'undefined') {
-                logger.logError(this._getMsg("Parameter [{name}, {value}] is undefined"));
+                //logger.logError(this._getMsg("Parameter [{name}, {value}] is undefined"));
             }
             return this;
         }
@@ -42,7 +42,7 @@ module nemesis {
          */
         public isNotEmpty():verifier {
             if(typeof(this._value.length) != 'undefined' && this._value.length == 0) {
-                logger.logError(this._getMsg("Parameter [{name}, {value}] is empty."));
+                //logger.logError(this._getMsg("Parameter [{name}, {value}] is empty."));
             }
             return this;
         }
@@ -54,7 +54,7 @@ module nemesis {
          */
         public isGreaterThan(x: number) {
             if(this._value <= x) {
-                logger.logError(this._getMsg("Parameter [{name}, {value}] is greater than [" + x + "]"));
+               // logger.logError(this._getMsg("Parameter [{name}, {value}] is greater than [" + x + "]"));
             }
             return this;
         }
@@ -66,7 +66,7 @@ module nemesis {
          */
         public isLessThan(x: number) {
             if(this._value >= x) {
-                logger.logError(this._getMsg("Parameter [{name}, {value}] is less than [" + x + "]"));
+                //logger.logError(this._getMsg("Parameter [{name}, {value}] is less than [" + x + "]"));
             }
             return this;
         }
