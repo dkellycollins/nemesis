@@ -1,4 +1,5 @@
 ///<reference path="../lib/es6/es6-promise.d.ts" />
+///<reference path="../lib/node/node.d.ts" />
 
 /**
  * The entry point class. Contains reference to other modules and manages the game loop.
@@ -49,6 +50,10 @@ module nemesis {
             }
 
             this._events[eventName].forEach(handler => {
+                if(!handler) {
+                    return;
+                }
+
                 handler(args);
             });
         }

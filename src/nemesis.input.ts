@@ -1,4 +1,5 @@
 ///<reference path="nemesis.ts" />
+///<reference path="../lib/node/node.d.ts" />
 
 module nemesis.input {
     /***** Keyboard *****/

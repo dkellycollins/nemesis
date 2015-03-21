@@ -1,23 +1,14 @@
 ///<reference path="../../lib/mocha/mocha.d.ts" />
 ///<reference path="../../lib/node/node.d.ts" />
+///<reference path="../../src/nemesis.ts" />
 
-var assert = require("assert");
-var eventObject = require("nemesis").eventObject;
-
-function AAATest(testDesc: string, arrange: () => void, act: () => void, assert: () => void) {
-    test(testDesc, () => {
-        arrange();
-        act();
-        assert();
-    });
-}
+declare var assert: any;
 
 suite("eventObject", () => {
-    this.timeout(500);
 
     test("raise event with no listeners", () => {
         //Arange
-        var e = new eventObject();
+        var e = new nemesis.eventObject();
 
         //Act
         e.emit("testEvent");
@@ -26,7 +17,7 @@ suite("eventObject", () => {
     });
 
     test("raise event with one listener", (done) => {
-        var e = new eventObject();
+        var e = new nemesis.eventObject();
         e.on("testEvent", () => {
             done();
         });
@@ -35,7 +26,7 @@ suite("eventObject", () => {
     });
 
     test("raise event with arguments", (done) => {
-        var e = new eventObject();
+        var e = new nemesis.eventObject();
         var testValue = 3;
         e.on("testEvent", (value) => {
             assert.equal(testValue, value);
@@ -46,7 +37,7 @@ suite("eventObject", () => {
     });
 
     test("raise event when multiple events registered", (done) => {
-        var e = new eventObject();
+        var e = new nemesis.eventObject();
         e.on("goodEvent", () => {
             done();
         });
@@ -58,7 +49,7 @@ suite("eventObject", () => {
     });
 
     test("unsubscribe event listener", (done) => {
-        var e = new eventObject();
+        var e = new nemesis.eventObject();
         var handler1 = e.on("testEvent", () => {
             throw "removed handler called";
         });

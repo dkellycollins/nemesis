@@ -4,13 +4,13 @@ var merge = require("merge2");
 var rimraf = require("rimraf");
 var mocha = require("gulp-mocha");
 var uglify = require("gulp-uglify");
+var gutil = require('gulp-util');
+var path = require("path");
 
 var modules = [
    "nemesis",
-   //"nemesis.gui",
    "nemesis.input",
-   //"nemesis.logger",
-   //"nemesis.render3D",
+   "nemesis.render3D"
    //"nemesis.shaders",
 ];
 
@@ -24,12 +24,10 @@ gulp.task("scripts", ["clean"], function() {
    modules.forEach(function(module) {
       //Source files
       var srcResult = gulp.src([
-         "src/" + module + ".ts",
-         "src/" + module + "/**/*.ts"
+         "src/" + module + ".ts"
       ])
       .pipe(ts({
-         declaration: true,
-         out: module + ".js"
+         declaration: true
       }))
       .pipe(gulp.dest("build/"));
 
@@ -40,11 +38,17 @@ gulp.task("scripts", ["clean"], function() {
          "test/" + module + "/**/*.ts"
       ])
       .pipe(ts({
-
+         out: module + ".test.js"
       }))
       .pipe(gulp.dest("build/test/" + module));
 
       results.push(testResult);
+
+      //Test page.
+      var htmlResult = gulp.src(["test/" + module + "/index.html"])
+         .pipe(gulp.dest("build/test/" + module + ""));
+
+      results.push(htmlResult);
    });
 
    return merge(results);
@@ -52,13 +56,21 @@ gulp.task("scripts", ["clean"], function() {
 
 gulp.task("test", ["scripts"], function() {
    var results = [];
+   function testErrorHandler(err) {
+      gutil.log(err.toString());
+      exitCode = 1;
+   }
 
    modules.forEach(function(module) {
       var result = gulp.src(["build/test/" + module + "/*.js", "build/test/" + module + "/**/*.js"])
          .pipe(mocha({
             ui: 'tdd',
             reporter: 'progress'
-         }));
+         }))
+         .on("error", function(err) {
+            testErrorHandler(err);
+            process.emit('exit');
+         });
 
       results.push(result);
    });
