@@ -4,7 +4,7 @@
 
 declare var assert: any;
 
-suite("eventObject", () => {
+suite("nemesis.eventObject", () => {
 
     test("raise event with no listeners", () => {
         //Arange
