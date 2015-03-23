@@ -6,19 +6,19 @@ var mocha = require("gulp-mocha");
 var uglify = require("gulp-uglify");
 var gutil = require('gulp-util');
 var path = require("path");
+var through = require("through");
 
 var modules = [
    "nemesis",
    "nemesis.input",
    "nemesis.render3D"
-   //"nemesis.shaders",
 ];
 
 gulp.task("clean", function(cb) {
    rimraf("./build", cb);
 });
 
-gulp.task("scripts", ["clean"], function() {
+gulp.task("scripts:src", function() {
    var results = [];
 
    modules.forEach(function(module) {
@@ -32,7 +32,15 @@ gulp.task("scripts", ["clean"], function() {
       .pipe(gulp.dest("build/"));
 
       results.push(srcResult);
+   });
 
+   return merge(results);
+});
+
+gulp.task("scripts:test", function() {
+   var results = [];
+
+   modules.forEach(function(module) {
       //Test files
       var testResult = gulp.src([
          "test/" + module + "/**/*.ts"
@@ -53,6 +61,48 @@ gulp.task("scripts", ["clean"], function() {
 
    return merge(results);
 });
+
+gulp.task("scripts:shaders", function() {
+   return gulp.src(["src/nemesis.shaders/**/*.glsl"])
+      /*.pipe(function shaders() {
+         //Based on gulp-shaders.js from Babylon.js https://github.com/BabylonJS/Babylon.js/blob/master/Tools/Gulp/gulp-shaders.js
+
+         var firstFile = null;
+         var content = {};
+
+         function bufferContents(file){
+            if (file.isNull()) return; // ignore
+
+            if (!firstFile) firstFile = file;
+
+            var fileName = file.path
+               .replace(file.base, '');
+
+            content[fileName] = file.contents.toString();
+         }
+
+         function endStream(){
+
+            var joinedPath = path.join(firstFile.base, "nemesis.shaders.js");
+
+            var joinedFile = new gutil.File({
+               cwd: firstFile.cwd,
+               base: firstFile.base,
+               path: joinedPath,
+               contents: new Buffer(JSON.stringify(content))
+            });
+
+            this.emit('data', joinedFile);
+            this.emit('end');
+         }
+
+         return through(bufferContents, endStream);
+      })
+      .pipe(gulp.dest("build"))*/
+      .pipe(gulp.dest("build/nemsis.shaders"));
+});
+
+gulp.task("scripts", ["scripts:src", "scripts:shaders", "scripts:test"]);
 
 gulp.task("test", ["scripts"], function() {
    var results = [];
