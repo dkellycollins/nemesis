@@ -87,7 +87,7 @@ gulp.task("scripts:shaders", function() {
             cwd: firstFile.cwd,
             base: firstFile.base,
             path: joinedPath,
-            contents: new Buffer(JSON.stringify(content))
+            contents: new Buffer("nemesis.shaders=" + JSON.stringify(content))
          });
 
          this.emit('data', joinedFile);
