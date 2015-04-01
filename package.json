@@ -37,7 +37,7 @@
     "mocha": "^1.21.4",
     "rimraf": "^2.3.2",
     "through": "^2.3.6",
-    "typescript": "^1.1.0-1"
+    "typescript": "^1.4.1"
   },
   "dependencies": {
     "gl-matrix": "^2.1.0"
