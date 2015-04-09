@@ -226,26 +226,29 @@ module nemesis {
     }
 
     /***** Canvas *****/
-    function initCanvas(): HTMLCanvasElement {
+    
+    function _initCanvas(config: NemesisConfig): HTMLCanvasElement {
         var canvas: HTMLCanvasElement;
         var elements = document.getElementsByTagName('canvas');
 
-        if(elements.length == 0) {
-            logger.error('No canvas elements found.', null);
-        } else {
-            for(var i = 0; i < elements.length; i++) {
-                if(elements[i].hasAttribute('nemesis')) {
-                    canvas = elements[i];
+        var i = 0;
+        for(var i = 0; i < elements.length; i++) {
+            cavnas = elements[i];
+            
+            if(canvas.hasAttribute("nemesis")
+                || canvas.attribute("id") == config.canvasId) {
                     break;
                 }
-            }
-            canvas = canvas || elements[0];
-
-            //Fullscreen option must be handled here
-            if(nemesis.config().fullscreen) {
+        }
+        
+        if(!!canvas) {
+            //Initialize the canvas
+            if(config.fullscreen) {
                 canvas.height = window.innerHeight;
                 canvas.width = window.innerWidth;
             }
+        } else {
+            logger.warn("No canvas element found.");
         }
 
         return canvas;
@@ -253,7 +256,7 @@ module nemesis {
 
     var _loadPromise = new Promise<HTMLCanvasElement>((resolve, reject) => {
         nemesis.on("init", function () {
-            var canvas = initCanvas();
+            var canvas = _initCanvas(nemesis.config());
 
             if(!!canvas) {
                 resolve(canvas);

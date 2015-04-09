@@ -11,7 +11,7 @@ suite("nemesis.config", function() {
         assert.ok(config, "FAIL: config cannot be null by default");
     });
 
-    test("properties set", () => {
+    test("properties set persist", () => {
         var config = nemesis.config();
 
         config.logLevel = 100;

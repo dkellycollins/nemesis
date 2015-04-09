@@ -29,6 +29,7 @@ gulp.task("scripts:src", function() {
       .pipe(ts({
          declaration: true
       }))
+      .on("error", gutil.log)
       .pipe(gulp.dest("build/"));
 
       results.push(srcResult);
@@ -48,6 +49,7 @@ gulp.task("scripts:test", function() {
       .pipe(ts({
          out: module + ".test.js"
       }))
+      .on("error", gutil.log)
       .pipe(gulp.dest("build/test/" + module));
 
       results.push(testResult);
@@ -99,6 +101,7 @@ gulp.task("scripts:shaders", function() {
 
    return gulp.src(["src/nemesis.shaders/**/*.glsl"])
       .pipe(compileShaders)
+      .on("error", gutil.log)
       .pipe(gulp.dest("build/"));
 });
 
